@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $path = base_path('routes/dev.php');
-        if (env('APP_ENV') === 'local' && file_exists($path)) {
+        if ('local' === env('APP_ENV') && file_exists($path)) {
             $this->loadRoutesFrom($path);
         }
     }

@@ -7,6 +7,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PasswordUpdateTest extends TestCase
 {
     use RefreshDatabase;
@@ -22,11 +27,13 @@ class PasswordUpdateTest extends TestCase
                 'current_password' => 'password',
                 'password' => 'new-password',
                 'password_confirmation' => 'new-password',
-            ]);
+            ])
+        ;
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
+            ->assertRedirect('/profile')
+        ;
 
         $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
     }
@@ -42,7 +49,8 @@ class PasswordUpdateTest extends TestCase
                 'current_password' => 'wrong-password',
                 'password' => 'new-password',
                 'password_confirmation' => 'new-password',
-            ]);
+            ])
+        ;
 
         $response
             ->assertSessionHasErrors('current_password')
