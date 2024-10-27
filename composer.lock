@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f0dad69247e83d2a3877e11a0b47688",
+    "content-hash": "158de4843647f018039bae32b52cccb1",
     "packages": [
         {
             "name": "brick/math",
@@ -505,6 +505,110 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "eureka/component-curl",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eureka-framework/component-curl.git",
+                "reference": "171e272d8cddfb79f266e737a029f254cef64dba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eureka-framework/component-curl/zipball/171e272d8cddfb79f266e737a029f254cef64dba",
+                "reference": "171e272d8cddfb79f266e737a029f254cef64dba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "nyholm/psr7": "^1.5",
+                "php": "8.1.*||8.2.*||8.3.*||8.4.*",
+                "psr/http-client": "^1.0",
+                "psr/http-message": "^1.0||^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.62.0",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpstan/phpstan": "^1.11.11",
+                "phpstan/phpstan-phpunit": "^1.4.0",
+                "phpunit/phpcov": "^9.0.2",
+                "phpunit/phpunit": "^10.5.30",
+                "shipmonk/composer-dependency-analyser": "^1.7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eureka\\Component\\Curl\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Romain Cottard",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Component Curl & Http Client PSR implementation. ",
+            "support": {
+                "issues": "https://github.com/eureka-framework/component-curl/issues",
+                "source": "https://github.com/eureka-framework/component-curl/tree/3.0.0"
+            },
+            "time": "2024-08-22T16:18:15+00:00"
+        },
+        {
+            "name": "eureka/component-serializer",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eureka-framework/component-serializer.git",
+                "reference": "fc392070205e654a5a3852361336a8cd2ea0cff7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eureka-framework/component-serializer/zipball/fc392070205e654a5a3852361336a8cd2ea0cff7",
+                "reference": "fc392070205e654a5a3852361336a8cd2ea0cff7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "8.1.*||8.2.*||8.3.*||8.4.*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.62.0",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "phpstan/phpstan": "^1.11.11",
+                "phpstan/phpstan-phpunit": "^1.4.0",
+                "phpunit/phpcov": "^9.0.2",
+                "phpunit/phpunit": "^10.5.30",
+                "shipmonk/composer-dependency-analyser": "^1.7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eureka\\Component\\Serializer\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Romain Cottard",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Serializer used in client to serialize response VO when they are put in cache.",
+            "support": {
+                "issues": "https://github.com/eureka-framework/component-serializer/issues",
+                "source": "https://github.com/eureka-framework/component-serializer/tree/2.1.0"
+            },
+            "time": "2024-08-22T15:51:12+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -2536,6 +2640,84 @@
                 }
             ],
             "time": "2024-03-06T16:17:14+00:00"
+        },
+        {
+            "name": "nyholm/psr7",
+            "version": "1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nyholm/psr7.git",
+                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "provide": {
+                "php-http/message-factory-implementation": "1.0",
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "^0.9",
+                "php-http/message-factory": "^1.0",
+                "php-http/psr7-integration-tests": "^1.0",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.4",
+                "symfony/error-handler": "^4.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nyholm\\Psr7\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                },
+                {
+                    "name": "Martijn van der Ven",
+                    "email": "martijn@vanderven.se"
+                }
+            ],
+            "description": "A fast PHP7 implementation of PSR-7",
+            "homepage": "https://tnyholm.se",
+            "keywords": [
+                "psr-17",
+                "psr-7"
+            ],
+            "support": {
+                "issues": "https://github.com/Nyholm/psr7/issues",
+                "source": "https://github.com/Nyholm/psr7/tree/1.8.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Zegnat",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nyholm",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-09T07:06:30+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -5749,6 +5931,67 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.2.7"
             },
             "time": "2023-12-08T13:03:43+00:00"
+        },
+        {
+            "name": "velkuns/artifactsmmo-client",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/velkuns/artifactsmmo-client.git",
+                "reference": "a6fa37454248c0d197312e62be5a5ef339c763c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/velkuns/artifactsmmo-client/zipball/a6fa37454248c0d197312e62be5a5ef339c763c5",
+                "reference": "a6fa37454248c0d197312e62be5a5ef339c763c5",
+                "shasum": ""
+            },
+            "require": {
+                "eureka/component-serializer": "^2.1",
+                "ext-json": "*",
+                "php": "8.1.*||8.2.*||8.3.*",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0||^2.0",
+                "psr/log": "^1.1||^2.0||^3.0"
+            },
+            "require-dev": {
+                "cebe/php-openapi": "^1.7.0",
+                "eureka/component-console": "^6.2.0",
+                "eureka/component-curl": "^3.0.0",
+                "friendsofphp/php-cs-fixer": "^3.62.0",
+                "lcobucci/clock": "^3.0.0",
+                "maglnet/composer-require-checker": "^4.7.1",
+                "nikic/php-parser": "^4.19.1",
+                "nyholm/psr7": "^1.8.1",
+                "phpstan/phpstan": "^1.11.11",
+                "phpstan/phpstan-phpunit": "^1.4.0",
+                "phpunit/phpcov": "^9.0.2",
+                "phpunit/phpunit": "^10.5.30",
+                "shipmonk/composer-dependency-analyser": "^1.7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Velkuns\\ArtifactsMMO\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Romain Cottard",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Client for Artifacts MMO Game Code",
+            "support": {
+                "issues": "https://github.com/velkuns/artifactsmmo-client/issues",
+                "source": "https://github.com/velkuns/artifactsmmo-client/tree/2.0.0"
+            },
+            "time": "2024-08-25T16:38:18+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
