@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,78 +9,78 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int         $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property string      $name
- * @property string      $skin
- * @property int         $level
- * @property int         $xp
- * @property int         $max_xp
- * @property int         $achievements_points
- * @property int         $gold
- * @property int         $speed
- * @property int         $mining_level
- * @property int         $mining_xp
- * @property int         $mining_max_xp
- * @property int         $woodcutting_level
- * @property int         $woodcutting_xp
- * @property int         $woodcutting_max_xp
- * @property int         $fishing_level
- * @property int         $fishing_xp
- * @property int         $fishing_max_xp
- * @property int         $weaponcrafting_level
- * @property int         $weaponcrafting_xp
- * @property int         $weaponcrafting_max_xp
- * @property int         $gearcrafting_level
- * @property int         $gearcrafting_xp
- * @property int         $gearcrafting_max_xp
- * @property int         $jewelrycrafting_level
- * @property int         $jewelrycrafting_xp
- * @property int         $jewelrycrafting_max_xp
- * @property int         $cooking_level
- * @property int         $cooking_xp
- * @property int         $cooking_max_xp
- * @property int         $hp
- * @property int         $haste
- * @property int         $critical_strike
- * @property int         $stamina
- * @property int         $attack_fire
- * @property int         $attack_earth
- * @property int         $attack_water
- * @property int         $attack_air
- * @property int         $dmg_fire
- * @property int         $dmg_earth
- * @property int         $dmg_water
- * @property int         $dmg_air
- * @property int         $res_fire
- * @property int         $res_earth
- * @property int         $res_water
- * @property int         $res_air
- * @property int         $x
- * @property int         $y
- * @property int         $cooldown
- * @property Carbon      $cooldown_expiration
- * @property string      $weapon_slot
- * @property string      $shield_slot
- * @property string      $helmet_slot
- * @property string      $body_armor_slot
- * @property string      $leg_armor_slot
- * @property string      $boots_slot
- * @property string      $ring1_slot
- * @property string      $ring2_slot
- * @property string      $amulet_slot
- * @property string      $artifact1_slot
- * @property string      $artifact2_slot
- * @property string      $consumable1_slot
- * @property int         $consumable1_slot_quantity
- * @property string      $consumable2_slot
- * @property int         $consumable2_slot_quantity
- * @property string      $task
- * @property string      $task_type
- * @property int         $task_progress
- * @property int         $task_total
- * @property int         $inventory_max_items
+ * @property string $name
+ * @property string $skin
+ * @property int $level
+ * @property int $xp
+ * @property int $max_xp
+ * @property int $achievements_points
+ * @property int $gold
+ * @property int $speed
+ * @property int $mining_level
+ * @property int $mining_xp
+ * @property int $mining_max_xp
+ * @property int $woodcutting_level
+ * @property int $woodcutting_xp
+ * @property int $woodcutting_max_xp
+ * @property int $fishing_level
+ * @property int $fishing_xp
+ * @property int $fishing_max_xp
+ * @property int $weaponcrafting_level
+ * @property int $weaponcrafting_xp
+ * @property int $weaponcrafting_max_xp
+ * @property int $gearcrafting_level
+ * @property int $gearcrafting_xp
+ * @property int $gearcrafting_max_xp
+ * @property int $jewelrycrafting_level
+ * @property int $jewelrycrafting_xp
+ * @property int $jewelrycrafting_max_xp
+ * @property int $cooking_level
+ * @property int $cooking_xp
+ * @property int $cooking_max_xp
+ * @property int $hp
+ * @property int $haste
+ * @property int $critical_strike
+ * @property int $stamina
+ * @property int $attack_fire
+ * @property int $attack_earth
+ * @property int $attack_water
+ * @property int $attack_air
+ * @property int $dmg_fire
+ * @property int $dmg_earth
+ * @property int $dmg_water
+ * @property int $dmg_air
+ * @property int $res_fire
+ * @property int $res_earth
+ * @property int $res_water
+ * @property int $res_air
+ * @property int $x
+ * @property int $y
+ * @property int $cooldown
+ * @property Carbon $cooldown_expiration
+ * @property string $weapon_slot
+ * @property string $shield_slot
+ * @property string $helmet_slot
+ * @property string $body_armor_slot
+ * @property string $leg_armor_slot
+ * @property string $boots_slot
+ * @property string $ring1_slot
+ * @property string $ring2_slot
+ * @property string $amulet_slot
+ * @property string $artifact1_slot
+ * @property string $artifact2_slot
+ * @property string $consumable1_slot
+ * @property int $consumable1_slot_quantity
+ * @property string $consumable2_slot
+ * @property int $consumable2_slot_quantity
+ * @property string $task
+ * @property string $task_type
+ * @property int $task_progress
+ * @property int $task_total
+ * @property int $inventory_max_items
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
  * @property-read int|null $inventory_items_count
  *
