@@ -13,15 +13,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "eureka/component-curl": "^3.0",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/horizon": "^5.29",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "nyholm/psr7": "^1.8",
-        "tightenco/ziggy": "^2.0",
-        "velkuns/artifactsmmo-client": "^2.0"
+        "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.2",
