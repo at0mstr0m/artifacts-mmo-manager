@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Data\Responses\GetBankDetailsData;
+use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\ItemData;
+use App\Enums\RateLimitTypes;
 use App\Traits\MakesRequests;
 use Illuminate\Support\Collection;
 
@@ -25,7 +27,7 @@ class ArtifactsService
 
     public function getStatus(): GetStatusData
     {
-        return GetStatusData::from($this->get()->json('data'));
+        return GetStatusData::from($this->get());
     }
 
     /*
@@ -36,13 +38,13 @@ class ArtifactsService
 
     public function getBankDetails(): GetBankDetailsData
     {
-        return GetBankDetailsData::from($this->get('my/bank')->json('data'));
+        return GetBankDetailsData::from($this->get('my/bank'));
     }
 
     // todo: implement
     // public function getBankItems(): GetBankDetailsData
     // {
-    //     return GetBankDetailsData::from($this->get('my/bank/items')->json('data'));
+    //     return GetBankDetailsData::from($this->get('my/bank/items'));
     // }
 
     /*
@@ -51,7 +53,15 @@ class ArtifactsService
      * #########################################################################
      */
 
-    public function getItems(
+    public function getItem(string $code): GetItemData
+    {
+        return GetItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
+    }
+
+    /**
+     * @return Collection<ItemData>
+     */
+    public function getAllItems(
         int $perPage = 10,
         int $page = 1,
         bool $all = false
@@ -61,13 +71,9 @@ class ArtifactsService
             $page = 1;
         }
 
-        $response = $this->get(
-            'items',
-            static::paginationParams($perPage, $page, $all)
-        );
-
-        /** @var Collection */
-        $data = ItemData::collect($response->json('data'), Collection::class);
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('items', RateLimitTypes::DATA, $query);
+        $data = ItemData::collection($response);
 
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)

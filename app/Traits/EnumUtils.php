@@ -41,7 +41,21 @@ trait EnumUtils
             }
         }
 
-        throw new \ValueError("{$name} is not a valid value for enum " . static::class);
+        throw new \ValueError("{$name} is not a valid name for enum " . static::class);
+    }
+
+    public static function fromValue(self|string $value): static
+    {
+        if ($value instanceof static) {
+            return $value;
+        }
+        foreach (static::cases() as $case) {
+            if ($value === $case->value) {
+                return $case;
+            }
+        }
+
+        throw new \ValueError("{$value} is not a valid value for enum " . static::class);
     }
 
     public static function randomCase(): static

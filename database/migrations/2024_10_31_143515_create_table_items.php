@@ -15,12 +15,12 @@ return new class extends Migration {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name');
-            $table->tinyText('code');
-            $table->integer('level');
-            $table->tinyText('type');
-            $table->tinyText('subtype');
-            $table->text('description');
+            $table->tinyText('name')->nullable();
+            $table->tinyText('code')->nullable();
+            $table->integer('level')->nullable();
+            $table->tinyText('type')->nullable();
+            $table->tinyText('subtype')->nullable();
+            $table->text('description')->nullable();
         });
 
         Schema::create('effects', function (Blueprint $table) {
@@ -41,6 +41,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('effect_item');
+        Schema::dropIfExists('effects');
         Schema::dropIfExists('items');
     }
 };

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use App\Enums\RateLimitTypes;
 use App\Services\ArtifactsService;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -36,6 +37,7 @@ trait MakesRequests
     }
 
     private function baseRequest(
+        ?RateLimitTypes $type,
         string $method,
         string $path,
         array $payload,
@@ -46,38 +48,38 @@ trait MakesRequests
         }
 
         /** @var bool|PendingRequest */
-        $request = RateLimiter::attempt(
-            'ARTIFACTS_REQUESTS',
-            2,
-            fn() => Http::withToken($this->token),
-            1
-        );
+        $request = $this->handleRateLimits($type);
 
         if (! $request) {
             sleep(1);
 
-            return $this->baseRequest($method, $path, $payload, $attempts + 1);
+            return $this->baseRequest(
+                ...func_get_args(),
+                attempts: $attempts + 1
+            );
         }
 
         $this->logRequest($method, $path, $payload);
 
-        return $request->{$method}(self::URL . $path, $payload)
+        return $request
+            ->{$method}(self::URL . $path, $payload)
             ->throwUnlessStatus(HttpResponse::HTTP_OK);
     }
 
-    private function get(string $path = '', array $query = []): Response
-    {
-        return $this->baseRequest('get', $path, $query);
+    private function get(
+        string $path = '',
+        ?RateLimitTypes $type = null,
+        array $query = [],
+    ): Response {
+        return $this->baseRequest($type, 'get', $path, $query);
     }
 
-    private function post(string $path, array $payload = []): Response
-    {
-        return $this->baseRequest('post', $path, $payload);
-    }
-
-    private function patch(string $path, array $payload = []): Response
-    {
-        return $this->baseRequest('patch', $path, $payload);
+    private function post(
+        string $path,
+        ?RateLimitTypes $type = null,
+        array $payload = [],
+    ): Response {
+        return $this->baseRequest($type, 'post', $path, $payload);
     }
 
     private function getAllPagesData(
@@ -96,13 +98,11 @@ trait MakesRequests
             $currentPage <= $totalPages;
             ++$currentPage
         ) {
-            $data = $data->concat($this->{$methodName}(
-                ...[
-                    'perPage' => $perPage,
-                    'page' => $currentPage,
-                    ...$arguments,
-                ]
-            ));
+            $data = $data->concat($this->{$methodName}(...[
+                'perPage' => $perPage,
+                'page' => $currentPage,
+                ...$arguments,
+            ]));
         }
 
         return $data;
@@ -117,5 +117,51 @@ trait MakesRequests
             'size' => $all ? static::MAX_PER_PAGE : $perPage,
             'page' => $page,
         ];
+    }
+
+    private function handleRateLimits(
+        ?RateLimitTypes $type = null
+    ): bool|PendingRequest {
+        $callback = fn () => Http::withToken($this->token);
+        if (! $type) {
+            return $callback();
+        }
+        $limits = $type->getLimits();
+        $onlyHourlyLimit = count($limits) === 1;
+
+        $request = null;
+        if (array_key_exists('hour', $limits)) {
+            $request = RateLimiter::attempt(
+                $type->value . '_per_hour',
+                $limits['hour'],
+                /*
+                 * No need to create a new Http instance beffore the other rate
+                 * limits are checked.
+                 */
+                $onlyHourlyLimit ? $callback : fn () => true,
+                60 * 60 // 1 hour
+            );
+            if ($onlyHourlyLimit) {
+                return $request;
+            }
+        }
+
+        /** @var bool|PendingRequest */
+        $request = RateLimiter::attempt(
+            $type->value . '_per_minute',
+            $limits['minute'],
+            fn () => true,  // no need to create a new Http instance
+        );
+
+        if (! $request) {
+            return $request;
+        }
+
+        return RateLimiter::attempt(
+            $type->value . '_per_second',
+            $limits['second'],
+            $callback,
+            1
+        );
     }
 }

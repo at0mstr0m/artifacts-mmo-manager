@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 /**
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -43,8 +45,13 @@ class Item extends Model
         'description' => 'string',
     ];
 
-    public function effects()
+    public function effects(): BelongsToMany
     {
         return $this->belongsToMany(Effect::class);
+    }
+
+    public function craft(): BelongsToMany
+    {
+        return $this->belongsToMany(Craft::class)->withPivot(['quantity']);
     }
 }

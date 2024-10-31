@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Schemas;
 
-use Spatie\LaravelData\Data;
+use App\Data\Data;
 
 class CharacterData extends Data
 {

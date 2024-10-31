@@ -18,7 +18,6 @@
         "laravel/horizon": "^5.29",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "spatie/laravel-data": "^4.11",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

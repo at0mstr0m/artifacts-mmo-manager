@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Data\Schemas;
 
+use App\Data\Data;
 use App\Enums\Skills;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
-use Spatie\LaravelData\Data;
 
 class CraftData extends Data
 {
@@ -16,9 +14,14 @@ class CraftData extends Data
      * @param  Collection<SimpleItemData>  $items
      */
     public function __construct(
-        #[WithCast(EnumCast::class)]
-        public Skills $skill,
+        public Skills|string $skill,
         public int $level,
-        public Collection $items,
-    ) {}
+        public array|Collection $items,
+        public int $quantity,
+    ) {
+        $this->skill = Skills::fromValue($skill);
+        $this->items = collect($items)
+            ->snakeKeys()
+            ->mapValuesInto(SimpleItemData::class);
+    }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Responses;
 
-use Spatie\LaravelData\Data;
+use App\Data\Data;
 
 class GetBankItemsData extends Data
 {
