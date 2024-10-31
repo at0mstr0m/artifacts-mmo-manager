@@ -27,9 +27,7 @@
         "elseif": true,
         "encoding": true,
         "full_opening_tag": true,
-        "function_declaration": {
-            "closure_fn_spacing": "none"
-        },
+        "function_declaration": true,
         "indentation_type": true,
         "line_ending": true,
         "lowercase_cast": true,

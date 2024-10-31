@@ -55,6 +55,7 @@ return (new Config())
             'single_quoted' => 'ignore',
         ],
         'multiline_whitespace_before_semicolons' => true,
+        'function_declaration' => true,
+        'not_operator_with_successor_space' => true,
     ])
-    ->setLineEnding("\n")
-;
+    ->setLineEnding("\n");
