@@ -6,6 +6,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $name
+ * @property string $code
+ * @property int $level
+ * @property int $hp
+ * @property int $attack_fire
+ * @property int $attack_earth
+ * @property int $attack_water
+ * @property int $attack_air
+ * @property int $res_fire
+ * @property int $res_earth
+ * @property int $res_water
+ * @property int $res_air
+ * @property int $min_gold
+ * @property int $max_gold
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
+ * @property-read int|null $drops_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster query()
+ *
+ * @mixin \Eloquent
+ */
 class Monster extends Model
 {
     protected $fillable = [

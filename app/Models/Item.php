@@ -11,12 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $name
- * @property string $code
- * @property int $level
- * @property string $type
- * @property string $subtype
- * @property string $description
+ * @property string|null $name
+ * @property string|null $code
+ * @property int|null $level
+ * @property string|null $type
+ * @property string|null $subtype
+ * @property string|null $description
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Craft> $craft
+ * @property-read int|null $craft_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
+ * @property-read int|null $drops_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Effect> $effects
  * @property-read int|null $effects_count
  *

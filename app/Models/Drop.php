@@ -6,6 +6,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $monster_id
+ * @property int $item_id
+ * @property int $rate
+ * @property int $min_quantity
+ * @property int $max_quantity
+ * @property-read Item $item
+ * @property-read Monster $monster
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Drop newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Drop newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Drop query()
+ *
+ * @mixin \Eloquent
+ */
 class Drop extends Model
 {
     protected $fillable = [

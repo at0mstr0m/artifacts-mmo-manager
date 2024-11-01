@@ -4,6 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $name
+ * @property string $skin
+ * @property int $x
+ * @property int $y
+ * @property string|null $content_type
+ * @property string|null $content_code
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Map newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Map newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Map query()
+ *
+ * @mixin \Eloquent
+ */
 class Map extends Model
 {
     protected $fillable = [
