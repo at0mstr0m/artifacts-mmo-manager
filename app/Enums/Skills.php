@@ -16,4 +16,5 @@ enum Skills: string
     case COOKING = 'cooking';
     case WOOD_CUTTING = 'woodcutting';
     case MINING = 'mining';
+    case FISHING = 'fishing';
 }

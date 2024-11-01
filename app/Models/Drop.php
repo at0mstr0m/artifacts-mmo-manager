@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property int $id
@@ -38,9 +39,9 @@ class Drop extends Model
         'max_quantity' => 'integer',
     ];
 
-    public function monster(): BelongsTo
+    public function source(): MorphTo
     {
-        return $this->belongsTo(Monster::class);
+        return $this->morphTo();
     }
 
     public function item(): BelongsTo

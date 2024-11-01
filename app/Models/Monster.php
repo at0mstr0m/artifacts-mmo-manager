@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
@@ -69,8 +69,8 @@ class Monster extends Model
         'max_gold' => 'integer',
     ];
 
-    public function drops(): HasMany
+    public function drops(): MorphMany
     {
-        return $this->hasMany(Drop::class);
+        return $this->morphMany(Drop::class, 'source');
     }
 }

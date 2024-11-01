@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Data\Responses\GetBankDetailsData;
-use App\Data\Responses\GetItemData;
-use App\Data\Responses\GetStatusData;
-use App\Data\Schemas\ItemData;
 use App\Data\Schemas\MapData;
-use App\Data\Schemas\MonsterData;
 use App\Enums\RateLimitTypes;
 use App\Traits\MakesRequests;
+use App\Data\Schemas\ItemData;
+use App\Data\Schemas\MonsterData;
+use App\Data\Schemas\ResourceData;
 use Illuminate\Support\Collection;
+use App\Data\Responses\GetItemData;
+use App\Data\Responses\GetStatusData;
+use App\Data\Responses\GetBankDetailsData;
 
 class ArtifactsService
 {
@@ -142,6 +143,39 @@ class ArtifactsService
         $query = static::paginationParams($perPage, $page, $all);
         $response = $this->get('monsters', RateLimitTypes::DATA, $query);
         $data = MonsterData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    /*
+     * #########################################################################
+     * Resources
+     * #########################################################################
+     */
+
+    public function getResource(string $code): ResourceData
+    {
+        return ResourceData::from($this->get("resources/{$code}", RateLimitTypes::DATA));
+    }
+
+    /**
+     * @return Collection<ResourceData>
+     */
+    public function getAllResources(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('resources', RateLimitTypes::DATA, $query);
+        $data = ResourceData::collection($response);
 
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)

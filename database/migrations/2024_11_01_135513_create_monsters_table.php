@@ -37,7 +37,7 @@ return new class extends Migration {
         Schema::create('drops', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('monster_id')->constrained();
+            $table->morphs('source');
             $table->foreignId('item_id')->constrained();
             $table->integer('rate');
             $table->integer('min_quantity');
@@ -50,6 +50,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('drops');
         Schema::dropIfExists('monsters');
     }
 };
