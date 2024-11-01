@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -53,5 +54,10 @@ class Item extends Model
     public function craft(): BelongsToMany
     {
         return $this->belongsToMany(Craft::class)->withPivot(['quantity']);
+    }
+
+    public function drops(): HasMany
+    {
+        return $this->hasMany(Drop::class);
     }
 }

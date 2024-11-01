@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('monsters', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->tinyText('name');
+            $table->tinyText('code');
+            $table->integer('level');
+            $table->integer('hp');
+
+            $table->integer('attack_fire');
+            $table->integer('attack_earth');
+            $table->integer('attack_water');
+            $table->integer('attack_air');
+
+            $table->integer('res_fire');
+            $table->integer('res_earth');
+            $table->integer('res_water');
+            $table->integer('res_air');
+
+            $table->integer('min_gold');
+            $table->integer('max_gold');
+        });
+
+        Schema::create('drops', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('monster_id')->constrained();
+            $table->foreignId('item_id')->constrained();
+            $table->integer('rate');
+            $table->integer('min_quantity');
+            $table->integer('max_quantity');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('monsters');
+    }
+};

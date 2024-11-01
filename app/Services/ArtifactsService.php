@@ -9,6 +9,7 @@ use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\MapData;
+use App\Data\Schemas\MonsterData;
 use App\Enums\RateLimitTypes;
 use App\Traits\MakesRequests;
 use Illuminate\Support\Collection;
@@ -108,6 +109,39 @@ class ArtifactsService
         $query = static::paginationParams($perPage, $page, $all);
         $response = $this->get('items', RateLimitTypes::DATA, $query);
         $data = ItemData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    /*
+     * #########################################################################
+     * Monsters
+     * #########################################################################
+     */
+
+    public function getMonster(string $code): MonsterData
+    {
+        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
+    }
+
+    /**
+     * @return Collection<MonsterData>
+     */
+    public function getAllMonsters(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('monsters', RateLimitTypes::DATA, $query);
+        $data = MonsterData::collection($response);
 
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
