@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             MapSeeder::class,
             MonsterSeeder::class,
+            ResourceSeeder::class,
         ]);
     }
 }
