@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Data\Schemas\MapData;
-use App\Enums\RateLimitTypes;
-use App\Traits\MakesRequests;
-use App\Data\Schemas\ItemData;
-use App\Data\Schemas\MonsterData;
-use App\Data\Schemas\ResourceData;
-use Illuminate\Support\Collection;
+use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
-use App\Data\Responses\GetBankDetailsData;
+use App\Data\Schemas\ItemData;
+use App\Data\Schemas\MapData;
+use App\Data\Schemas\MonsterData;
+use App\Data\Schemas\ResourceData;
+use App\Data\Schemas\SimpleItemData;
+use App\Enums\RateLimitTypes;
+use App\Traits\MakesRequests;
+use Illuminate\Support\Collection;
 
 class ArtifactsService
 {
@@ -44,22 +45,33 @@ class ArtifactsService
         return GetBankDetailsData::from($this->get('my/bank'));
     }
 
-    // todo: implement
-    // public function getBankItems(): GetBankDetailsData
-    // {
-    //     return GetBankDetailsData::from($this->get('my/bank/items'));
-    // }
+    /**
+     * @return Collection<SimpleItemData>
+     */
+    public function getBankItems(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('my/bank/items', RateLimitTypes::DATA, $query);
+        $data = SimpleItemData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
 
     /*
      * #########################################################################
      * Maps
      * #########################################################################
      */
-
-    public function getMap(int $x, int $y): MapData
-    {
-        return MapData::from($this->get("maps/{$x}/{$y}", RateLimitTypes::DATA));
-    }
 
     /**
      * @return Collection<MapData>
@@ -83,16 +95,16 @@ class ArtifactsService
             : $data;
     }
 
+    public function getMap(int $x, int $y): MapData
+    {
+        return MapData::from($this->get("maps/{$x}/{$y}", RateLimitTypes::DATA));
+    }
+
     /*
      * #########################################################################
      * Items
      * #########################################################################
      */
-
-    public function getItem(string $code): GetItemData
-    {
-        return GetItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
-    }
 
     /**
      * @return Collection<ItemData>
@@ -116,16 +128,16 @@ class ArtifactsService
             : $data;
     }
 
+    public function getItem(string $code): GetItemData
+    {
+        return GetItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
+    }
+
     /*
      * #########################################################################
      * Monsters
      * #########################################################################
      */
-
-    public function getMonster(string $code): MonsterData
-    {
-        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
-    }
 
     /**
      * @return Collection<MonsterData>
@@ -149,16 +161,16 @@ class ArtifactsService
             : $data;
     }
 
+    public function getMonster(string $code): MonsterData
+    {
+        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
+    }
+
     /*
      * #########################################################################
      * Resources
      * #########################################################################
      */
-
-    public function getResource(string $code): ResourceData
-    {
-        return ResourceData::from($this->get("resources/{$code}", RateLimitTypes::DATA));
-    }
 
     /**
      * @return Collection<ResourceData>
@@ -180,5 +192,10 @@ class ArtifactsService
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
             : $data;
+    }
+
+    public function getResource(string $code): ResourceData
+    {
+        return ResourceData::from($this->get("resources/{$code}", RateLimitTypes::DATA));
     }
 }
