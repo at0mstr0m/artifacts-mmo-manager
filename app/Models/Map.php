@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 /**
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -40,4 +42,9 @@ class Map extends Model
         'content_type' => 'string',
         'content_code' => 'string',
     ];
+
+    public function map(): HasMany
+    {
+        return $this->hasMany(Map::class);
+    }
 }

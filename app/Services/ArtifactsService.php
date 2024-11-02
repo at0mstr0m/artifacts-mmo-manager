@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
+use App\Data\Schemas\EventData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
@@ -197,5 +198,33 @@ class ArtifactsService
     public function getResource(string $code): ResourceData
     {
         return ResourceData::from($this->get("resources/{$code}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * Events
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<EventData>
+     */
+    public function getAllEvents(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('events', RateLimitTypes::DATA, $query);
+        $data = EventData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
     }
 }

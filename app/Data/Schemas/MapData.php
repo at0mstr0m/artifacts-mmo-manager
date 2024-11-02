@@ -13,6 +13,8 @@ class MapData extends Data
 
     public ?string $contentCode = null;
 
+    private Map $model;
+
     public function __construct(
         public string $name,
         public string $skin,
@@ -25,9 +27,14 @@ class MapData extends Data
         $this->createIfNotExists();
     }
 
+    public function getModel(): Map
+    {
+        return $this->model;
+    }
+
     private function createIfNotExists(): void
     {
-        Map::firstOrCreate([
+        $this->model = Map::firstOrCreate([
             'x' => $this->x,
             'y' => $this->y,
         ], [

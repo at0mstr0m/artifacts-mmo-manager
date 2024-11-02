@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             MapSeeder::class,
             MonsterSeeder::class,
             ResourceSeeder::class,
+            EventSeeder::class,
         ]);
     }
 }
