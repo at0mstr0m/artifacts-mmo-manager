@@ -48,34 +48,40 @@ class ItemData extends Data
             'description' => $this->description,
         ]);
 
-        if (! $this->model->wasRecentlyCreated) {
-            return;
+        if (
+            $this->effects->isNotEmpty()
+            && $this->model->effects()->doesntExist()
+        ) {
+            $this->effects->each(function (ItemEffectData $effect) {
+                $this->model->effects()->attach(Effect::firstOrCreate([
+                    'name' => $effect->name,
+                    'value' => $effect->value,
+                ]));
+            });
         }
-
-        $this->effects?->each(function (ItemEffectData $effect) {
-            $this->model->effects()->attach(Effect::firstOrCreate([
-                'name' => $effect->name,
-                'value' => $effect->value,
-            ]));
-        });
 
         if (! $this->craft) {
             return;
         }
 
+        /** @var Craft */
         $craft = Craft::firstOrCreate([
             'skill' => $this->craft->skill,
             'level' => $this->craft->level,
             'quantity' => $this->craft->quantity,
         ]);
 
+        if ($craft->items()->count() === $this->craft->items->count()) {
+            return;
+        }
+
         $this->craft->items->each(
             function (SimpleItemData $simpleItemData) use ($craft) {
                 $requiredItem = Item::firstWhere('code', $simpleItemData->code)
-                    ?? app(ArtifactsService::class)
-                        ->getItem($simpleItemData->code)
-                        ->item
-                        ->getModel();
+                ?? app(ArtifactsService::class)
+                    ->getItem($simpleItemData->code)
+                    ->item
+                    ->getModel();
 
                 $craft->items()->attach(
                     $requiredItem,
