@@ -13,6 +13,7 @@ use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\EventData;
 use App\Data\Schemas\GrandExchangeItemData;
 use App\Data\Schemas\ItemData;
+use App\Data\Schemas\LogData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
 use App\Data\Schemas\ResourceData;
@@ -43,9 +44,20 @@ class ArtifactsService
 
     /*
      * #########################################################################
-     * My Characters
+     * My characters
      * #########################################################################
      */
+
+    /**
+     * @return Collection<LogData>
+     */
+    public function getAllCharactersLogs(): Collection
+    {
+        return LogData::collection(
+            // not more than 100 logs available
+            $this->get('my/logs', RateLimitTypes::DATA, ['size' => 100])
+        );
+    }
 
     /**
      * @return Collection<CharacterData>

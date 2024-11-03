@@ -24,6 +24,7 @@ class ResourceData extends Data
     ) {
         $this->skill = Skills::fromValue($skill);
         $this->drops = DropData::collection($drops);
+
         $this->createIfNotExists();
     }
 

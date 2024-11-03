@@ -14,6 +14,9 @@ class CharacterSeeder extends Seeder
      */
     public function run(): void
     {
-        app(ArtifactsService::class)->getMyCharacters();
+        $api = app(ArtifactsService::class);
+
+        $api->getMyCharacters();
+        $api->getAllCharactersLogs();
     }
 }

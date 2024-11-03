@@ -25,6 +25,7 @@ class TaskData extends Data
         $this->type = TaskTypes::fromValue($type);
         $this->skill = $this->skill ? Skills::fromValue($skill) : null;
         $this->rewardedCoins = data_get($rewards, 'items.0.quantity');
+
         $this->createIfNotExists();
     }
 

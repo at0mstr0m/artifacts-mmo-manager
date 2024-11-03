@@ -24,6 +24,7 @@ class MapData extends Data
     ) {
         $this->contentType = data_get($content, 'type');
         $this->contentCode = data_get($content, 'code');
+
         $this->createIfNotExists();
     }
 

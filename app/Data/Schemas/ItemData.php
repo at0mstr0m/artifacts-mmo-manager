@@ -30,6 +30,7 @@ class ItemData extends Data
     ) {
         $this->effects = ItemEffectData::collection($effects);
         $this->craft = CraftData::from($craft);
+
         $this->createIfNotExists();
     }
 

@@ -241,4 +241,9 @@ class Character extends Model
     {
         return $this->hasMany(InventoryItem::class);
     }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(Log::class);
+    }
 }

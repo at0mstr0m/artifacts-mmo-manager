@@ -32,6 +32,7 @@ class MonsterData extends Data
         public array|Collection $drops,
     ) {
         $this->drops = DropData::collection($drops);
+
         $this->createIfNotExists();
     }
 

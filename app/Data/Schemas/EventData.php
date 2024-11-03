@@ -23,6 +23,7 @@ class EventData extends Data
         $this->expiration = Carbon::parse($expiration);
         $this->startedAt = Carbon::parse($createdAt);
         $this->map = MapData::from($map);
+
         $this->createIfNotExists();
     }
 
