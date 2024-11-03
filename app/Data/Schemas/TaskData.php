@@ -19,8 +19,8 @@ class TaskData extends Data
         public string|TaskTypes $type,
         public int $minQuantity,
         public int $maxQuantity,
-        public null|Skills|string $skill = null,
         array $rewards,
+        public null|Skills|string $skill = null,
     ) {
         $this->type = TaskTypes::fromValue($type);
         $this->skill = $this->skill ? Skills::fromValue($skill) : null;

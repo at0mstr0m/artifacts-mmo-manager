@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Data\Schemas\MapData;
-use App\Enums\RateLimitTypes;
-use App\Traits\MakesRequests;
-use App\Data\Schemas\ItemData;
-use App\Data\Schemas\TaskData;
+use App\Data\Responses\GetBankDetailsData;
+use App\Data\Responses\GetItemData;
+use App\Data\Responses\GetStatusData;
+use App\Data\Schemas\AchievementData;
 use App\Data\Schemas\EventData;
+use App\Data\Schemas\GrandExchangeItemData;
+use App\Data\Schemas\ItemData;
+use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
 use App\Data\Schemas\ResourceData;
-use Illuminate\Support\Collection;
-use App\Data\Responses\GetItemData;
 use App\Data\Schemas\SimpleItemData;
+use App\Data\Schemas\TaskData;
 use App\Data\Schemas\TaskRewardData;
-use App\Data\Responses\GetStatusData;
-use App\Data\Responses\GetBankDetailsData;
-use App\Data\Schemas\GrandExchangeItemData;
+use App\Enums\RateLimitTypes;
+use App\Traits\MakesRequests;
+use Illuminate\Support\Collection;
 
 class ArtifactsService
 {
@@ -238,7 +239,7 @@ class ArtifactsService
      */
 
     /**
-     * @return Collection<ResourceData>
+     * @return Collection<GrandExchangeItemData>
      */
     public function getAllGeItem(
         int $perPage = 10,
@@ -325,6 +326,41 @@ class ArtifactsService
     {
         return TaskRewardData::from(
             $this->get("tasks/rewards/{$code}", RateLimitTypes::DATA)
+        );
+    }
+
+    /*
+     * #########################################################################
+     * Achievements
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<AchievementData>
+     */
+    public function getAllAchievements(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('achievements', RateLimitTypes::DATA, $query);
+        $data = AchievementData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    public function getAchievement(string $code): AchievementData
+    {
+        return AchievementData::from(
+            $this->get("achievements/{$code}", RateLimitTypes::DATA)
         );
     }
 }
