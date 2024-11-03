@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
@@ -70,6 +71,11 @@ class ArtifactsService
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
             : $data;
+    }
+
+    public function getAccountDetails(): GetAccountDetailsData
+    {
+        return GetAccountDetailsData::from($this->get('my/details'));
     }
 
     /*
