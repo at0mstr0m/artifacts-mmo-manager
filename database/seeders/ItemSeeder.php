@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Actions\UpdateGrandExchangeAction;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Seeder;
 
@@ -15,5 +16,6 @@ class ItemSeeder extends Seeder
     public function run(): void
     {
         app(ArtifactsService::class)->getAllItems(all: true);
+        UpdateGrandExchangeAction::run();
     }
 }

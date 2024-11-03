@@ -8,6 +8,7 @@ use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\EventData;
+use App\Data\Schemas\GrandExchangeItemData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
@@ -226,5 +227,38 @@ class ArtifactsService
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
             : $data;
+    }
+
+    /*
+     * #########################################################################
+     * Grand Exchange
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<ResourceData>
+     */
+    public function getAllGeItem(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('ge', RateLimitTypes::DATA, $query);
+        $data = GrandExchangeItemData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    public function getGeItem(string $code): GrandExchangeItemData
+    {
+        return GrandExchangeItemData::from($this->get("ge/{$code}", RateLimitTypes::DATA));
     }
 }
