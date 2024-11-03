@@ -9,6 +9,7 @@ use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\AchievementData;
+use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\EventData;
 use App\Data\Schemas\GrandExchangeItemData;
 use App\Data\Schemas\ItemData;
@@ -38,6 +39,22 @@ class ArtifactsService
     public function getStatus(): GetStatusData
     {
         return GetStatusData::from($this->get());
+    }
+
+    /*
+     * #########################################################################
+     * My Characters
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<CharacterData>
+     */
+    public function getMyCharacters(): Collection
+    {
+        return CharacterData::collection(
+            $this->get('my/characters', RateLimitTypes::DATA)
+        );
     }
 
     /*

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             TaskSeeder::class,
             AchievementSeeder::class,
+            CharacterSeeder::class,
         ]);
     }
 }

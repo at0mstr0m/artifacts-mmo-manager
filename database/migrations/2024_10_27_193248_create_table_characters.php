@@ -90,6 +90,7 @@ return new class extends Migration {
             $table->string('amulet_slot');
             $table->string('artifact1_slot');
             $table->string('artifact2_slot');
+            $table->string('artifact3_slot');
             $table->string('consumable1_slot');
             $table->tinyInteger('consumable1_slot_quantity');
             $table->string('consumable2_slot');
@@ -106,7 +107,8 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId('character_id')
-                ->constrained();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->tinyInteger('slot');
             $table->string('code');
             $table->integer('quantity');
