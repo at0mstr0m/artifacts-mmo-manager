@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Data\Responses\GetBankDetailsData;
-use App\Data\Responses\GetItemData;
-use App\Data\Responses\GetStatusData;
-use App\Data\Schemas\EventData;
-use App\Data\Schemas\GrandExchangeItemData;
-use App\Data\Schemas\ItemData;
 use App\Data\Schemas\MapData;
-use App\Data\Schemas\MonsterData;
-use App\Data\Schemas\ResourceData;
-use App\Data\Schemas\SimpleItemData;
 use App\Enums\RateLimitTypes;
 use App\Traits\MakesRequests;
+use App\Data\Schemas\ItemData;
+use App\Data\Schemas\TaskData;
+use App\Data\Schemas\EventData;
+use App\Data\Schemas\MonsterData;
+use App\Data\Schemas\ResourceData;
 use Illuminate\Support\Collection;
+use App\Data\Responses\GetItemData;
+use App\Data\Schemas\SimpleItemData;
+use App\Data\Schemas\TaskRewardData;
+use App\Data\Responses\GetStatusData;
+use App\Data\Responses\GetBankDetailsData;
+use App\Data\Schemas\GrandExchangeItemData;
 
 class ArtifactsService
 {
@@ -260,5 +262,69 @@ class ArtifactsService
     public function getGeItem(string $code): GrandExchangeItemData
     {
         return GrandExchangeItemData::from($this->get("ge/{$code}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * Tasks
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<TaskData>
+     */
+    public function getAllTasks(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('tasks/list', RateLimitTypes::DATA, $query);
+        $data = TaskData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    public function getTask(string $code): TaskData
+    {
+        return TaskData::from(
+            $this->get("tasks/list/{$code}", RateLimitTypes::DATA)
+        );
+    }
+
+    /**
+     * @return Collection<TaskRewardData>
+     */
+    public function getAllTaskRewards(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('tasks/rewards', RateLimitTypes::DATA, $query);
+        $data = TaskRewardData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    public function getTaskReward(string $code): TaskRewardData
+    {
+        return TaskRewardData::from(
+            $this->get("tasks/rewards/{$code}", RateLimitTypes::DATA)
+        );
     }
 }

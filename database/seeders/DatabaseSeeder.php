@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             MonsterSeeder::class,
             ResourceSeeder::class,
             EventSeeder::class,
+            TaskSeeder::class,
         ]);
     }
 }
