@@ -15,12 +15,13 @@ return new class extends Migration {
         Schema::create('maps', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name');
-            $table->tinyText('skin');
+            $table->string('name');
+            $table->string('skin');
             $table->integer('x');
             $table->integer('y');
-            $table->tinyText('content_type')->nullable();
-            $table->tinyText('content_code')->nullable();
+            $table->unique(['x', 'y']);
+            $table->string('content_type')->nullable();
+            $table->string('content_code')->nullable();
         });
     }
 

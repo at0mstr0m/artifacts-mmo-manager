@@ -16,8 +16,8 @@ return new class extends Migration {
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name');
-            $table->tinyText('code');
+            $table->string('name');
+            $table->string('code')->unique();
             $table->enum('skill', Skills::values());
             $table->integer('level');
         });

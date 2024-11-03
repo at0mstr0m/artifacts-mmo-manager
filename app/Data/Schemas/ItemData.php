@@ -83,10 +83,9 @@ class ItemData extends Data
                     ->item
                     ->getModel();
 
-                $craft->items()->attach(
-                    $requiredItem,
-                    ['quantity' => $simpleItemData->quantity]
-                );
+                $craft->items()->syncWithoutDetaching([
+                    $requiredItem->id => ['quantity' => $simpleItemData->quantity],
+                ]);
             }
         );
     }

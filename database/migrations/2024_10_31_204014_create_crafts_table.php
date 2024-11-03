@@ -24,6 +24,7 @@ return new class extends Migration {
         Schema::create('craft_item', function (Blueprint $table) {
             $table->foreignId('craft_id')->constrained();
             $table->foreignId('item_id')->constrained();
+            $table->unique(['craft_id', 'item_id']);
             $table->integer('quantity');
         });
     }

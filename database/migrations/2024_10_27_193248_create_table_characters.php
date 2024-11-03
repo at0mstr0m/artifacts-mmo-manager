@@ -15,8 +15,8 @@ return new class extends Migration {
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name');
-            $table->tinyText('skin');
+            $table->string('name');
+            $table->string('skin');
             $table->tinyInteger('level');
 
             $table->integer('xp');
@@ -79,24 +79,24 @@ return new class extends Migration {
             $table->integer('cooldown');
             $table->dateTime('cooldown_expiration');
 
-            $table->tinyText('weapon_slot');
-            $table->tinyText('shield_slot');
-            $table->tinyText('helmet_slot');
-            $table->tinyText('body_armor_slot');
-            $table->tinyText('leg_armor_slot');
-            $table->tinyText('boots_slot');
-            $table->tinyText('ring1_slot');
-            $table->tinyText('ring2_slot');
-            $table->tinyText('amulet_slot');
-            $table->tinyText('artifact1_slot');
-            $table->tinyText('artifact2_slot');
-            $table->tinyText('consumable1_slot');
+            $table->string('weapon_slot');
+            $table->string('shield_slot');
+            $table->string('helmet_slot');
+            $table->string('body_armor_slot');
+            $table->string('leg_armor_slot');
+            $table->string('boots_slot');
+            $table->string('ring1_slot');
+            $table->string('ring2_slot');
+            $table->string('amulet_slot');
+            $table->string('artifact1_slot');
+            $table->string('artifact2_slot');
+            $table->string('consumable1_slot');
             $table->tinyInteger('consumable1_slot_quantity');
-            $table->tinyText('consumable2_slot');
+            $table->string('consumable2_slot');
             $table->tinyInteger('consumable2_slot_quantity');
 
-            $table->tinyText('task');
-            $table->tinyText('task_type');
+            $table->string('task');
+            $table->string('task_type');
             $table->integer('task_progress');
             $table->integer('task_total');
             $table->tinyInteger('inventory_max_items');
@@ -108,7 +108,7 @@ return new class extends Migration {
             $table->foreignId('character_id')
                 ->constrained();
             $table->tinyInteger('slot');
-            $table->tinyText('code');
+            $table->string('code');
             $table->integer('quantity');
             $table->unique(['character_id', 'slot']);
         });

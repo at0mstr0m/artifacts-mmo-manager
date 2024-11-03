@@ -15,18 +15,18 @@ return new class extends Migration {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name')->nullable();
-            $table->tinyText('code')->nullable();
-            $table->integer('level')->nullable();
-            $table->tinyText('type')->nullable();
-            $table->tinyText('subtype')->nullable();
-            $table->text('description')->nullable();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->integer('level');
+            $table->string('type');
+            $table->string('subtype');
+            $table->text('description');
         });
 
         Schema::create('effects', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->tinyText('name');
+            $table->string('name');
             $table->integer('value');
         });
 
