@@ -43,8 +43,8 @@ class Map extends Model
         'content_code' => 'string',
     ];
 
-    public function map(): HasMany
+    public function events(): HasMany
     {
-        return $this->hasMany(Map::class);
+        return $this->hasMany(Event::class);
     }
 }

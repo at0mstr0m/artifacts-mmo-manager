@@ -10,16 +10,18 @@ use Illuminate\Support\Carbon;
 
 class EventData extends Data
 {
+    public Carbon $startedAt;
+
     public function __construct(
         public string $name,
         public string $previousSkin,
         public int $duration,
         public Carbon|string $expiration,
-        public Carbon|string $startedAt,
         public array|MapData $map,
+        string $createdAt,
     ) {
         $this->expiration = Carbon::parse($expiration);
-        $this->startedAt = Carbon::parse($startedAt);
+        $this->startedAt = Carbon::parse($createdAt);
         $this->map = MapData::from($map);
         $this->createIfNotExists();
     }
@@ -29,7 +31,7 @@ class EventData extends Data
         Event::firstWhere([
             'name' => $this->name,
             'started_at' => $this->startedAt,
-        ]) ?? $this->map->getModel()->map()->create([
+        ]) ?? $this->map->getModel()->events()->create([
             'name' => $this->name,
             'previous_skin' => $this->previousSkin,
             'duration' => $this->duration,
