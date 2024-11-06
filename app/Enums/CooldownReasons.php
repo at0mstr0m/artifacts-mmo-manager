@@ -9,7 +9,7 @@ use App\Traits\EnumUtils;
 enum CooldownReasons: string
 {
     use EnumUtils;
-    
+
     case MOVEMENT = 'movement';
     case FIGHT = 'fight';
     case CRAFTING = 'crafting';

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
@@ -56,6 +57,25 @@ class ArtifactsService
                 "my/{$name}/action/move",
                 RateLimitTypes::ACTIONS,
                 ['x' => $x, 'y' => $y]
+            )
+        );
+    }
+
+    public function actionEquipItem(
+        string $name,
+        string $slot,
+        string $itemCode,
+        int $quantity = 1
+    ): ActionEquipItemData {
+        return ActionEquipItemData::from(
+            $this->post(
+                "my/{$name}/action/equip",
+                RateLimitTypes::ACTIONS,
+                [
+                    'slot' => $slot,
+                    'code' => $itemCode,
+                    'quantity' => $quantity,
+                ]
             )
         );
     }

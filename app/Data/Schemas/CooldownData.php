@@ -11,9 +11,9 @@ use Illuminate\Support\Carbon;
 class CooldownData extends Data
 {
     /**
-     * @param Carbon $startedAt
-     * @param Carbon $expiration
-     * @param CooldownReasons $reason
+     * @param  Carbon  $startedAt
+     * @param  Carbon  $expiration
+     * @param  CooldownReasons  $reason
      */
     public function __construct(
         public int $totalSeconds,
