@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionMoveData;
+use App\Data\Responses\ActionRestData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetStatusData;
@@ -57,6 +58,16 @@ class ArtifactsService
                 "my/{$name}/action/move",
                 RateLimitTypes::ACTIONS,
                 ['x' => $x, 'y' => $y]
+            )
+        );
+    }
+
+    public function actionRest(string $name): ActionRestData
+    {
+        return ActionRestData::from(
+            $this->post(
+                "my/{$name}/action/rest",
+                RateLimitTypes::ACTIONS,
             )
         );
     }
