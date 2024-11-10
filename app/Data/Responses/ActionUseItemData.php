@@ -9,7 +9,7 @@ use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\CooldownData;
 use App\Data\Schemas\ItemData;
 
-class ActionEquipItemData extends Data
+class ActionUseItemData extends Data
 {
     /**
      * @param CooldownData $cooldown
@@ -18,7 +18,6 @@ class ActionEquipItemData extends Data
      */
     public function __construct(
         public array|CooldownData $cooldown,
-        public string $slot,
         public array|ItemData $item,
         public array|CharacterData $character,
     ) {

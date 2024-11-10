@@ -26,7 +26,6 @@ class ActionFightData extends Data
         $this->fight = FightData::from($fight);
         $this->character = CharacterData::from($character);
 
-        // todo: implement
         $this->character
             ->getModel()
             ->fights()

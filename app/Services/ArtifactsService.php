@@ -8,6 +8,7 @@ use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
+use App\Data\Responses\ActionUseItemData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetStatusData;
@@ -84,6 +85,42 @@ class ArtifactsService
                 RateLimitTypes::ACTIONS,
                 [
                     'slot' => $slot,
+                    'code' => $itemCode,
+                    'quantity' => $quantity,
+                ]
+            )
+        );
+    }
+
+    public function actionUnquipItem(
+        string $name,
+        string $slot,
+        string $itemCode,
+        int $quantity = 1
+    ): ActionEquipItemData {
+        return ActionEquipItemData::from(
+            $this->post(
+                "my/{$name}/action/unequip",
+                RateLimitTypes::ACTIONS,
+                [
+                    'slot' => $slot,
+                    'code' => $itemCode,
+                    'quantity' => $quantity,
+                ]
+            )
+        );
+    }
+
+    public function actionUseItem(
+        string $name,
+        string $itemCode,
+        int $quantity = 1
+    ): ActionUseItemData {
+        return ActionUseItemData::from(
+            $this->post(
+                "my/{$name}/action/use",
+                RateLimitTypes::ACTIONS,
+                [
                     'code' => $itemCode,
                     'quantity' => $quantity,
                 ]
