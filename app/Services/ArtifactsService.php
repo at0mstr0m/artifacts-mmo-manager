@@ -9,7 +9,6 @@ use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
-use App\Data\Responses\GetItemData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\AchievementData;
 use App\Data\Schemas\CharacterData;
@@ -208,9 +207,9 @@ class ArtifactsService
             : $data;
     }
 
-    public function getItem(string $code): GetItemData
+    public function getItem(string $code): ItemData
     {
-        return GetItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
+        return ItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
     }
 
     /*
@@ -299,7 +298,7 @@ class ArtifactsService
         }
 
         $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('events', RateLimitTypes::DATA, $query);
+        $response = $this->get('events/active', RateLimitTypes::DATA, $query);
         $data = EventData::collection($response);
 
         return $all

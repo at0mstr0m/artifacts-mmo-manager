@@ -13,6 +13,10 @@ class TaskData extends Data
 {
     public int $rewardedCoins;
 
+    /**
+     * @param TaskTypes $type
+     * @param ?Skills $skill
+     */
     public function __construct(
         public string $code,
         public int $level,

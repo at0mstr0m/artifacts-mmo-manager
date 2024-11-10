@@ -40,6 +40,7 @@ class Item extends Model
         'type',
         'subtype',
         'description',
+        'tradeable',
     ];
 
     protected $casts = [
@@ -49,6 +50,7 @@ class Item extends Model
         'type' => 'string',
         'subtype' => 'string',
         'description' => 'string',
+        'tradeable' => 'boolean',
     ];
 
     public function effects(): BelongsToMany

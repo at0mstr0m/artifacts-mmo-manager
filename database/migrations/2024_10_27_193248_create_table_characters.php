@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('account');
             $table->string('skin');
             $table->tinyInteger('level');
 
@@ -53,7 +54,12 @@ return new class extends Migration {
             $table->integer('cooking_xp');
             $table->integer('cooking_max_xp');
 
+            $table->tinyInteger('alchemy_level');
+            $table->integer('alchemy_xp');
+            $table->integer('alchemy_max_xp');
+
             $table->integer('hp');
+            $table->integer('max_hp');
             $table->integer('haste');
             $table->integer('critical_strike');
             $table->integer('stamina');

@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->string('code');
             $table->integer('min_quantity');
             $table->integer('max_quantity');
-            $table->float('odds');
+            $table->integer('rate');
         });
     }
 

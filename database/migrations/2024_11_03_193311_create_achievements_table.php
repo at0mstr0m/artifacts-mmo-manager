@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->enum('type', AchievementTypes::values());
             $table->string('target')->nullable();
             $table->integer('total');
+            $table->integer('rewarded_gold');
         });
     }
 

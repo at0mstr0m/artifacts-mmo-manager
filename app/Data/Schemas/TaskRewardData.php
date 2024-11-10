@@ -15,7 +15,7 @@ class TaskRewardData extends Data
         public string $code,
         public int $minQuantity,
         public int $maxQuantity,
-        public float $odds,
+        public float $rate,
     ) {
         $this->createIfNotExists();
     }
@@ -26,7 +26,7 @@ class TaskRewardData extends Data
             'code' => $this->code,
             'min_quantity' => $this->minQuantity,
             'max_quantity' => $this->maxQuantity,
-            'odds' => $this->odds,
+            'rate' => $this->rate,
         ]);
     }
 }

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('type');
             $table->string('subtype');
             $table->text('description');
+            $table->boolean('tradeable');
         });
 
         Schema::create('effects', function (Blueprint $table) {

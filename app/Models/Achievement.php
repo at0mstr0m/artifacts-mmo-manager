@@ -16,6 +16,7 @@ class Achievement extends Model
         'type',
         'target',
         'total',
+        'rewarded_gold',
     ];
 
     protected $casts = [
@@ -26,5 +27,6 @@ class Achievement extends Model
         'type' => AchievementTypes::class,
         'target' => 'string',
         'total' => 'integer',
+        'rewarded_gold' => 'integer',
     ];
 }

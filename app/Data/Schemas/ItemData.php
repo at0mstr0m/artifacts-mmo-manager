@@ -26,6 +26,7 @@ class ItemData extends Data
         public string $type,
         public string $subtype,
         public string $description,
+        public bool $tradeable,
         public array|Collection $effects = [],
         public null|array|CraftData $craft = null,
     ) {
@@ -48,6 +49,7 @@ class ItemData extends Data
             'type' => $this->type,
             'subtype' => $this->subtype,
             'description' => $this->description,
+            'tradeable' => $this->tradeable,
         ]);
 
         if (
@@ -82,7 +84,6 @@ class ItemData extends Data
                 $requiredItem = Item::firstWhere('code', $simpleItemData->code)
                 ?? app(ArtifactsService::class)
                     ->getItem($simpleItemData->code)
-                    ->item
                     ->getModel();
 
                 $craft->items()->syncWithoutDetaching([

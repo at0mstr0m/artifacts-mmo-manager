@@ -12,14 +12,14 @@ class TaskReward extends Model
         'code',
         'min_quantity',
         'max_quantity',
-        'odds',
+        'rate',
     ];
 
     protected $casts = [
         'code' => 'string',
         'min_quantity' => 'integer',
         'max_quantity' => 'integer',
-        'odds' => 'float',
+        'rate' => 'float',
     ];
 
     public function item(): BelongsTo

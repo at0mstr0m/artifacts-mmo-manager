@@ -10,6 +10,11 @@ use App\Models\Achievement;
 
 class AchievementData extends Data
 {
+    public int $rewardedGold;
+
+    /**
+     * @param AchievementTypes $type
+     */
     public function __construct(
         public string $name,
         public string $code,
@@ -17,9 +22,11 @@ class AchievementData extends Data
         public int $points,
         public AchievementTypes|string $type,
         public int $total,
+        array $rewards,
         public ?string $target = null,
     ) {
         $this->type = AchievementTypes::fromValue($type);
+        $this->rewardedGold = $rewards['gold'];
         $this->createIfNotExists();
     }
 
@@ -33,6 +40,7 @@ class AchievementData extends Data
             'type' => $this->type,
             'total' => $this->total,
             'target' => $this->target,
+            'rewarded_gold' => $this->rewardedGold,
         ]);
     }
 }

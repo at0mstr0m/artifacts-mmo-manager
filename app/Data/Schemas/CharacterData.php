@@ -18,6 +18,7 @@ class CharacterData extends Data
      */
     public function __construct(
         public string $name,
+        public string $account,
         public string $skin,
         public int $level,
         public int $xp,
@@ -46,7 +47,11 @@ class CharacterData extends Data
         public int $cookingLevel,
         public int $cookingXp,
         public int $cookingMaxXp,
+        public int $alchemyLevel,
+        public int $alchemyXp,
+        public int $alchemyMaxXp,
         public int $hp,
+        public int $maxHp,
         public int $haste,
         public int $criticalStrike,
         public int $stamina,
@@ -104,6 +109,7 @@ class CharacterData extends Data
     {
         $this->model = Character::updateOrCreate([
             'name' => $this->name,
+            'account' => $this->account,
         ], [
             'skin' => $this->skin,
             'level' => $this->level,
@@ -133,6 +139,9 @@ class CharacterData extends Data
             'cooking_level' => $this->cookingLevel,
             'cooking_xp' => $this->cookingXp,
             'cooking_max_xp' => $this->cookingMaxXp,
+            'alchemy_level' => $this->alchemyLevel,
+            'alchemy_xp' => $this->alchemyXp,
+            'alchemy_max_xp' => $this->alchemyMaxXp,
             'hp' => $this->hp,
             'haste' => $this->haste,
             'critical_strike' => $this->criticalStrike,
