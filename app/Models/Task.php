@@ -7,6 +7,24 @@ namespace App\Models;
 use App\Enums\Skills;
 use App\Enums\TaskTypes;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $code
+ * @property int $level
+ * @property TaskTypes $type
+ * @property int $min_quantity
+ * @property int $max_quantity
+ * @property Skills|null $skill
+ * @property int $rewarded_coins
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task query()
+ *
+ * @mixin \Eloquent
+ */
 class Task extends Model
 {
     protected $fillable = [

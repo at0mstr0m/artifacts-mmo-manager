@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $monster_id
+ * @property string $source_type
+ * @property int $source_id
  * @property int $item_id
  * @property int $rate
  * @property int $min_quantity
  * @property int $max_quantity
  * @property-read Item $item
- * @property-read Monster $monster
+ * @property-read \Eloquent|\Illuminate\Database\Eloquent\Model $source
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Drop newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Drop newQuery()

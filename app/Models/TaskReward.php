@@ -6,6 +6,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $code
+ * @property int $min_quantity
+ * @property int $max_quantity
+ * @property float $rate
+ * @property-read Item|null $item
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskReward newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskReward newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskReward query()
+ *
+ * @mixin \Eloquent
+ */
 class TaskReward extends Model
 {
     protected $fillable = [

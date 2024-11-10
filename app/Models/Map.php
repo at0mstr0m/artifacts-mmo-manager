@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $y
  * @property string|null $content_type
  * @property string|null $content_code
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $events
+ * @property-read int|null $events_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Map newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Map newQuery()

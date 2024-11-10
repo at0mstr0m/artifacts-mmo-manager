@@ -6,6 +6,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $character_id
+ * @property string $account
+ * @property string $type
+ * @property string $description
+ * @property array $content
+ * @property \Illuminate\Support\Carbon|null $cooldown
+ * @property \Illuminate\Support\Carbon $logged_at
+ * @property-read Character|null $character
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Log newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Log newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Log query()
+ *
+ * @mixin \Eloquent
+ */
 class Log extends Model
 {
     protected $fillable = [

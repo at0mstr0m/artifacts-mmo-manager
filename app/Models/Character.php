@@ -12,11 +12,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string $name
+ * @property string $account
  * @property string $skin
  * @property int $level
  * @property int $xp
  * @property int $max_xp
- * @property int $achievements_points
  * @property int $gold
  * @property int $speed
  * @property int $mining_level
@@ -40,7 +40,11 @@ use Illuminate\Support\Carbon;
  * @property int $cooking_level
  * @property int $cooking_xp
  * @property int $cooking_max_xp
+ * @property int $alchemy_level
+ * @property int $alchemy_xp
+ * @property int $alchemy_max_xp
  * @property int $hp
+ * @property int $max_hp
  * @property int $haste
  * @property int $critical_strike
  * @property int $stamina
@@ -71,6 +75,7 @@ use Illuminate\Support\Carbon;
  * @property string $amulet_slot
  * @property string $artifact1_slot
  * @property string $artifact2_slot
+ * @property string $artifact3_slot
  * @property string $utility1_slot
  * @property int $utility1_slot_quantity
  * @property string $utility2_slot
@@ -80,8 +85,12 @@ use Illuminate\Support\Carbon;
  * @property int $task_progress
  * @property int $task_total
  * @property int $inventory_max_items
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
+ * @property-read int|null $fights_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
  * @property-read int|null $inventory_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
+ * @property-read int|null $logs_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newQuery()
