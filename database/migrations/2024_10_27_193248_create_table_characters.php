@@ -22,7 +22,6 @@ return new class extends Migration {
 
             $table->integer('xp');
             $table->integer('max_xp');
-            $table->integer('achievements_points');
             $table->integer('gold');
             $table->integer('speed');
 
@@ -97,10 +96,10 @@ return new class extends Migration {
             $table->string('artifact1_slot');
             $table->string('artifact2_slot');
             $table->string('artifact3_slot');
-            $table->string('consumable1_slot');
-            $table->tinyInteger('consumable1_slot_quantity');
-            $table->string('consumable2_slot');
-            $table->tinyInteger('consumable2_slot_quantity');
+            $table->string('utility1_slot');
+            $table->tinyInteger('utility1_slot_quantity');
+            $table->string('utility2_slot');
+            $table->tinyInteger('utility2_slot_quantity');
 
             $table->string('task');
             $table->string('task_type');

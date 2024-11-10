@@ -10,6 +10,7 @@ class Event extends Model
 {
     protected $fillable = [
         'name',
+        'code',
         'previous_skin',
         'duration',
         'expiration',
@@ -18,6 +19,7 @@ class Event extends Model
 
     protected $casts = [
         'name' => 'string',
+        'code' => 'string',
         'previous_skin' => 'string',
         'duration' => 'integer',
         'expiration' => 'datetime',

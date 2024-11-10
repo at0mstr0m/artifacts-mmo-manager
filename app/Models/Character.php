@@ -71,10 +71,10 @@ use Illuminate\Support\Carbon;
  * @property string $amulet_slot
  * @property string $artifact1_slot
  * @property string $artifact2_slot
- * @property string $consumable1_slot
- * @property int $consumable1_slot_quantity
- * @property string $consumable2_slot
- * @property int $consumable2_slot_quantity
+ * @property string $utility1_slot
+ * @property int $utility1_slot_quantity
+ * @property string $utility2_slot
+ * @property int $utility2_slot_quantity
  * @property string $task
  * @property string $task_type
  * @property int $task_progress
@@ -93,11 +93,11 @@ class Character extends Model
 {
     protected $fillable = [
         'name',
+        'account',
         'skin',
         'level',
         'xp',
         'max_xp',
-        'achievements_points',
         'gold',
         'speed',
         'mining_level',
@@ -121,7 +121,11 @@ class Character extends Model
         'cooking_level',
         'cooking_xp',
         'cooking_max_xp',
+        'alchemy_level',
+        'alchemy_xp',
+        'alchemy_max_xp',
         'hp',
+        'max_hp',
         'haste',
         'critical_strike',
         'stamina',
@@ -153,10 +157,10 @@ class Character extends Model
         'artifact1_slot',
         'artifact2_slot',
         'artifact3_slot',
-        'consumable1_slot',
-        'consumable1_slot_quantity',
-        'consumable2_slot',
-        'consumable2_slot_quantity',
+        'utility1_slot',
+        'utility1_slot_quantity',
+        'utility2_slot',
+        'utility2_slot_quantity',
         'task',
         'task_type',
         'task_progress',
@@ -166,11 +170,11 @@ class Character extends Model
 
     protected $casts = [
         'name' => 'string',
+        'account' => 'string',
         'skin' => 'string',
         'level' => 'integer',
         'xp' => 'integer',
         'max_xp' => 'integer',
-        'achievements_points' => 'integer',
         'gold' => 'integer',
         'speed' => 'integer',
         'mining_level' => 'integer',
@@ -194,7 +198,11 @@ class Character extends Model
         'cooking_level' => 'integer',
         'cooking_xp' => 'integer',
         'cooking_max_xp' => 'integer',
+        'alchemy_level' => 'integer',
+        'alchemy_xp' => 'integer',
+        'alchemy_max_xp' => 'integer',
         'hp' => 'integer',
+        'max_hp' => 'integer',
         'haste' => 'integer',
         'critical_strike' => 'integer',
         'stamina' => 'integer',
@@ -226,10 +234,10 @@ class Character extends Model
         'artifact1_slot' => 'string',
         'artifact2_slot' => 'string',
         'artifact3_slot' => 'string',
-        'consumable1_slot' => 'string',
-        'consumable1_slot_quantity' => 'integer',
-        'consumable2_slot' => 'string',
-        'consumable2_slot_quantity' => 'integer',
+        'utility1_slot' => 'string',
+        'utility1_slot_quantity' => 'integer',
+        'utility2_slot' => 'string',
+        'utility2_slot_quantity' => 'integer',
         'task' => 'string',
         'task_type' => 'string',
         'task_progress' => 'integer',

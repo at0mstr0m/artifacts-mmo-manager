@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('code');
             $table->foreignId('map_id')->constrained();
             $table->string('previous_skin');
             $table->integer('duration');

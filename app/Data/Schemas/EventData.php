@@ -14,6 +14,7 @@ class EventData extends Data
 
     public function __construct(
         public string $name,
+        public string $code,
         public string $previousSkin,
         public int $duration,
         public Carbon|string $expiration,
@@ -30,10 +31,11 @@ class EventData extends Data
     private function createIfNotExists(): void
     {
         Event::firstWhere([
-            'name' => $this->name,
+            'code' => $this->code,
             'started_at' => $this->startedAt,
         ]) ?? $this->map->getModel()->events()->create([
             'name' => $this->name,
+            'code' => $this->code,
             'previous_skin' => $this->previousSkin,
             'duration' => $this->duration,
             'expiration' => $this->expiration,
