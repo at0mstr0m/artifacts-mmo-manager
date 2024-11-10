@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->string('subtype');
             $table->text('description');
             $table->boolean('tradeable');
+            $table->integer('deposited')
+                ->default(0);
         });
 
         Schema::create('effects', function (Blueprint $table) {

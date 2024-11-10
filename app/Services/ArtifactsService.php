@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Data\Responses\ActionBuyBankExpansionData;
+use App\Data\Responses\ActionDepositBankData;
+use App\Data\Responses\ActionDepositBankGoldData;
 use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
+use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionMoveData;
+use App\Data\Responses\ActionRecyclingData;
 use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionUseItemData;
 use App\Data\Responses\GetAccountDetailsData;
@@ -131,7 +136,86 @@ class ArtifactsService
     public function actionFight(string $name): ActionFightData
     {
         return ActionFightData::from(
-            $this->post("my/{$name}/action/equip", RateLimitTypes::ACTIONS)
+            $this->post("my/{$name}/action/fight", RateLimitTypes::ACTIONS)
+        );
+    }
+
+    public function actionGathering(string $name): ActionGatheringData
+    {
+        return ActionGatheringData::from(
+            $this->post("my/{$name}/action/gathering", RateLimitTypes::ACTIONS)
+        );
+    }
+
+    public function actionDepositBankGold(
+        string $name,
+        int $quantity
+    ): ActionDepositBankGoldData {
+        return ActionDepositBankGoldData::from(
+            $this->post(
+                "my/{$name}/action/bank/deposit/gold",
+                RateLimitTypes::ACTIONS,
+                ['quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionDepositBank(
+        string $name,
+        string $code,
+        int $quantity
+    ): ActionDepositBankData {
+        return ActionDepositBankData::from(
+            $this->post(
+                "my/{$name}/action/bank/deposit",
+                RateLimitTypes::ACTIONS,
+                ['code' => $code, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionWithdrawBank(
+        string $name,
+        string $code,
+        int $quantity
+    ): ActionDepositBankData {
+        return ActionDepositBankData::from(
+            $this->post(
+                "my/{$name}/action/bank/withdraw",
+                RateLimitTypes::ACTIONS,
+                ['code' => $code, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionWithdrawBankGold(
+        string $name,
+        int $quantity
+    ): ActionDepositBankGoldData {
+        return ActionDepositBankGoldData::from(
+            $this->post(
+                "my/{$name}/action/bank/withdraw/gold",
+                RateLimitTypes::ACTIONS,
+                ['quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionBuyBankExpansion(
+        string $name
+    ): ActionBuyBankExpansionData {
+        return ActionBuyBankExpansionData::from(
+            $this->post(
+                "my/{$name}/action/bank/buy_expansion",
+                RateLimitTypes::ACTIONS
+            )
+        );
+    }
+
+    public function actionRecycling(string $name): ActionRecyclingData
+    {
+        return ActionRecyclingData::from(
+            $this->post("/my/{$name}/action/recycling", RateLimitTypes::ACTIONS)
         );
     }
 

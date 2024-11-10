@@ -24,10 +24,9 @@ abstract class Data
         if ($data instanceof Response) {
             $data = $data->json('data');
         }
-        dump(static::class);
 
         return $data === null
             ? $data
-            : new static(...dump(collect($data)->camelKeys()->toArray()));
+            : new static(...collect($data)->camelKeys()->toArray());
     }
 }
