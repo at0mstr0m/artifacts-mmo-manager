@@ -12,9 +12,9 @@ use App\Data\Schemas\ItemData;
 class ActionEquipItemData extends Data
 {
     /**
-     * @param  CooldownData  $cooldown
-     * @param  ItemData  $item
-     * @param  CharacterData  $character
+     * @param CooldownData $cooldown
+     * @param ItemData $item
+     * @param CharacterData $character
      */
     public function __construct(
         public string $slot,

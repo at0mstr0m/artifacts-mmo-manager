@@ -14,7 +14,7 @@ class CharacterData extends Data
     private Character $model;
 
     /**
-     * @param  Collection<InventorySlotData>  $inventory
+     * @param Collection<InventorySlotData> $inventory
      */
     public function __construct(
         public string $name,

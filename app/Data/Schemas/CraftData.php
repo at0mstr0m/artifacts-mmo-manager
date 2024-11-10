@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class CraftData extends Data
 {
     /**
-     * @param  Collection<SimpleItemData>  $items
+     * @param Collection<SimpleItemData> $items
      */
     public function __construct(
         public Skills|string $skill,

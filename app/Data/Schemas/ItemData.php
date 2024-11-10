@@ -16,7 +16,8 @@ class ItemData extends Data
     private Item $model;
 
     /**
-     * @param  Collection<ItemEffectData>  $effects
+     * @param Collection<ItemEffectData> $effects
+     * @param CraftData $craft
      */
     public function __construct(
         public string $name,

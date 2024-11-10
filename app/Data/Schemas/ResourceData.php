@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 class ResourceData extends Data
 {
     /**
-     * @param  Collection<DropData>  $drops
+     * @param Collection<DropData> $drops
      */
     public function __construct(
         public string $name,

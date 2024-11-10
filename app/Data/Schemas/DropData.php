@@ -11,7 +11,7 @@ class DropData extends Data
     public function __construct(
         public string $code,
         public int $rate,
-        public int $minQuantity,
-        public int $maxQuantity,
+        public ?int $minQuantity = null,
+        public ?int $maxQuantity = null,
     ) {}
 }

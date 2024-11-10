@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 class GetStatusData extends Data
 {
     /**
-     * @param  Collection<AnnouncementData>  $announcements
+     * @param Collection<AnnouncementData> $announcements
      */
     public function __construct(
         public string $status,

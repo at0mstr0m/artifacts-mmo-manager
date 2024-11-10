@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class GetAllItemsData extends Data
 {
     /**
-     * @param  Collection<ItemData>  $items
+     * @param Collection<ItemData> $items
      */
     public function __construct(
         public Collection $items,

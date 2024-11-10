@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Data\Responses\ActionEquipItemData;
+use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
@@ -77,6 +78,13 @@ class ArtifactsService
                     'quantity' => $quantity,
                 ]
             )
+        );
+    }
+
+    public function actionFight(string $name): ActionFightData
+    {
+        return ActionFightData::from(
+            $this->post("my/{$name}/action/equip", RateLimitTypes::ACTIONS)
         );
     }
 

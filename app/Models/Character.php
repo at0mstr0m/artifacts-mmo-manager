@@ -246,4 +246,9 @@ class Character extends Model
     {
         return $this->hasMany(Log::class);
     }
+
+    public function fights(): HasMany
+    {
+        return $this->hasMany(Fight::class);
+    }
 }

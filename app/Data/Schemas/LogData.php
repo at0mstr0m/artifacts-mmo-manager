@@ -13,7 +13,7 @@ class LogData extends Data
     public Carbon $loggedAt;
 
     /**
-     * @param  Character  $character
+     * @param Character $character
      */
     public function __construct(
         public Character|string $character,

@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 class MonsterData extends Data
 {
     /**
-     * @param  Collection<DropData>  $drops
+     * @param Collection<DropData> $drops
      */
     public function __construct(
         public string $name,

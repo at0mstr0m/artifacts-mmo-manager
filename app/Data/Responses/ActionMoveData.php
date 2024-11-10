@@ -12,9 +12,9 @@ use App\Data\Schemas\MapData;
 class ActionMoveData extends Data
 {
     /**
-     * @param  CooldownData  $cooldown
-     * @param  MapData  $destination
-     * @param  CharacterData  $character
+     * @param CooldownData $cooldown
+     * @param MapData $destination
+     * @param CharacterData $character
      */
     public function __construct(
         public array|CooldownData $cooldown,
