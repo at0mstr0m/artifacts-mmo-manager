@@ -10,6 +10,7 @@ use App\Data\Responses\ActionDepositBankGoldData;
 use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
+use App\Data\Responses\ActionGeBuyItemData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRecyclingData;
 use App\Data\Responses\ActionRestData;
@@ -212,10 +213,31 @@ class ArtifactsService
         );
     }
 
-    public function actionRecycling(string $name): ActionRecyclingData
-    {
+    public function actionRecycling(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionRecyclingData {
         return ActionRecyclingData::from(
-            $this->post("/my/{$name}/action/recycling", RateLimitTypes::ACTIONS)
+            $this->post(
+                "/my/{$name}/action/recycling",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionGeBuyItem(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionGeBuyItemData {
+        return ActionGeBuyItemData::from(
+            $this->post(
+                "/my/{$name}/action/grandexchange/buy",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
+            )
         );
     }
 

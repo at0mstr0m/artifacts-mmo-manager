@@ -77,4 +77,9 @@ class Item extends Model
     {
         return $this->hasMany(TaskReward::class, 'code', 'code');
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }
