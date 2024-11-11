@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Transaction extends Model
 {
     protected $fillable = [
@@ -20,7 +22,7 @@ class Transaction extends Model
         'total_price' => 'integer',
     ];
 
-    public function item()
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
     }

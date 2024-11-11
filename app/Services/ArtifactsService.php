@@ -249,7 +249,7 @@ class ArtifactsService
     ): ActionGeBuyItemData {
         return ActionGeBuyItemData::from(
             $this->post(
-                "/my/{$name}/action/grandexchange/buy",
+                "/my/{$name}/action/grandexchange/sell",
                 RateLimitTypes::ACTIONS,
                 [
                     'code' => $itemCode,
