@@ -44,7 +44,7 @@ class Item extends Model
         'subtype',
         'description',
         'tradeable',
-        'deposited'
+        'deposited',
     ];
 
     protected $casts = [
@@ -55,7 +55,7 @@ class Item extends Model
         'subtype' => 'string',
         'description' => 'string',
         'tradeable' => 'boolean',
-        'deposited' => 'integer'
+        'deposited' => 'integer',
     ];
 
     public function effects(): BelongsToMany
@@ -78,8 +78,8 @@ class Item extends Model
         return $this->hasMany(TaskReward::class, 'code', 'code');
     }
 
-    public function orders(): HasMany
+    public function transactions(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Transaction::class);
     }
 }

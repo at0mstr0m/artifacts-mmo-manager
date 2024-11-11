@@ -241,6 +241,25 @@ class ArtifactsService
         );
     }
 
+    public function actionGeCreateSellOrder(
+        string $name,
+        string $itemCode,
+        int $quantity,
+        int $price,
+    ): ActionGeBuyItemData {
+        return ActionGeBuyItemData::from(
+            $this->post(
+                "/my/{$name}/action/grandexchange/buy",
+                RateLimitTypes::ACTIONS,
+                [
+                    'code' => $itemCode,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                ]
+            )
+        );
+    }
+
     /**
      * @return Collection<LogData>
      */

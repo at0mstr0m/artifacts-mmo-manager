@@ -23,7 +23,7 @@ class TransactionData extends Data
         $this->identifier = $id;
         $this->item = Item::firstWhere('code', $code);
 
-        $this->item->orders()->create([
+        $this->item->transactions()->create([
             'identifier' => $this->identifier,
             'quantity' => $this->quantity,
             'price' => $this->price,

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-
-class Order extends Model
+class Transaction extends Model
 {
     protected $fillable = [
         'identifier',
