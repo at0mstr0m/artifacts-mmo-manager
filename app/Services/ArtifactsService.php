@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Data\Responses\ActionAcceptNewTask;
 use App\Data\Responses\ActionBuyBankExpansionData;
+use App\Data\Responses\ActionCompleteTaskData;
+use App\Data\Responses\ActionDeleteItemData;
 use App\Data\Responses\ActionDepositBankData;
 use App\Data\Responses\ActionDepositBankGoldData;
 use App\Data\Responses\ActionEquipItemData;
@@ -15,6 +18,9 @@ use App\Data\Responses\ActionGeCancelSellOrderData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRecyclingData;
 use App\Data\Responses\ActionRestData;
+use App\Data\Responses\ActionTaskCancelData;
+use App\Data\Responses\ActionTaskExchangeData;
+use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Responses\ActionUseItemData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
@@ -164,28 +170,28 @@ class ArtifactsService
 
     public function actionDepositBank(
         string $name,
-        string $code,
+        string $itemCode,
         int $quantity
     ): ActionDepositBankData {
         return ActionDepositBankData::from(
             $this->post(
                 "my/{$name}/action/bank/deposit",
                 RateLimitTypes::ACTIONS,
-                ['code' => $code, 'quantity' => $quantity]
+                ['code' => $itemCode, 'quantity' => $quantity]
             )
         );
     }
 
     public function actionWithdrawBank(
         string $name,
-        string $code,
+        string $itemCode,
         int $quantity
     ): ActionDepositBankData {
         return ActionDepositBankData::from(
             $this->post(
                 "my/{$name}/action/bank/withdraw",
                 RateLimitTypes::ACTIONS,
-                ['code' => $code, 'quantity' => $quantity]
+                ['code' => $itemCode, 'quantity' => $quantity]
             )
         );
     }
@@ -221,7 +227,7 @@ class ArtifactsService
     ): ActionRecyclingData {
         return ActionRecyclingData::from(
             $this->post(
-                "/my/{$name}/action/recycling",
+                "my/{$name}/action/recycling",
                 RateLimitTypes::ACTIONS,
                 ['code' => $itemCode, 'quantity' => $quantity]
             )
@@ -235,7 +241,7 @@ class ArtifactsService
     ): ActionGeBuyItemData {
         return ActionGeBuyItemData::from(
             $this->post(
-                "/my/{$name}/action/grandexchange/buy",
+                "my/{$name}/action/grandexchange/buy",
                 RateLimitTypes::ACTIONS,
                 ['code' => $itemCode, 'quantity' => $quantity]
             )
@@ -250,7 +256,7 @@ class ArtifactsService
     ): ActionGeBuyItemData {
         return ActionGeBuyItemData::from(
             $this->post(
-                "/my/{$name}/action/grandexchange/sell",
+                "my/{$name}/action/grandexchange/sell",
                 RateLimitTypes::ACTIONS,
                 [
                     'code' => $itemCode,
@@ -267,9 +273,77 @@ class ArtifactsService
     ): ActionGeCancelSellOrderData {
         return ActionGeCancelSellOrderData::from(
             $this->post(
-                "/my/{$name}/action/grandexchange/cancel",
+                "my/{$name}/action/grandexchange/cancel",
                 RateLimitTypes::ACTIONS,
                 ['id' => $identifier]
+            )
+        );
+    }
+
+    public function actionCompleteTask(string $name): ActionCompleteTaskData
+    {
+        return ActionCompleteTaskData::from(
+            $this->post(
+                "my/{$name}/action/task/complete",
+                RateLimitTypes::ACTIONS,
+            )
+        );
+    }
+
+    public function actionTaskExchange(string $name): ActionTaskExchangeData
+    {
+        return ActionTaskExchangeData::from(
+            $this->post(
+                "my/{$name}/action/task/exchange",
+                RateLimitTypes::ACTIONS,
+            )
+        );
+    }
+
+    public function actionAcceptNewTask(string $name): ActionAcceptNewTask
+    {
+        return ActionAcceptNewTask::from(
+            $this->post(
+                "my/{$name}/action/task/new",
+                RateLimitTypes::ACTIONS,
+            )
+        );
+    }
+
+    public function actionTaskTrade(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionTaskTradeData {
+        return ActionTaskTradeData::from(
+            $this->post(
+                "my/{$name}/action/task/trade",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionTaskCancel(string $name): ActionTaskCancelData
+    {
+        return ActionTaskCancelData::from(
+            $this->post(
+                "my/{$name}/action/task/cancel",
+                RateLimitTypes::ACTIONS,
+            )
+        );
+    }
+
+    public function actionDeleteItem(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionDeleteItemData {
+        return ActionDeleteItemData::from(
+            $this->post(
+                "my/{$name}/action/delete",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
             )
         );
     }
