@@ -6,6 +6,7 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 use App\Models\Item;
+use App\Models\Transaction;
 
 class TransactionData extends Data
 {
@@ -22,8 +23,11 @@ class TransactionData extends Data
     ) {
         $this->identifier = $id;
         $this->item = Item::firstWhere('code', $code);
+    }
 
-        $this->item->transactions()->create([
+    public function createModel(): Transaction
+    {
+        return $this->item->transactions()->create([
             'identifier' => $this->identifier,
             'quantity' => $this->quantity,
             'price' => $this->price,

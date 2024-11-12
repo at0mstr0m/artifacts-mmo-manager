@@ -9,7 +9,7 @@ use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\CooldownData;
 use App\Data\Schemas\TransactionData;
 
-class ActionGeBuyItemData extends Data
+class ActionGeCancelSellOrderData extends Data
 {
     /**
      * @param CooldownData $cooldown
@@ -23,7 +23,6 @@ class ActionGeBuyItemData extends Data
     ) {
         $this->cooldown = CooldownData::from($cooldown);
         $this->order = TransactionData::from($order);
-        $this->order->createModel();
         $this->character = CharacterData::from($character);
     }
 }

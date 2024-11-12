@@ -11,6 +11,7 @@ use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionGeBuyItemData;
+use App\Data\Responses\ActionGeCancelSellOrderData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRecyclingData;
 use App\Data\Responses\ActionRestData;
@@ -256,6 +257,19 @@ class ArtifactsService
                     'quantity' => $quantity,
                     'price' => $price,
                 ]
+            )
+        );
+    }
+
+    public function actionGeCancelSellOrder(
+        string $name,
+        string $identifier,
+    ): ActionGeCancelSellOrderData {
+        return ActionGeCancelSellOrderData::from(
+            $this->post(
+                "/my/{$name}/action/grandexchange/cancel",
+                RateLimitTypes::ACTIONS,
+                ['id' => $identifier]
             )
         );
     }
