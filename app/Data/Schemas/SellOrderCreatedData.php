@@ -8,7 +8,7 @@ use App\Data\Data;
 use App\Models\Item;
 use Illuminate\Support\Carbon;
 
-class OrderData extends Data
+class SellOrderCreatedData extends Data
 {
     public string $identifier;
 
@@ -29,13 +29,12 @@ class OrderData extends Data
         $this->item = Item::firstWhere('code', $code);
         $this->placedAt = Carbon::parse($createdAt);
 
-        $this->item->sellOrders()->updateOrCreate([
+        $this->item->sellOrders()->create([
             'identifier' => $this->identifier,
-        ], [
+            'placed_at' => $this->placedAt,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'total_price' => $this->totalPrice,
-            'placed_at' => $this->placedAt,
             'tax' => $this->tax,
         ]);
     }

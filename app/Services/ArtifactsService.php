@@ -29,11 +29,13 @@ use App\Data\Schemas\AchievementData;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\EventData;
 use App\Data\Schemas\GrandExchangeItemData;
+use App\Data\Schemas\HistoricSellOrderData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\LogData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
 use App\Data\Schemas\ResourceData;
+use App\Data\Schemas\SellOrderData;
 use App\Data\Schemas\SimpleItemData;
 use App\Data\Schemas\TaskData;
 use App\Data\Schemas\TaskRewardData;
@@ -396,6 +398,55 @@ class ArtifactsService
         $query = static::paginationParams($perPage, $page, $all);
         $response = $this->get('my/bank/items', RateLimitTypes::DATA, $query);
         $data = SimpleItemData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    /**
+     * @return Collection<SellOrderData>
+     */
+    public function getGeSellOrders(
+        ?string $itemCode = null,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $arguments = $itemCode ? ['code' => $itemCode] : [];
+        $query = [
+            ...static::paginationParams($perPage, $page, $all),
+            ...$arguments,
+        ];
+        $response = $this->get('my/grandexchange/orders', RateLimitTypes::DATA, $query);
+        $data = SellOrderData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage, $arguments)
+            : $data;
+    }
+
+    /**
+     * @return Collection<HistoricSellOrderData>
+     */
+    public function getGeSellHistory(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('my/grandexchange/history', RateLimitTypes::DATA, $query);
+        $data = HistoricSellOrderData::collection($response);
 
         return $all
             ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)

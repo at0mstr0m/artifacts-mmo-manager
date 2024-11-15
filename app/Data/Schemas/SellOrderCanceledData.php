@@ -6,9 +6,10 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 use App\Models\Item;
+use App\Models\SellOrder;
 use Illuminate\Support\Carbon;
 
-class OrderData extends Data
+class SellOrderCanceledData extends Data
 {
     public string $identifier;
 
@@ -29,14 +30,6 @@ class OrderData extends Data
         $this->item = Item::firstWhere('code', $code);
         $this->placedAt = Carbon::parse($createdAt);
 
-        $this->item->sellOrders()->updateOrCreate([
-            'identifier' => $this->identifier,
-        ], [
-            'quantity' => $this->quantity,
-            'price' => $this->price,
-            'total_price' => $this->totalPrice,
-            'placed_at' => $this->placedAt,
-            'tax' => $this->tax,
-        ]);
+        SellOrder::where('identifier', $id)->delete();
     }
 }

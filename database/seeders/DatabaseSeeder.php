@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             TaskSeeder::class,
             AchievementSeeder::class,
             CharacterSeeder::class,
+            GrandExchangeSeeder::class,
         ]);
     }
 }

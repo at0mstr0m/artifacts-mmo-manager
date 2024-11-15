@@ -6,22 +6,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Order extends Model
+class SellOrder extends Model
 {
     protected $fillable = [
         'identifier',
-        'placed_at',
+        'seller',
+        'buyer',
         'quantity',
         'price',
         'total_price',
+        'placed_at',
+        'tax',
     ];
 
     protected $casts = [
         'identifier' => 'string',
-        'placed_at' => 'datetime',
+        'seller' => 'string',
+        'buyer' => 'string',
         'quantity' => 'integer',
         'price' => 'integer',
         'total_price' => 'integer',
+        'placed_at' => 'datetime',
+        'sold_at' => 'datetime',
+        'tax' => 'integer',
     ];
 
     public function item(): BelongsTo

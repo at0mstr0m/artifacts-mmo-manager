@@ -8,6 +8,7 @@ use App\Data\Data;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\CooldownData;
 use App\Data\Schemas\OrderData;
+use App\Data\Schemas\SellOrderCreatedData;
 use App\Data\Schemas\TransactionData;
 
 class ActionGeCreateSellOrderData extends Data
@@ -23,7 +24,7 @@ class ActionGeCreateSellOrderData extends Data
         public array|CharacterData $character,
     ) {
         $this->cooldown = CooldownData::from($cooldown);
-        $this->order = OrderData::from($order);
+        $this->order = SellOrderCreatedData::from($order);
         $this->character = CharacterData::from($character);
     }
 }

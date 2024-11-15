@@ -83,8 +83,8 @@ class Item extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function orders(): HasMany
+    public function sellOrders(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(SellOrder::class);
     }
 }

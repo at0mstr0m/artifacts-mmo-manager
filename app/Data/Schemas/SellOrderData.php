@@ -8,7 +8,7 @@ use App\Data\Data;
 use App\Models\Item;
 use Illuminate\Support\Carbon;
 
-class OrderData extends Data
+class SellOrderData extends Data
 {
     public string $identifier;
 
@@ -18,12 +18,12 @@ class OrderData extends Data
 
     public function __construct(
         string $id,
-        string $createdAt,
+        public string $seller,
         string $code,
         public int $quantity,
         public int $price,
         public int $totalPrice,
-        public int $tax,
+        string $createdAt,
     ) {
         $this->identifier = $id;
         $this->item = Item::firstWhere('code', $code);
@@ -32,11 +32,11 @@ class OrderData extends Data
         $this->item->sellOrders()->updateOrCreate([
             'identifier' => $this->identifier,
         ], [
+            'seller' => $this->seller,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'total_price' => $this->totalPrice,
             'placed_at' => $this->placedAt,
-            'tax' => $this->tax,
         ]);
     }
 }

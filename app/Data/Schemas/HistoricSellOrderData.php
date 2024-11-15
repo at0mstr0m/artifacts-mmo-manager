@@ -8,35 +8,37 @@ use App\Data\Data;
 use App\Models\Item;
 use Illuminate\Support\Carbon;
 
-class OrderData extends Data
+class HistoricSellOrderData extends Data
 {
     public string $identifier;
 
     public Item $item;
 
-    public Carbon $placedAt;
+    public int $totalPrice;
 
     public function __construct(
         string $id,
-        string $createdAt,
+        public string $seller,
+        public string $buyer,
         string $code,
         public int $quantity,
         public int $price,
-        public int $totalPrice,
-        public int $tax,
+        public Carbon|string $soldAt,
     ) {
         $this->identifier = $id;
         $this->item = Item::firstWhere('code', $code);
-        $this->placedAt = Carbon::parse($createdAt);
+        $this->soldAt = Carbon::parse($soldAt);
+        $this->totalPrice = $this->quantity * $this->price;
 
         $this->item->sellOrders()->updateOrCreate([
             'identifier' => $this->identifier,
         ], [
+            'seller' => $this->seller,
+            'buyer' => $this->buyer,
             'quantity' => $this->quantity,
             'price' => $this->price,
             'total_price' => $this->totalPrice,
-            'placed_at' => $this->placedAt,
-            'tax' => $this->tax,
+            'sold_at' => $this->soldAt,
         ]);
     }
 }
