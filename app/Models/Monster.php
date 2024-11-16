@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $max_gold
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
  * @property-read int|null $drops_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Map> $locations
+ * @property-read int|null $locations_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newQuery()
@@ -72,5 +75,10 @@ class Monster extends Model
     public function drops(): MorphMany
     {
         return $this->morphMany(Drop::class, 'source');
+    }
+
+    public function locations(): HasMany
+    {
+        return $this->hasMany(Map::class, 'content_code', 'code');
     }
 }

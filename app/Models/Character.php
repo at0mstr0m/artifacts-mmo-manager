@@ -91,6 +91,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $fights_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
  * @property-read int|null $inventory_items_count
+ * @property-read bool $is_healthy
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
  * @property-read int|null $logs_count
  *
