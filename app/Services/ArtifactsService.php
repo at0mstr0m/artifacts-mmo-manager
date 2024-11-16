@@ -464,6 +464,28 @@ class ArtifactsService
      * #########################################################################
      */
 
+    public function createCharacter(string $name, string $skin): CharacterData
+    {
+        return CharacterData::from(
+            $this->post(
+                'characters/create',
+                RateLimitTypes::DATA,
+                ['name' => $name, 'skin' => $skin]
+            )
+        );
+    }
+
+    public function deleteCharacter(string $name): CharacterData
+    {
+        return CharacterData::from(
+            $this->post(
+                'characters/delete',
+                RateLimitTypes::DATA,
+                ['name' => $name]
+            )
+        );
+    }
+
     public function getCharacter(string $name): CharacterData
     {
         return CharacterData::from(

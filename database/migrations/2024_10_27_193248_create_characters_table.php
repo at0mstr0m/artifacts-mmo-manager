@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CharacterSkins;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->string('name');
             $table->string('account');
-            $table->string('skin');
+            $table->enum('skin', CharacterSkins::values());
             $table->tinyInteger('level');
 
             $table->integer('xp');

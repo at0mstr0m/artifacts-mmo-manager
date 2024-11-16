@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Schemas;
 
 use App\Data\Data;
+use App\Enums\CharacterSkins;
 use App\Models\Character;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -15,11 +16,12 @@ class CharacterData extends Data
 
     /**
      * @param Collection<InventorySlotData> $inventory
+     * @param CharacterSkins $skin
      */
     public function __construct(
         public string $name,
         public string $account,
-        public string $skin,
+        public CharacterSkins|string $skin,
         public int $level,
         public int $xp,
         public int $maxXp,
@@ -95,6 +97,7 @@ class CharacterData extends Data
     ) {
         $this->cooldownExpiration = Carbon::parse($cooldownExpiration);
         $this->inventory = InventorySlotData::collection($inventory);
+        $this->skin = CharacterSkins::fromValue($skin);
 
         $this->createIfNotExists();
     }

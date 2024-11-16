@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
+use App\Enums\CharacterSkins;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string $name
  * @property string $account
- * @property string $skin
+ * @property CharacterSkins $skin
  * @property int $level
  * @property int $xp
  * @property int $max_xp
@@ -91,6 +92,7 @@ use Illuminate\Support\Carbon;
  * @property int $task_progress
  * @property int $task_total
  * @property int $inventory_max_items
+ * @property int|null $occupaion_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
  * @property-read int|null $fights_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
@@ -98,6 +100,7 @@ use Illuminate\Support\Carbon;
  * @property-read bool $is_healthy
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
  * @property-read int|null $logs_count
+ * @property-read Occupaion|null $occupation
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newQuery()
@@ -187,7 +190,7 @@ class Character extends Model
     protected $casts = [
         'name' => 'string',
         'account' => 'string',
-        'skin' => 'string',
+        'skin' => CharacterSkins::class,
         'level' => 'integer',
         'xp' => 'integer',
         'max_xp' => 'integer',

@@ -4,6 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property array $config
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Character> $characters
+ * @property-read int|null $characters_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Occupaion newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Occupaion newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Occupaion query()
+ *
+ * @mixin \Eloquent
+ */
 class Occupaion extends Model
 {
     protected $fillable = ['config'];
