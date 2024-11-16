@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Data\Responses\ActionFightData;
+use App\Data\Responses\ActionMoveData;
+use App\Data\Responses\ActionRestData;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -272,33 +276,50 @@ class Character extends Model
         return $this->hasMany(Fight::class);
     }
 
-    public function move(int|Map $x, ?int $y = null): static
+    public function occupation(): BelongsTo
+    {
+        return $this->belongsTo(Occupaion::class);
+    }
+
+    public function isAt(int|Map $x, ?int $y = null): bool
     {
         if ($x instanceof Map) {
             $y = $x->y;
             $x = $x->x;
         }
 
-        app(ArtifactsService::class)->actionMove($this->name, $x, $y);
-
-        return $this;
+        return $this->x === $x && $this->y === $y;
     }
 
-    public function fight(): static
+    public function move(int|Map $x, ?int $y = null): ActionMoveData
     {
-        app(ArtifactsService::class)->actionFight($this->name);
+        if ($x instanceof Map) {
+            $y = $x->y;
+            $x = $x->x;
+        }
 
-        return $this;
+        return app(ArtifactsService::class)->actionMove($this->name, $x, $y);
     }
 
-    public function rest(): static
+    public function fight(): ActionFightData
+    {
+        return app(ArtifactsService::class)->actionFight($this->name);
+    }
+
+    public function rest(): ActionRestData
     {
         if ($this->is_healthy) {
             return $this;
         }
-        app(ArtifactsService::class)->actionRest($this->name);
 
-        return $this;
+        return app(ArtifactsService::class)->actionRest($this->name);
+    }
+
+    public function refetch(): static
+    {
+        return app(ArtifactsService::class)
+            ->getCharacter($this->name)
+            ->getModel();
     }
 
     protected function isHealthy(): Attribute

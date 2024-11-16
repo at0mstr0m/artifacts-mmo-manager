@@ -10,20 +10,21 @@ use Illuminate\Support\Carbon;
 
 class CooldownData extends Data
 {
+    public Carbon $expiresAt;
+
     /**
      * @param Carbon $startedAt
-     * @param Carbon $expiration
      * @param CooldownReasons $reason
      */
     public function __construct(
         public int $totalSeconds,
         public int $remainingSeconds,
         public Carbon|string $startedAt,
-        public Carbon|string $expiration,
+        string $expiration,
         public CooldownReasons|string $reason,
     ) {
         $this->startedAt = Carbon::parse($startedAt);
-        $this->expiration = Carbon::parse($expiration);
+        $this->expiresAt = Carbon::parse($expiration);
         $this->reason = CooldownReasons::fromValue($reason);
     }
 }
