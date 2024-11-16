@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Services\ArtifactsService;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -267,5 +269,41 @@ class Character extends Model
     public function fights(): HasMany
     {
         return $this->hasMany(Fight::class);
+    }
+
+    public function move(int|Map $x, ?int $y = null): static
+    {
+        if ($x instanceof Map) {
+            $y = $x->y;
+            $x = $x->x;
+        }
+
+        app(ArtifactsService::class)->actionMove($this->name, $x, $y);
+
+        return $this;
+    }
+
+    public function fight(): static
+    {
+        app(ArtifactsService::class)->actionFight($this->name);
+
+        return $this;
+    }
+
+    public function rest(): static
+    {
+        if ($this->is_healthy) {
+            return $this;
+        }
+        app(ArtifactsService::class)->actionRest($this->name);
+
+        return $this;
+    }
+
+    protected function isHealthy(): Attribute
+    {
+        return Attribute::get(
+            fn (): bool => $this->refresh()->hp === $this->max_hp
+        );
     }
 }

@@ -6,10 +6,12 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 
-class DropData extends Data
+class DropRateData extends Data
 {
     public function __construct(
         public string $code,
-        public int $quantity,
+        public int $rate,
+        public int $minQuantity,
+        public int $maxQuantity,
     ) {}
 }

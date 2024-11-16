@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 class MonsterData extends Data
 {
     /**
-     * @param Collection<DropData> $drops
+     * @param Collection<DropRateData> $drops
      */
     public function __construct(
         public string $name,
@@ -31,7 +31,7 @@ class MonsterData extends Data
         public int $maxGold,
         public array|Collection $drops,
     ) {
-        $this->drops = DropData::collection($drops);
+        $this->drops = DropRateData::collection($drops);
 
         $this->createIfNotExists();
     }
@@ -60,7 +60,7 @@ class MonsterData extends Data
         }
 
         $this->drops->each(
-            fn (DropData $drop) => $monster
+            fn (DropRateData $drop) => $monster
                 ->drops()
                 ->make([
                     'rate' => $drop->rate,

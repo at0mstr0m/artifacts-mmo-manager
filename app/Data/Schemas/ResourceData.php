@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 class ResourceData extends Data
 {
     /**
-     * @param Collection<DropData> $drops
+     * @param Collection<DropRateData> $drops
      */
     public function __construct(
         public string $name,
@@ -23,7 +23,7 @@ class ResourceData extends Data
         public array|Collection $drops,
     ) {
         $this->skill = Skills::fromValue($skill);
-        $this->drops = DropData::collection($drops);
+        $this->drops = DropRateData::collection($drops);
 
         $this->createIfNotExists();
     }
@@ -42,7 +42,7 @@ class ResourceData extends Data
         }
 
         $this->drops->each(
-            fn (DropData $drop) => $resource
+            fn (DropRateData $drop) => $resource
                 ->drops()
                 ->make([
                     'rate' => $drop->rate,
