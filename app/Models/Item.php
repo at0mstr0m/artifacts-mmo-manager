@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\IdentifiableByCode;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -41,6 +43,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Item extends Model
 {
+    use IdentifiableByCode;
+
     protected $fillable = [
         'name',
         'code',
@@ -68,9 +72,9 @@ class Item extends Model
         return $this->belongsToMany(Effect::class);
     }
 
-    public function craft(): BelongsToMany
+    public function craft(): HasOne
     {
-        return $this->belongsToMany(Craft::class)->withPivot(['quantity']);
+        return $this->hasOne(Craft::class);
     }
 
     public function drops(): MorphMany

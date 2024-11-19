@@ -8,7 +8,6 @@ use App\Data\Data;
 use App\Models\Craft;
 use App\Models\Effect;
 use App\Models\Item;
-use App\Services\ArtifactsService;
 use Illuminate\Support\Collection;
 
 class ItemData extends Data
@@ -69,27 +68,24 @@ class ItemData extends Data
         }
 
         /** @var Craft */
-        $craft = Craft::firstOrCreate([
+        $craft = $this->model->craft()->updateOrCreate([
             'skill' => $this->craft->skill,
             'level' => $this->craft->level,
             'quantity' => $this->craft->quantity,
         ]);
 
-        if ($craft->items()->count() === $this->craft->items->count()) {
+        if ($craft->requiredItems()->count() === $this->craft->items->count()) {
             return;
         }
 
-        $this->craft->items->each(
-            function (SimpleItemData $simpleItemData) use ($craft) {
-                $requiredItem = Item::firstWhere('code', $simpleItemData->code)
-                ?? app(ArtifactsService::class)
-                    ->getItem($simpleItemData->code)
-                    ->getModel();
-
-                $craft->items()->syncWithoutDetaching([
-                    $requiredItem->id => ['quantity' => $simpleItemData->quantity],
-                ]);
-            }
+        $craft->requiredItems()->sync(
+            $this->craft->items->mapWithKeys(
+                fn (SimpleItemData $simpleItemData) => [
+                    $simpleItemData->code => [
+                        'quantity' => $simpleItemData->quantity,
+                    ],
+                ]
+            )->all()
         );
     }
 }

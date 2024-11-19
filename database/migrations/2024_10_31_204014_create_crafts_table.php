@@ -16,6 +16,7 @@ return new class extends Migration {
         Schema::create('crafts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('item_id')->constrained();
             $table->enum('skill', Skills::values());
             $table->integer('level');
             $table->integer('quantity');
@@ -23,8 +24,8 @@ return new class extends Migration {
 
         Schema::create('craft_item', function (Blueprint $table) {
             $table->foreignId('craft_id')->constrained();
-            $table->foreignId('item_id')->constrained();
-            $table->unique(['craft_id', 'item_id']);
+            $table->string('item_code');
+            $table->unique(['craft_id', 'item_code']);
             $table->integer('quantity');
         });
     }

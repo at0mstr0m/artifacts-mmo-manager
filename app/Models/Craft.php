@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Skills;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -37,8 +38,20 @@ class Craft extends Model
         'quantity' => 'integer',
     ];
 
-    public function items(): BelongsToMany
+    public function item(): BelongsTo
     {
-        return $this->belongsToMany(Item::class)->withPivot(['quantity']);
+        return $this->belongsTo(Item::class);
+    }
+
+    public function requiredItems(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Item::class,
+            'craft_item',
+            'craft_id',
+            'item_code',
+            'id',
+            'code',
+        )->withPivot(['quantity']);
     }
 }
