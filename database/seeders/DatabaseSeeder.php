@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             AchievementSeeder::class,
             CharacterSeeder::class,
             GrandExchangeSeeder::class,
+            BankItemSeeder::class,
         ]);
     }
 }
