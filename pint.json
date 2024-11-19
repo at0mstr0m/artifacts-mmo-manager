@@ -143,11 +143,8 @@
         "backtick_to_shell_exec": true,
         "blank_line_before_statement": {
             "statements": [
-                "break",
-                "case",
                 "continue",
                 "declare",
-                "default",
                 "exit",
                 "goto",
                 "include",
