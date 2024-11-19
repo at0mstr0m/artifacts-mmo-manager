@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs;
+namespace App\Jobs\CharacterJobs;
 
 use App\Enums\FightResults;
+use App\Jobs\CharacterJob;
 use App\Models\Monster;
 
 class FightMonster extends CharacterJob
@@ -73,9 +74,8 @@ class FightMonster extends CharacterJob
                 ->cooldown
                 ->expiresAt;
         }
-        $delay->diffInSeconds(now());
-        $this->log("delaying for {$delay->diffInSeconds(now())} Seconds");
 
+        $this->log("delaying for {$delay->diffInSeconds(now())} Seconds");
         $this->selfDispatch(['tries' => $this->tries])->delay($delay);
     }
 }
