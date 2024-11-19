@@ -12,6 +12,8 @@ class EventData extends Data
 {
     public Carbon $startedAt;
 
+    protected Event $event;
+
     public function __construct(
         public string $name,
         public string $code,
@@ -28,9 +30,14 @@ class EventData extends Data
         $this->createIfNotExists();
     }
 
+    public function getModel(): Event
+    {
+        return $this->event;
+    }
+
     private function createIfNotExists(): void
     {
-        Event::firstWhere([
+        $this->event = Event::firstWhere([
             'code' => $this->code,
             'started_at' => $this->startedAt,
         ]) ?? $this->map->getModel()->events()->create([

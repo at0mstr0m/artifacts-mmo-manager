@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Jobs\UpdateEvents;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,4 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {})->create();
+    ->withExceptions(function (Exceptions $exceptions) {})
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->job(UpdateEvents::class)->everyMinute();
+    })
+    ->create();
