@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Data\Responses\ActionFightData;
+use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
+use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -284,6 +286,13 @@ class Character extends Model
         return $this->belongsTo(Occupaion::class);
     }
 
+    public function refetch(): static
+    {
+        return app(ArtifactsService::class)
+            ->getCharacter($this->name)
+            ->getModel();
+    }
+
     public function isAt(int|Map $x, ?int $y = null): bool
     {
         if ($x instanceof Map) {
@@ -309,6 +318,11 @@ class Character extends Model
         return app(ArtifactsService::class)->actionFight($this->name);
     }
 
+    public function gather(): ActionGatheringData
+    {
+        return app(ArtifactsService::class)->actionGathering($this->name);
+    }
+
     public function rest(): ActionRestData
     {
         if ($this->is_healthy) {
@@ -318,11 +332,39 @@ class Character extends Model
         return app(ArtifactsService::class)->actionRest($this->name);
     }
 
-    public function refetch(): static
-    {
-        return app(ArtifactsService::class)
-            ->getCharacter($this->name)
-            ->getModel();
+    public function hasInInventory(
+        int|Item|SimpleItemData|string $item,
+        int $quantity = 1
+    ): bool {
+        switch (true) {
+            case is_int($item):
+                $item = Item::find($item)->code;
+                break;
+            case $item instanceof Item:
+                $item = $item->code;
+                break;
+            case $item instanceof SimpleItemData:
+                $quantity = $item->quantity;
+                $item = $item->code;
+                break;
+        }
+
+        return $this->inventoryItems()
+            ->where('code', $item)
+            ->where('quantity', '>=', $quantity)
+            ->exists();
+    }
+
+    public function hasSkillLevel(
+        Craft|string $skill,
+        ?int $level = null
+    ): bool {
+        if ($skill instanceof Craft) {
+            $level = $skill->level;
+            $skill = $skill->skill;
+        }
+
+        return $this->{$skill . '_level'} >= $level;
     }
 
     protected function isHealthy(): Attribute

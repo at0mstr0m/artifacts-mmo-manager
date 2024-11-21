@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Data\Responses\ActionAcceptNewTask;
 use App\Data\Responses\ActionBuyBankExpansionData;
 use App\Data\Responses\ActionCompleteTaskData;
+use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionDeleteItemData;
 use App\Data\Responses\ActionDepositBankData;
 use App\Data\Responses\ActionDepositBankGoldData;
@@ -154,6 +155,20 @@ class ArtifactsService
     {
         return ActionGatheringData::from(
             $this->post("my/{$name}/action/gathering", RateLimitTypes::ACTIONS)
+        );
+    }
+
+    public function actionCrafting(
+        string $name,
+        string $itemCode,
+        int $quantity = 1
+    ): ActionCraftingData {
+        return ActionCraftingData::from(
+            $this->post(
+                "my/{$name}/action/crafting",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
+            )
         );
     }
 
