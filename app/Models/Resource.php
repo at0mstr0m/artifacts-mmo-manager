@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property Skills $skill
  * @property int $level
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
- * @property-read int|null $drops_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Map> $maps
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource newQuery()

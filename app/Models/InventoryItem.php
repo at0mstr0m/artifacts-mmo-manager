@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $code
  * @property int $quantity
  * @property-read Character $character
+ * @property-read Item|null $item
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InventoryItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InventoryItem newQuery()

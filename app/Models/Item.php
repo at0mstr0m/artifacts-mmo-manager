@@ -21,22 +21,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $description
  * @property bool $tradeable
  * @property int $deposited
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Craft> $craft
- * @property-read int|null $craft_count
+ * @property-read Craft|null $craft
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
- * @property-read int|null $drops_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Effect> $effects
- * @property-read int|null $effects_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SellOrder> $sellOrders
- * @property-read int|null $sell_orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TaskReward> $taskRewards
- * @property-read int|null $task_rewards_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
- * @property-read int|null $transactions_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Item searchByCode(string $search = '')
  *
  * @mixin \Eloquent
  */

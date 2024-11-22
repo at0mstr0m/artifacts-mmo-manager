@@ -11,7 +11,6 @@ namespace App\Models;
  * @property string $name
  * @property int $value
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Item> $items
- * @property-read int|null $items_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newQuery()

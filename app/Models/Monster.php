@@ -26,9 +26,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $min_gold
  * @property int $max_gold
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
- * @property-read int|null $drops_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Map> $locations
- * @property-read int|null $locations_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newQuery()

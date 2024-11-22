@@ -97,12 +97,9 @@ use Illuminate\Support\Carbon;
  * @property int $inventory_max_items
  * @property int|null $occupaion_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
- * @property-read int|null $fights_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
- * @property-read int|null $inventory_items_count
  * @property-read bool $is_healthy
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
- * @property-read int|null $logs_count
  * @property-read Occupaion|null $occupation
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newModelQuery()

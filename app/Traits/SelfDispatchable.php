@@ -21,7 +21,7 @@ trait SelfDispatchable
     protected ?Collection $nextJobs = null;
 
     /**
-     * @param Collection<NextJobData>  $nextJobs
+     * @param Collection<NextJobData> $nextJobs
      */
     public function setNextJobs(null|Collection|NextJobData $nextJobs): static
     {
