@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -48,5 +49,15 @@ class Map extends Model
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function resource(): BelongsTo
+    {
+        return $this->belongsTo(Resource::class, 'content_code', 'code');
+    }
+
+    public function monster(): BelongsTo
+    {
+        return $this->belongsTo(Monster::class, 'content_code', 'code');
     }
 }

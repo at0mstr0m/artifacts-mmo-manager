@@ -42,4 +42,9 @@ class InventoryItem extends Model
     {
         return $this->belongsTo(Character::class);
     }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'code', 'code');
+    }
 }

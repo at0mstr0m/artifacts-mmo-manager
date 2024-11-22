@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Skills;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -43,5 +44,10 @@ class Resource extends Model
     public function drops(): MorphMany
     {
         return $this->morphMany(Drop::class, 'source');
+    }
+
+    public function maps(): HasMany
+    {
+        return $this->hasMany(Map::class, 'content_code', 'code');
     }
 }

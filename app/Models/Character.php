@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionMoveData;
@@ -323,6 +324,21 @@ class Character extends Model
         return app(ArtifactsService::class)->actionGathering($this->name);
     }
 
+    public function craft(
+        Item|string $item,
+        int $quantity = 1
+    ): ActionCraftingData {
+        if ($item instanceof Item) {
+            $item = $item->code;
+        }
+
+        return app(ArtifactsService::class)->actionCrafting(
+            $this->name,
+            $item,
+            $quantity
+        );
+    }
+
     public function rest(): ActionRestData
     {
         if ($this->is_healthy) {
@@ -355,13 +371,30 @@ class Character extends Model
             ->exists();
     }
 
+    public function countInInventory(int|Item|SimpleItemData|string $item): int
+    {
+        switch (true) {
+            case is_int($item):
+                $item = Item::find($item)->code;
+                break;
+            case $item instanceof Item:
+            case $item instanceof SimpleItemData:
+                $item = $item->code;
+                break;
+        }
+
+        return (int) $this->inventoryItems()
+            ->where('code', $item)
+            ->sum('quantity');
+    }
+
     public function hasSkillLevel(
         Craft|string $skill,
         ?int $level = null
     ): bool {
         if ($skill instanceof Craft) {
             $level = $skill->level;
-            $skill = $skill->skill;
+            $skill = $skill->skill->value;
         }
 
         return $this->{$skill . '_level'} >= $level;

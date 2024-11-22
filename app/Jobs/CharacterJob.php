@@ -21,9 +21,6 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
 
     protected Character $character;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(protected int $characterId) {}
 
     /**
@@ -44,9 +41,6 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
         return (string) $this->characterId;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $this->character = Character::find($this->characterId)->refetch();

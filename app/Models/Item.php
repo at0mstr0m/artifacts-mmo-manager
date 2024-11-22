@@ -8,7 +8,6 @@ use App\Traits\IdentifiableByCode;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
@@ -77,9 +76,9 @@ class Item extends Model
         return $this->hasOne(Craft::class);
     }
 
-    public function drops(): MorphMany
+    public function drops(): HasMany
     {
-        return $this->morphMany(Drop::class, 'source');
+        return $this->hasMany(Drop::class);
     }
 
     public function taskRewards(): HasMany

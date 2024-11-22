@@ -12,9 +12,6 @@ class FightMonster extends CharacterJob
 {
     protected Monster $monster;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(
         int $characterId,
         protected int $monsterId,
@@ -30,12 +27,11 @@ class FightMonster extends CharacterJob
                 . $monsterId
                 . ' too many times'
             ));
+
+            return;
         }
     }
 
-    /**
-     * Execute the job.
-     */
     public function handleCharacter(): void
     {
         $this->monster = Monster::find($this->monsterId);

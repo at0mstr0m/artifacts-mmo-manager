@@ -11,18 +11,12 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class UpdateEvents implements ShouldQueue, ShouldBeUnique
+class UpdateEvents implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct() {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $changedIds = app(ArtifactsService::class)
