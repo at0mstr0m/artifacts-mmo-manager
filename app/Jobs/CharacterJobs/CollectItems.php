@@ -64,9 +64,32 @@ class CollectItems extends CharacterJob
                 $nextItem->id,
                 $itemData->quantity
             ),
-            default => $this->fail('Cannot find Drop for Item ' . $nextItem->name),
+            default => null,
         };
 
-        $this->dispatchWithComeback($job);
+        if ($job) {
+            $this->dispatchWithComeback($job);
+
+            return;
+        }
+
+        $this->log("Cannot obtain {$nextItem->name} as drop from any source.");
+
+        if ($nextItem->craft()->doesntExist()) {
+            $this->fail(
+                'Item '
+                . '$nextItem->name'
+                . ' can neither be obtained as drop from source nor be crafted'
+            );
+        }
+
+        $this->log("Item {$nextItem->name} can be crafted");
+        $this->dispatchWithComeback(
+            new CollectRawMaterialsToCraft(
+                $this->characterId,
+                $nextItem->id,
+                $itemData->quantity
+            )
+        );
     }
 }
