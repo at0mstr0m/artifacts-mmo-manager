@@ -55,7 +55,12 @@ class CraftItem extends CharacterJob
 
             return;
         }
-        $this->log('is at workshop');
+        $this->log(
+            'is at workshop and will now craft '
+            . $this->quantity
+            . ' units of '
+            . $this->item->name
+        );
         $craftingData = $this->character->craft($this->item, $this->quantity);
         $this->dispatchNextJob()?->delay($craftingData->cooldown->expiresAt);
     }

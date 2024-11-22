@@ -50,6 +50,8 @@ class CollectItems extends CharacterJob
         $nextItem = $itemData->getModel();
 
         $this->log('Must collect ' . $nextItem->name);
+        $currentQuantity = $this->character->countInInventory($nextItem);
+        $this->log("currently has {$currentQuantity} of {$nextItem->name}");
 
         /** @var Drop */
         $drop = $nextItem->drops()->orderBy('rate')->first();
@@ -62,7 +64,7 @@ class CollectItems extends CharacterJob
             Resource::class => new GatherItem(
                 $this->characterId,
                 $nextItem->id,
-                $itemData->quantity
+                $itemData->quantity - $currentQuantity,
             ),
             default => null,
         };

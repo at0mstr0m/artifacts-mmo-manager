@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Actions\EvaluateFittingItemSlot;
 use App\Data\Responses\ActionCraftingData;
+use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionMoveData;
@@ -16,6 +18,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -345,6 +349,34 @@ class Character extends Model
         return app(ArtifactsService::class)->actionRest($this->name);
     }
 
+    public function equip(
+        Item|string $item,
+        int $quantity = 1,
+        ?string $slot = null,
+    ): ActionEquipItemData {
+        if (is_string($item)) {
+            $item = Item::findByCode($item);
+        }
+
+        if ($slot === null) {
+            /** @var false|string|null */
+            $slot = EvaluateFittingItemSlot::run($this, $item);
+
+            if ($slot === false) {
+                throw new \Exception('Item slot is occupied');
+            }
+
+            if ($slot === null) {
+                throw new \Exception('Item does not fit into any slot');
+            }
+        }
+
+        $slot = Str::beforeLast($slot, '_slot');
+
+        return app(ArtifactsService::class)
+            ->actionEquipItem($this->name, $slot, $item->code, $quantity);
+    }
+
     public function hasInInventory(
         int|Item|SimpleItemData|string $item,
         int $quantity = 1
@@ -395,6 +427,34 @@ class Character extends Model
         }
 
         return $this->{$skill . '_level'} >= $level;
+    }
+
+    public function isEquipedWith(Item|string $itemCode): bool
+    {
+        if ($itemCode instanceof Item) {
+            $itemCode = $itemCode->code;
+        }
+
+        return $this->getSlots()->contains($itemCode);
+    }
+
+    public function slotIsOccupied(string $slot): bool
+    {
+        return (bool) $this->{$slot};
+    }
+
+    public function getSlots(): Collection
+    {
+        return collect($this->getAttributes())->filter(
+            function (mixed $value, string $key): bool {
+                return Str::endsWith($key, '_slot');
+            }
+        );
+    }
+
+    public function getSlotNames(): Collection
+    {
+        return $this->getSlots()->keys();
     }
 
     protected function isHealthy(): Attribute
