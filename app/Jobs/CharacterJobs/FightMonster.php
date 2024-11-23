@@ -7,8 +7,9 @@ namespace App\Jobs\CharacterJobs;
 use App\Enums\FightResults;
 use App\Jobs\CharacterJob;
 use App\Models\Monster;
+use Illuminate\Foundation\Bus\PendingDispatch;
 
-class FightMonster extends CharacterJob
+abstract class FightMonster extends CharacterJob
 {
     protected Monster $monster;
 
@@ -17,8 +18,6 @@ class FightMonster extends CharacterJob
         protected int $monsterId,
         protected int $tries = 0,
     ) {
-        parent::__construct($characterId);
-        $this->constructorArguments = compact('characterId', 'monsterId', 'tries');
         if ($tries > 3) {
             $this->fail(new \Exception(
                 'Character '
@@ -27,12 +26,13 @@ class FightMonster extends CharacterJob
                 . $monsterId
                 . ' too many times'
             ));
-
-            return;
         }
+        parent::__construct($characterId);
     }
 
-    public function handleCharacter(): void
+    abstract protected function handleWin(): PendingDispatch;
+
+    protected function handleCharacter(): void
     {
         $this->monster = Monster::find($this->monsterId);
 
@@ -55,23 +55,33 @@ class FightMonster extends CharacterJob
             return;
         }
 
-        if ($this->character->isAt($monsterLocation)) {
-            $this->log("fighting monster {$this->monster->name}");
-            $data = $this->character->fight();
-            $delay = $data->cooldown->expiresAt;
-            $result = $data->fight->result;
-            $this->log("fight result: {$result->value}");
-            $this->tries = $result === FightResults::WIN ? 0 : $this->tries + 1;
-        } else {
+        if (! $this->character->isAt($monsterLocation)) {
             $this->log("moving to monster {$this->monster->name}");
             $delay = $this
                 ->character
                 ->move($monsterLocation)
                 ->cooldown
                 ->expiresAt;
+
+            $this->selfDispatch()->delay($delay);
+
+            return;
         }
 
-        $this->log("delaying for {$delay->diffInSeconds(now())} Seconds");
+        $this->log("fighting monster {$this->monster->name}");
+        $data = $this->character->fight();
+        $delay = $data->cooldown->expiresAt;
+        $result = $data->fight->result;
+        $this->log("fight result: {$result->value}");
+        $hasWon = $result === FightResults::WIN;
+        $this->tries = $result === FightResults::WIN ? 0 : $this->tries + 1;
+
+        if ($hasWon) {
+            $this->handleWin($delay)->delay($delay);
+
+            return;
+        }
+
         $this->selfDispatch(['tries' => $this->tries])->delay($delay);
     }
 }

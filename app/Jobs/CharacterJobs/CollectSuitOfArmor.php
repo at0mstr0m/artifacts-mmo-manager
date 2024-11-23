@@ -25,7 +25,7 @@ class CollectSuitOfArmor extends CharacterJob
         );
     }
 
-    public function handleCharacter(): void
+    protected function handleCharacter(): void
     {
         foreach (SuitOfArmorParts::cases() as $part) {
             $this->handlePart($part);
@@ -69,6 +69,12 @@ class CollectSuitOfArmor extends CharacterJob
                 $this->log("equiping {$item->name}");
                 $this->character->equip($item);
             }
+        }
+
+        if (! $this->character->hasSkillLevel($item->craft)) {
+            $this->log("missing skill level to craft {$item->name}");
+
+            return;
         }
 
         $this->log("collecting {$item->name}");

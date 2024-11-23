@@ -24,7 +24,7 @@ class CraftItem extends CharacterJob
         );
     }
 
-    public function handleCharacter(): void
+    protected function handleCharacter(): void
     {
         $this->log('must determine location to craft item');
         $this->item = Item::find($this->itemId);
@@ -34,7 +34,7 @@ class CraftItem extends CharacterJob
         if (! $this->character->hasSkillLevel($craft)) {
             $this->fail(
                 $this->character->name
-                . 'does not have required skill level'
+                . ' does not have required skill level'
                 . $craft->level
                 . ' to craft '
                 . $this->item->name

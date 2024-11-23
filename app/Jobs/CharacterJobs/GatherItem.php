@@ -27,7 +27,7 @@ class GatherItem extends CharacterJob
         );
     }
 
-    public function handleCharacter(): void
+    protected function handleCharacter(): void
     {
         $this->item = Item::find($this->itemId);
 

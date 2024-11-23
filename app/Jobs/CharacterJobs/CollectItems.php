@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
-use App\Data\Schemas\SimpleItemData;
-use App\Jobs\CharacterJob;
 use App\Models\Drop;
 use App\Models\Item;
 use App\Models\Monster;
 use App\Models\Resource;
+use App\Jobs\CharacterJob;
 use Illuminate\Support\Collection;
+use App\Data\Schemas\SimpleItemData;
 
 class CollectItems extends CharacterJob
 {
@@ -25,7 +25,7 @@ class CollectItems extends CharacterJob
         $this->constructorArguments = compact('characterId', 'items');
     }
 
-    public function handleCharacter(): void
+    protected function handleCharacter(): void
     {
         // check if all items are already collected
         $complete = $this->items->every(
@@ -57,9 +57,10 @@ class CollectItems extends CharacterJob
         $drop = $nextItem->drops()->orderBy('rate')->first();
 
         $job = match ($drop?->source_type) {
-            Monster::class => new FightMonster(
+            Monster::class => new FightMonsterDrop(
                 $this->characterId,
-                $drop->source_id
+                $drop->source_id,
+                $itemData,
             ),
             Resource::class => new GatherItem(
                 $this->characterId,

@@ -24,7 +24,7 @@ class CollectRawMaterialsToCraft extends CharacterJob
         );
     }
 
-    public function handleCharacter(): void
+    protected function handleCharacter(): void
     {
         if ($this->character->hasInInventory($this->itemId, $this->quantity)) {
             $this->log('Has all items in desired quantity ' . $this->quantity);
