@@ -12,6 +12,7 @@ use App\Data\Schemas\SimpleItemData;
 use App\Models\Item;
 use App\Traits\UpdatesDeposit;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ActionDepositBankData extends Data
 {
@@ -30,7 +31,7 @@ class ActionDepositBankData extends Data
         public array|CharacterData $character,
     ) {
         $this->cooldown = CooldownData::from($cooldown);
-        $this->item = CharacterData::from($item);
+        $this->item = ItemData::from($item);
         $this->bank = SimpleItemData::collection($bank);
         $this->character = CharacterData::from($character);
 
@@ -39,12 +40,14 @@ class ActionDepositBankData extends Data
 
     protected function updateDeposit(): void
     {
-        // reset all deposits to 0
-        Item::getQuery()->update(['deposit' => 0]);
-        // update deposits
-        $this->bank->each(function (SimpleItemData $itemData) {
-            $item = Item::firstWhere('code', $itemData->code);
-            $item->update(['deposit' => $itemData->quantity]);
+        DB::transaction(function () {
+            // reset all deposits to 0
+            Item::getQuery()->update(['deposited' => 0]);
+            // update deposits
+            $this->bank->each(function (SimpleItemData $itemData) {
+                $item = Item::firstWhere('code', $itemData->code);
+                $item->update(['deposited' => $itemData->quantity]);
+            });
         });
     }
 }
