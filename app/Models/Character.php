@@ -8,11 +8,14 @@ use App\Actions\EvaluateFittingItemSlot;
 use App\Data\Responses\ActionAcceptNewTask;
 use App\Data\Responses\ActionCompleteTaskData;
 use App\Data\Responses\ActionCraftingData;
+use App\Data\Responses\ActionDepositBankData;
+use App\Data\Responses\ActionDepositBankGoldData;
 use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
+use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
 use App\Enums\TaskTypes;
@@ -105,6 +108,7 @@ use Illuminate\Support\Str;
  * @property int $inventory_max_items
  * @property int|null $occupaion_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
+ * @property-read int $inventory_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
  * @property-read bool $is_healthy
  * @property-read Map|null $location
@@ -396,9 +400,69 @@ class Character extends Model
         return app(ArtifactsService::class)->actionAcceptNewTask($this->name);
     }
 
+    public function tradeTaskItems(
+        null|int|InventoryItem|Item|SimpleItemData|string $item = null,
+        int $quantity = 0,
+    ): ActionTaskTradeData {
+        $item ??= $this->inventoryItems()->firstWhere('code', $this->task);
+
+        switch (true) {
+            case is_int($item):
+                $item = Item::find($item)->code;
+                break;
+            case $item instanceof Item:
+                $item = $item->code;
+                break;
+            case $item instanceof SimpleItemData:
+            case $item instanceof InventoryItem:
+                $quantity = $quantity ?: $item->quantity;
+                $item = $item->code;
+                break;
+        }
+
+        return app(ArtifactsService::class)
+            ->actionTaskTrade(
+                $this->name,
+                $item,
+                $quantity
+            );
+    }
+
     public function completeTask(): ActionCompleteTaskData
     {
         return app(ArtifactsService::class)->actionCompleteTask($this->name);
+    }
+
+    public function depositGold(int $quantity = 0): ActionDepositBankGoldData
+    {
+        $quantity = $quantity ?: $this->gold;
+
+        return app(ArtifactsService::class)
+            ->actionDepositBankGold($this->name, $quantity);
+    }
+
+    public function depositItem(
+        int|InventoryItem|Item|SimpleItemData|string $item,
+        int $quantity = 0
+    ): ActionDepositBankData {
+        switch (true) {
+            case is_int($item):
+                $item = Item::find($item)->code;
+                break;
+            case $item instanceof Item:
+                $item = $item->code;
+                break;
+            case $item instanceof SimpleItemData:
+            case $item instanceof InventoryItem:
+                $quantity = $quantity ?: $item->quantity;
+                $item = $item->code;
+                break;
+        }
+
+        $quantity = $quantity ?: $this->countInInventory($item);
+
+        return app(ArtifactsService::class)
+            ->actionDepositBank($this->name, $item, $quantity);
     }
 
     public function hasInInventory(
@@ -481,10 +545,23 @@ class Character extends Model
         return $this->getSlots()->keys();
     }
 
+    public function inventoryIsFull(): bool
+    {
+        return $this->inventory_count === $this->inventory_max_items
+            || $this->inventoryItems()->pluck('code')->filter()->count() >= 20;
+    }
+
+    protected function inventoryCount(): Attribute
+    {
+        return Attribute::get(
+            fn (): int => (int) $this->inventoryItems()->sum('quantity')
+        );
+    }
+
     protected function isHealthy(): Attribute
     {
         return Attribute::get(
-            fn (): bool => $this->refresh()->hp === $this->max_hp
+            fn (): bool => $this->hp === $this->max_hp
         );
     }
 }
