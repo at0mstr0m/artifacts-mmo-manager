@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Actions\EvaluateFittingItemSlot;
 use App\Data\Responses\ActionAcceptNewTask;
+use App\Data\Responses\ActionBuyBankExpansionData;
 use App\Data\Responses\ActionCompleteTaskData;
 use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionDepositBankData;
@@ -439,6 +440,18 @@ class Character extends Model
 
         return app(ArtifactsService::class)
             ->actionDepositBankGold($this->name, $quantity);
+    }
+
+    public function withdrawGold(int $quantity): ActionDepositBankGoldData
+    {
+        return app(ArtifactsService::class)
+            ->actionWithdrawBankGold($this->name, $quantity);
+    }
+
+    public function buyBankExpansion(): ActionBuyBankExpansionData
+    {
+        return app(ArtifactsService::class)
+            ->actionBuyBankExpansion($this->name);
     }
 
     public function depositItem(
