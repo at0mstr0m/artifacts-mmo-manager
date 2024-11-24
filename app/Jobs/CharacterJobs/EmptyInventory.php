@@ -8,6 +8,7 @@ use App\Data\Schemas\SimpleItemData;
 use App\Jobs\CharacterJob;
 use App\Models\InventoryItem;
 use App\Models\Map;
+use App\Services\ArtifactsService;
 use Illuminate\Support\Collection;
 
 class EmptyInventory extends CharacterJob
@@ -27,6 +28,8 @@ class EmptyInventory extends CharacterJob
         $this->ensureIsAtBank();
 
         $this->depositGold();
+
+        $this->buyBankExpansion();
 
         $this->depositItems();
 
@@ -66,6 +69,31 @@ class EmptyInventory extends CharacterJob
         $data = $this->character->depositGold();
         $this->selfDispatch()->delay($data->cooldown->expiresAt);
 
+        $this->end();
+    }
+
+    private function buyBankExpansion(): void
+    {
+        $bankDetails = app(ArtifactsService::class)->getBankDetails();
+        $nextExpansionCost = $bankDetails->nextExpansionCost;
+        $this->log("Next bank expansion costs {$nextExpansionCost} gold");
+
+        if ($nextExpansionCost > $bankDetails->gold) {
+            $this->log('Not enough gold to buy expansion');
+
+            return;
+        }
+
+        $this->log('withdrawing gold to buy expansion');
+        $withdrawData = $this->character->withdrawGold($nextExpansionCost);
+        $this->character = $withdrawData->character->getModel();
+
+        sleep($withdrawData->cooldown->totalSeconds + 2);
+
+        $this->log('Buying bank expansion');
+        $buyExpansionData = $this->character->buyBankExpansion();
+
+        $this->selfDispatch()->delay($buyExpansionData->cooldown->expiresAt);
         $this->end();
     }
 
