@@ -108,7 +108,7 @@ class ArtifactsService
         );
     }
 
-    public function actionUnquipItem(
+    public function actionUnequipItem(
         string $name,
         string $slot,
         string $itemCode,

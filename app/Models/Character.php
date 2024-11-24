@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Actions\EvaluateFittingItemSlot;
+use App\Data\Responses\ActionAcceptNewTask;
+use App\Data\Responses\ActionCompleteTaskData;
 use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionEquipItemData;
 use App\Data\Responses\ActionFightData;
@@ -13,6 +15,7 @@ use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
 use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
+use App\Enums\TaskTypes;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -76,6 +79,7 @@ use Illuminate\Support\Str;
  * @property int $res_air
  * @property int $x
  * @property int $y
+ * @property string|null $x_y
  * @property int $cooldown
  * @property Carbon $cooldown_expiration
  * @property string $weapon_slot
@@ -95,7 +99,7 @@ use Illuminate\Support\Str;
  * @property string $utility2_slot
  * @property int $utility2_slot_quantity
  * @property string $task
- * @property string $task_type
+ * @property TaskTypes|null $task_type
  * @property int $task_progress
  * @property int $task_total
  * @property int $inventory_max_items
@@ -103,6 +107,7 @@ use Illuminate\Support\Str;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
  * @property-read bool $is_healthy
+ * @property-read Map|null $location
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
  * @property-read Occupaion|null $occupation
  *
@@ -262,10 +267,14 @@ class Character extends Model
         'utility2_slot' => 'string',
         'utility2_slot_quantity' => 'integer',
         'task' => 'string',
-        'task_type' => 'string',
+        'task_type' => TaskTypes::class,
         'task_progress' => 'integer',
         'task_total' => 'integer',
         'inventory_max_items' => 'integer',
+    ];
+
+    protected $appends = [
+        'x_y',
     ];
 
     public function inventoryItems(): HasMany
@@ -288,6 +297,11 @@ class Character extends Model
         return $this->belongsTo(Occupaion::class);
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Map::class, 'x_y', 'x_y');
+    }
+
     public function refetch(): static
     {
         return app(ArtifactsService::class)
@@ -305,7 +319,7 @@ class Character extends Model
         return $this->x === $x && $this->y === $y;
     }
 
-    public function move(int|Map $x, ?int $y = null): ActionMoveData
+    public function moveTo(int|Map $x, ?int $y = null): ActionMoveData
     {
         if ($x instanceof Map) {
             $y = $x->y;
@@ -375,6 +389,16 @@ class Character extends Model
 
         return app(ArtifactsService::class)
             ->actionEquipItem($this->name, $slot, $item->code, $quantity);
+    }
+
+    public function acceptNewTask(): ActionAcceptNewTask
+    {
+        return app(ArtifactsService::class)->actionAcceptNewTask($this->name);
+    }
+
+    public function completeTask(): ActionCompleteTaskData
+    {
+        return app(ArtifactsService::class)->actionCompleteTask($this->name);
     }
 
     public function hasInInventory(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\IdentifiableByCode;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -31,11 +32,14 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster searchByCode(string $search = '')
  *
  * @mixin \Eloquent
  */
 class Monster extends Model
 {
+    use IdentifiableByCode;
+
     protected $fillable = [
         'name',
         'code',

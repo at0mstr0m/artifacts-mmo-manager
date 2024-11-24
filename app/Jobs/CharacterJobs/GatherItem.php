@@ -17,13 +17,11 @@ class GatherItem extends CharacterJob
         protected int $characterId,
         protected int $itemId,
         protected int $quantity = 1,    // how many items to gather
-        protected ?int $mapId = null,
     ) {
         $this->constructorArguments = compact(
             'characterId',
             'itemId',
             'quantity',
-            'mapId',
         );
     }
 
@@ -31,6 +29,15 @@ class GatherItem extends CharacterJob
     {
         $this->item = Item::find($this->itemId);
 
+        $this->checkHasDesiredQuantity();
+
+        $this->goToItemLocation();
+
+        $this->gatherItem();
+    }
+
+    private function checkHasDesiredQuantity(): void
+    {
         $this->log("Gathering {$this->quantity} units of {$this->item->name}");
         $currentQuantity = $this->character->countInInventory($this->item);
         $this->log("currently loaded with {$currentQuantity} units");
@@ -39,46 +46,56 @@ class GatherItem extends CharacterJob
             $this->log('already have enough items');
             $this->dispatchNextJob();
 
+            $this->end();
+        }
+    }
+
+    private function goToItemLocation(): void
+    {
+        $currentLocation = $this->character->location;
+
+        if (
+            $currentLocation->content_type === 'resource'
+            || $currentLocation->content_code === $this->item->code
+        ) {
+            $this->log('Is at resource location');
+
             return;
         }
 
-        $itemLocation = Map::findOr($this->mapId, fn () => Map::query()
+        $this->log('Not at resource location');
+
+        $itemLocation = Map::query()
             ->whereRelation('resource', fn (Builder $query) => $query
                 ->whereRelation('drops', 'item_id', $this->item->id))
             ->inRandomOrder()
-            ->first());
+            ->first();
 
         if (! $itemLocation) {
-            throw new \Exception(
-                "found no location to gather item {$this->item->name}",
-                1
-            );
+            $this->fail("found no location to gather item {$this->item->name}");
         }
 
-        if (! $this->mapId) {
-            $this->mapId = $itemLocation->id;
-            $this->constructorArguments['mapId'] = $this->mapId;
-        }
+        $delay = $this
+            ->character
+            ->moveTo($itemLocation)
+            ->cooldown
+            ->expiresAt;
 
-        if ($this->character->isAt($itemLocation)) {
-            $this->log("gathering item {$this->item->name}");
-            $data = $this->character->gather();
-            $delay = $data->cooldown->expiresAt;
-            $count = $data->details
-                ->items
-                ->where('code', $this->item->code)
-                ->count();
-            $this->log("gathered {$count} Units of {$this->item->name}");
-        } else {
-            $this->log("moving to gathering location {$this->item->name}");
-            $delay = $this
-                ->character
-                ->move($itemLocation)
-                ->cooldown
-                ->expiresAt;
-        }
+        $this->selfDispatch()->delay($delay);
 
-        $this->log("delaying for {$delay->diffInSeconds(now())} Seconds");
+        $this->end();
+    }
+
+    private function gatherItem(): void
+    {
+        $this->log("gathering item {$this->item->name}");
+        $data = $this->character->gather();
+        $delay = $data->cooldown->expiresAt;
+        $count = $data->details
+            ->items
+            ->where('code', $this->item->code)
+            ->count();
+        $this->log("gathered {$count} Units of {$this->item->name}");
 
         if ($this->character->refresh()->hasInInventory($this->item, $this->quantity)) {
             $this->log('all items gathered');

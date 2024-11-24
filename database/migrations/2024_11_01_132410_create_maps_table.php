@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->integer('x');
             $table->integer('y');
             $table->unique(['x', 'y']);
+            $table->string('x_y')->virtualAs("CONCAT(x, ',', y)");
             $table->string('content_type')->nullable();
             $table->string('content_code')->nullable();
         });

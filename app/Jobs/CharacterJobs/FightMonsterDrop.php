@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\PendingDispatch;
 class FightMonsterDrop extends FightMonster
 {
     public function __construct(
-        int $characterId,
+        protected int $characterId,
         protected int $monsterId,
         protected SimpleItemData $itemData,
         protected int $tries = 0,

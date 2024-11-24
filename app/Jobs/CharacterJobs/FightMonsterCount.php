@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\PendingDispatch;
 class FightMonsterCount extends FightMonster
 {
     public function __construct(
-        int $characterId,
+        protected int $characterId,
         protected int $monsterId,
         protected int $count = 1,
         protected int $tries = 0,

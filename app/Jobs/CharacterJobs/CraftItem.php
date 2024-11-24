@@ -50,7 +50,7 @@ class CraftItem extends CharacterJob
 
         if (! $this->character->isAt($workshop)) {
             $this->log('is not at workshop');
-            $moveData = $this->character->move($workshop);
+            $moveData = $this->character->moveTo($workshop);
             $this->selfDispatch()->delay($moveData->cooldown->expiresAt);
 
             return;

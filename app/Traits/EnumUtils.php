@@ -58,10 +58,10 @@ trait EnumUtils
         throw new \ValueError("{$value} is not a valid value for enum " . static::class);
     }
 
-    public static function randomCase(): static
+    public static function random(): static
     {
-        $values = static::values();
+        $cases = static::cases();
 
-        return static::fromName($values[array_rand($values)]);
+        return static::fromName($cases[array_rand($cases)]);
     }
 }

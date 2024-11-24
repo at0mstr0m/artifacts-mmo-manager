@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $skin
  * @property int $x
  * @property int $y
+ * @property string|null $x_y
  * @property string|null $content_type
  * @property string|null $content_code
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $events
@@ -45,6 +46,10 @@ class Map extends Model
         'y' => 'integer',
         'content_type' => 'string',
         'content_code' => 'string',
+    ];
+
+    protected $appends = [
+        'x_y',
     ];
 
     public function events(): HasMany

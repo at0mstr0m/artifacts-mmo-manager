@@ -6,6 +6,7 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 use App\Enums\CharacterSkins;
+use App\Enums\TaskTypes;
 use App\Models\Character;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -17,6 +18,7 @@ class CharacterData extends Data
     /**
      * @param Collection<InventorySlotData> $inventory
      * @param CharacterSkins $skin
+     * @param TaskTypes $taskType
      */
     public function __construct(
         public string $name,
@@ -89,7 +91,7 @@ class CharacterData extends Data
         public string $utility2Slot,
         public int $utility2SlotQuantity,
         public string $task,
-        public string $taskType,
+        public null|string|TaskTypes $taskType,
         public int $taskProgress,
         public int $taskTotal,
         public int $inventoryMaxItems,
@@ -98,6 +100,7 @@ class CharacterData extends Data
         $this->cooldownExpiration = Carbon::parse($cooldownExpiration);
         $this->inventory = InventorySlotData::collection($inventory);
         $this->skin = CharacterSkins::fromValue($skin);
+        $this->taskType = $this->taskType ? TaskTypes::fromValue($taskType) : null;
 
         $this->createIfNotExists();
     }

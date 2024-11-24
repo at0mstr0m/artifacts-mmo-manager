@@ -26,7 +26,10 @@ class CollectRawMaterialsToCraft extends CharacterJob
 
     protected function handleCharacter(): void
     {
-        if ($this->character->hasInInventory($this->itemId, $this->quantity)) {
+        if (
+            $this->character->hasInInventory($this->itemId, $this->quantity)
+            || $this->character->hasEquipped($this->itemId)
+        ) {
             $this->log('Has all items in desired quantity ' . $this->quantity);
             $this->dispatchNextJob();
 

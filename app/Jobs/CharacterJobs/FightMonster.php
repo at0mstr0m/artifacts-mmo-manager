@@ -14,7 +14,7 @@ abstract class FightMonster extends CharacterJob
     protected Monster $monster;
 
     public function __construct(
-        int $characterId,
+        protected int $characterId,
         protected int $monsterId,
         protected int $tries = 0,
     ) {
@@ -27,7 +27,6 @@ abstract class FightMonster extends CharacterJob
                 . ' too many times'
             ));
         }
-        parent::__construct($characterId);
     }
 
     abstract protected function handleWin(): PendingDispatch;
@@ -36,45 +35,68 @@ abstract class FightMonster extends CharacterJob
     {
         $this->monster = Monster::find($this->monsterId);
 
+        $this->ensureCharacterIsHealthy();
+
+        $this->goToMonsterLocation();
+
+        $this->fightMonster();
+    }
+
+    private function ensureCharacterIsHealthy(): void
+    {
+        if ($this->character->is_healthy) {
+            return;
+        }
+
+        $this->log('Not healthy enough to fight');
+        $delay = $this->character->rest()->cooldown->expiresAt;
+        $this->selfDispatch()->delay($delay);
+
+        $this->end();
+    }
+
+    private function goToMonsterLocation(): void
+    {
+        $currentLocation = $this->character->location;
+
+        if (
+            $currentLocation->content_type === 'monster'
+            || $currentLocation->content_code === $this->monster->code
+        ) {
+            $this->log('Is at monster location');
+
+            return;
+        }
+
+        $this->log('Not at monster location');
         $monsterLocation = $this->monster->locations()->inRandomOrder()->first();
 
         if (! $monsterLocation) {
-            throw new \Exception(
-                "found no location for monster {$this->monster->name}",
-                1
-            );
+            $this->fail("found no location for monster {$this->monster->name}");
         }
 
-        if (! $this->character->is_healthy) {
-            $this->log('Not healthy enough to fight');
-            $delay = $this->character->rest()->cooldown->expiresAt;
-            $this->selfDispatch()->delay($delay);
+        $delay = $this
+            ->character
+            ->moveTo($monsterLocation)
+            ->cooldown
+            ->expiresAt;
 
-            $this->log('Resting');
+        $this->selfDispatch()->delay($delay);
 
-            return;
-        }
+        $this->end();
+    }
 
-        if (! $this->character->isAt($monsterLocation)) {
-            $this->log("moving to monster {$this->monster->name}");
-            $delay = $this
-                ->character
-                ->move($monsterLocation)
-                ->cooldown
-                ->expiresAt;
-
-            $this->selfDispatch()->delay($delay);
-
-            return;
-        }
-
+    private function fightMonster(): void
+    {
         $this->log("fighting monster {$this->monster->name}");
         $data = $this->character->fight();
         $delay = $data->cooldown->expiresAt;
         $result = $data->fight->result;
+
         $this->log("fight result: {$result->value}");
+
         $hasWon = $result === FightResults::WIN;
-        $this->tries = $result === FightResults::WIN ? 0 : $this->tries + 1;
+        $this->tries = $hasWon ? 0 : $this->tries + 1;
 
         if ($hasWon) {
             $this->handleWin($delay)->delay($delay);

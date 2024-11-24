@@ -18,10 +18,9 @@ class CollectItems extends CharacterJob
      * @param Collection<SimpleItemData> $items
      */
     public function __construct(
-        int $characterId,
+        protected int $characterId,
         protected Collection $items,
     ) {
-        parent::__construct($characterId);
         $this->constructorArguments = compact('characterId', 'items');
     }
 

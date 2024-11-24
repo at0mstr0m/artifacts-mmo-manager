@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Jobs\CharacterJobs;
 
 use App\Enums\SuitOfArmorParts;
-use App\Exceptions\EndJob;
 use App\Jobs\CharacterJob;
 use App\Models\Item;
 
@@ -84,6 +83,6 @@ class CollectSuitOfArmor extends CharacterJob
         );
 
         // stop loop here and craft the item
-        throw new EndJob();
+        $this->end();
     }
 }

@@ -18,5 +18,6 @@ class TaskSeeder extends Seeder
 
         $api->getAllResources(all: true);
         $api->getAllTaskRewards(all: true);
+        $api->getAllTasks(all: true);
     }
 }

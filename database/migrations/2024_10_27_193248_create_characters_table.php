@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\CharacterSkins;
+use App\Enums\TaskTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -81,6 +82,7 @@ return new class extends Migration {
 
             $table->integer('x');
             $table->integer('y');
+            $table->string('x_y')->virtualAs("CONCAT(x, ',', y)");
 
             $table->integer('cooldown');
             $table->dateTime('cooldown_expiration');
@@ -103,7 +105,8 @@ return new class extends Migration {
             $table->tinyInteger('utility2_slot_quantity');
 
             $table->string('task');
-            $table->string('task_type');
+            $table->enum('task_type', TaskTypes::values())
+                ->nullable();
             $table->integer('task_progress');
             $table->integer('task_total');
             $table->tinyInteger('inventory_max_items');

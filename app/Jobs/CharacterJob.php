@@ -21,7 +21,11 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
 
     protected Character $character;
 
-    public function __construct(protected int $characterId) {}
+    public function __construct(
+        protected int $characterId,
+    ) {
+        $this->constructorArguments = compact('characterId');
+    }
 
     /**
      * Get the middleware the job should pass through.
@@ -76,5 +80,10 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
                 . Str::replaceArray(':?', $replacements, $message)
                 . '"'
         );
+    }
+
+    protected function end(): never
+    {
+        throw new EndJob();
     }
 }
