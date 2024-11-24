@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
+use App\Data\NextJobData;
+use App\Data\Schemas\SimpleItemData;
 use App\Enums\TaskTypes;
 use App\Jobs\CharacterJob;
 use App\Models\Character;
@@ -26,7 +28,7 @@ class FulfillTask extends CharacterJob
     {
         $this->ensureHasTask();
 
-        $this->log("Fulfilling task: {$this->character->task}.");
+        $this->handleFullInventory();
 
         $this->handleFulfillment();
 
@@ -57,9 +59,53 @@ class FulfillTask extends CharacterJob
         }
     }
 
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
+            return;
+        }
+
+        switch ($this->type) {
+            case TaskTypes::MONSTERS:
+                $this->dispatchWithComeback(
+                    new EmptyInventory($this->character->id)
+                );
+                break;
+            case TaskTypes::ITEMS:
+                $itemCode = $this->character->task;
+                $job = (new EmptyInventory(
+                    $this->character->id,
+                    collect([new SimpleItemData(
+                        $itemCode,
+                        $this->character->countInInventory($itemCode)
+                    )])
+                ))
+                    ->setNextJobs($this->nextJobs)
+                    ->unshiftNextJob($this->makeNextJobData())
+                    ->unshiftNextJob(new NextJobData(
+                        TradeTaskItems::class,
+                        ['characterId' => $this->character->id]
+                    ));
+                dispatch($job);
+                break;
+        }
+
+        $this->end();
+    }
+
     private function handleFulfillment(): void
     {
-        $progressCount = $this->character->task_total - $this->character->task_progress;
+        $this->log("Fulfilling task: {$this->character->task}.");
+
+        $progressCount = match ($this->type) {
+            TaskTypes::MONSTERS => (
+                $this->character->task_total - $this->character->task_progress
+            ) ,
+            TaskTypes::ITEMS => (
+                ($this->character->task_total - $this->character->task_progress)
+                    - $this->character->countInInventory($this->character->task)
+            ),
+        };
 
         if ($progressCount <= 0) {
             $this->log('Task requirements fulfilled.');
@@ -77,9 +123,7 @@ class FulfillTask extends CharacterJob
                     $monsterId,
                     $progressCount
                 ));
-
-                $this->end();
-                // no break
+                break;
             case TaskTypes::ITEMS:
                 $itemId = Item::findByCode($this->character->task)->id;
                 $this->dispatchWithComeback(new GatherItem(
@@ -87,9 +131,10 @@ class FulfillTask extends CharacterJob
                     $itemId,
                     $progressCount
                 ));
-
-                $this->end();
+                break;
         }
+
+        $this->end();
     }
 
     private function claimRewards(): void

@@ -27,6 +27,8 @@ class GatherItem extends CharacterJob
 
     protected function handleCharacter(): void
     {
+        $this->handleFullInventory();
+
         $this->item = Item::find($this->itemId);
 
         $this->checkHasDesiredQuantity();
@@ -34,6 +36,18 @@ class GatherItem extends CharacterJob
         $this->goToItemLocation();
 
         $this->gatherItem();
+    }
+
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
+            return;
+        }
+        
+        $this->log('Inventory is full');
+        $this->dispatchNextJob();
+
+        $this->end();
     }
 
     private function checkHasDesiredQuantity(): void

@@ -33,6 +33,8 @@ abstract class FightMonster extends CharacterJob
 
     protected function handleCharacter(): void
     {
+        $this->handleFullInventory();
+
         $this->monster = Monster::find($this->monsterId);
 
         $this->ensureCharacterIsHealthy();
@@ -40,6 +42,17 @@ abstract class FightMonster extends CharacterJob
         $this->goToMonsterLocation();
 
         $this->fightMonster();
+    }
+
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
+            return;
+        }
+        $this->log('Inventory is full');
+        $this->dispatchNextJob();
+
+        $this->end();
     }
 
     private function ensureCharacterIsHealthy(): void
