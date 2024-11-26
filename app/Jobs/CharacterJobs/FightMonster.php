@@ -19,13 +19,13 @@ abstract class FightMonster extends CharacterJob
         protected int $tries = 0,
     ) {
         if ($tries > 3) {
-            $this->fail(new \Exception(
+            throw new \Exception(
                 'Character '
-                . $characterId
-                . ' tried to fight monster '
-                . $monsterId
-                . ' too many times'
-            ));
+                 . $characterId
+                 . ' tried to fight monster '
+                 . $monsterId
+                 . ' too many times'
+            );
         }
     }
 

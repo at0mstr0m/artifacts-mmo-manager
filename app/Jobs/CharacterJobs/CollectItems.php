@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
+use App\Data\Schemas\SimpleItemData;
+use App\Jobs\CharacterJob;
 use App\Models\Drop;
 use App\Models\Item;
 use App\Models\Monster;
 use App\Models\Resource;
-use App\Jobs\CharacterJob;
 use Illuminate\Support\Collection;
-use App\Data\Schemas\SimpleItemData;
 
 class CollectItems extends CharacterJob
 {
@@ -32,13 +32,13 @@ class CollectItems extends CharacterJob
         );
 
         if ($complete) {
-            $this->log('All items are already collected');
+            $this->log('All items are already crafted');
             $this->dispatchNextJob();
 
             return;
         }
 
-        $this->log('Not all Items collected yet.');
+        $this->log('Not all Items crafted yet.');
 
         /** @var SimpleItemData */
         $itemData = $this->items->firstWhere(

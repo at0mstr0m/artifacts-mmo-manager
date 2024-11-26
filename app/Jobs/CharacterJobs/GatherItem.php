@@ -43,7 +43,7 @@ class GatherItem extends CharacterJob
         if (! $this->character->inventoryIsFull()) {
             return;
         }
-        
+
         $this->log('Inventory is full');
         $this->dispatchNextJob();
 

@@ -15,59 +15,85 @@ class CollectRawMaterialsToCraft extends CharacterJob
     public function __construct(
         protected int $characterId,
         protected int $itemId,
-        protected int $quantity = 1,
+        protected int $count = 1,
     ) {
         $this->constructorArguments = compact(
             'characterId',
             'itemId',
-            'quantity'
+            'count'
         );
     }
 
     protected function handleCharacter(): void
     {
-        if (
-            $this->character->hasInInventory($this->itemId, $this->quantity)
-            || $this->character->hasEquipped($this->itemId)
-        ) {
-            $this->log('Has all items in desired quantity ' . $this->quantity);
+        $this->checkHasDesiredQuantity();
+
+        $this->craftItem();
+
+        /*
+         * Check here after crafting because inventory could have been be full
+         * of raw materials.
+         */
+        $this->handleFullInventory();
+
+        $this->collectRawMaterials();
+    }
+
+    private function checkHasDesiredQuantity(): void
+    {
+        if ($this->character->hasInInventory($this->itemId, $this->count)) {
+            $this->log('Has all items in desired quantity ' . $this->count);
             $this->dispatchNextJob();
 
-            return;
+            $this->end();
         }
 
         $this->log('Not all items collected yet.');
+    }
 
-        $this->item = Item::find($this->itemId);
-
-        $rawMaterials = $this->item->craft->requiredItems;
-        $hasAllRawMaterials = $rawMaterials->every(
-            fn (Item $requiredItem): bool => $this->character->hasInInventory(
-                $requiredItem->id,
-                $requiredItem->pivot->quantity * $this->quantity
-            )
-        );
-
-        if ($hasAllRawMaterials) {
-            $this->log(
-                'Has all required items to craft '
-                . $this->quantity
-                . ' '
-                . $this->item->name
-            );
-            $this->dispatchWithComeback(
-                new CraftItem($this->characterId, $this->itemId, $this->quantity)
-            );
-
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
             return;
         }
 
+        $this->log('Inventory is full');
+        $this->dispatchNextJob();
+
+        $this->end();
+    }
+
+    private function craftItem(): void
+    {
+        $this->item = Item::find($this->itemId);
+
+        $hasRawMaterialToCraftOne = $this->item->craft->requiredItems->every(
+            fn (Item $requiredItem): bool => $this->character->hasInInventory(
+                $requiredItem->id,
+                $requiredItem->pivot->quantity
+            )
+        );
+
+        if (! $hasRawMaterialToCraftOne) {
+            return;
+        }
+
+        $this->log("Has all required items to craft one {$this->item->name}");
+        $this->dispatchWithComeback(
+            new CraftItem($this->characterId, $this->itemId)
+        );
+
+        $this->end();
+    }
+
+    private function collectRawMaterials(): void
+    {
         $this->log('Not all required items collected yet.');
-        $items = $rawMaterials->map(
-            fn (Item $requiredItem): SimpleItemData => SimpleItemData::from([
-                'code' => $requiredItem->code,
-                'quantity' => $requiredItem->pivot->quantity * $this->quantity,
-            ])
+        $items = $this->item->craft->requiredItems->map(
+            fn (Item $requiredItem): SimpleItemData => new SimpleItemData(
+                $requiredItem->code,
+                $requiredItem->pivot->quantity,
+            )
         );
 
         $this->dispatchWithComeback(
