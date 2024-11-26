@@ -7,6 +7,7 @@ namespace App\Traits;
 use App\Enums\RateLimitTypes;
 use App\Services\ArtifactsService;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
@@ -122,7 +123,17 @@ trait MakesRequests
     private function handleRateLimits(
         ?RateLimitTypes $type = null
     ): bool|PendingRequest {
-        $callback = fn () => Http::withToken($this->token);
+        $callback = fn () => Http::withToken($this->token)
+            ->retry(2, 1000, function (\Exception $exception) {
+                $result = $exception instanceof RequestException
+                    && $exception->response->status() === 499;
+                if ($result) {
+                    Log::channel('api_requests')
+                        ->info('Retrying request after 499 status code.');
+                }
+
+                return $result;
+            });
         if (! $type) {
             return $callback();
         }
@@ -150,7 +161,7 @@ trait MakesRequests
         $request = RateLimiter::attempt(
             $type->value . '_per_minute',
             $limits['minute'],
-            fn () => true,  // no need to create a new Http instance
+            fn () => true,  // no need to create a new Http instance yet
         );
 
         if (! $request) {
