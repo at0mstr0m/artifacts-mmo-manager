@@ -11,5 +11,5 @@ enum FightResults: string
     use EnumUtils;
 
     case WIN = 'win';
-    case LOSE = 'lose';
+    case LOSS = 'loss';
 }
