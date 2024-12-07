@@ -62,6 +62,22 @@ class FulfillTask extends CharacterJob
     private function handleFullInventory(): void
     {
         if (! $this->character->inventoryIsFull()) {
+            $unfulfilled = $this->character->task_total - $this->character->task_progress;
+            if (! $unfulfilled) {
+                $this->log('Task requirements are fulfilled.');
+
+                return;
+            }
+
+            if ($this->character->countInInventory($this->character->task) === $unfulfilled) {
+                $this->log('Inventory contains last task items to be able to fulfill the task.');
+                $this->dispatchWithComeback(
+                    new TradeTaskItems($this->character->id)
+                );
+
+                $this->end();
+            }
+
             return;
         }
 
@@ -73,12 +89,21 @@ class FulfillTask extends CharacterJob
                 break;
             case TaskTypes::ITEMS:
                 $itemCode = $this->character->task;
+                $item = Item::findByCode($itemCode);
                 $job = (new EmptyInventory(
                     $this->character->id,
-                    collect([new SimpleItemData(
-                        $itemCode,
-                        $this->character->countInInventory($itemCode)
-                    )])
+                    collect([
+                        new SimpleItemData(
+                            $itemCode,
+                            $this->character->countInInventory($itemCode),
+                        ),
+                        ...($item->craft?->requiredItems?->map(
+                            fn (Item $requiredItem): SimpleItemData => new SimpleItemData(
+                                $requiredItem->code,
+                                $requiredItem->pivot->quantity * ($this->character->task_total - $this->character->task_progress),
+                            )
+                        )->all() ?? []),
+                    ])
                 ))
                     ->setNextJobs($this->nextJobs)
                     ->unshiftNextJob($this->makeNextJobData())
@@ -97,7 +122,7 @@ class FulfillTask extends CharacterJob
     {
         $this->log("Fulfilling task: {$this->character->task}.");
 
-        $progressCount = match ($this->type) {
+        $progress = match ($this->type) {
             TaskTypes::MONSTERS => (
                 $this->character->task_total - $this->character->task_progress
             ) ,
@@ -107,31 +132,34 @@ class FulfillTask extends CharacterJob
             ),
         };
 
-        if ($progressCount <= 0) {
+        if ($progress <= 0) {
             $this->log('Task requirements fulfilled.');
 
             return;
         }
 
         $this->log('Task is not fulfilled yet, fulfilling it.');
+        $this->log("Progress yet: {$progress}/{$this->character->task_total}.");
 
-        switch ($this->type) {
-            case TaskTypes::MONSTERS:
-                $monsterId = Monster::findByCode($this->character->task)->id;
-                $this->dispatchWithComeback(new FightMonsterCount(
-                    $this->character->id,
-                    $monsterId,
-                    $progressCount
-                ));
-                break;
-            case TaskTypes::ITEMS:
-                $itemId = Item::findByCode($this->character->task)->id;
-                $this->dispatchWithComeback(new GatherItem(
-                    $this->character->id,
-                    $itemId,
-                    $progressCount
-                ));
-                break;
+        $payload = [
+            'characterId' => $this->character->id,
+            'count' => $this->character->task_total,
+        ];
+
+        if ($this->type === TaskTypes::MONSTERS) {
+            $monsterId = Monster::findByCode($this->character->task)->id;
+            $this->dispatchWithComeback(
+                new FightMonsterCount(
+                    ...[...$payload, 'monsterId' => $monsterId]
+                )
+            );
+        } else {    // $this->type === TaskTypes::ITEMS
+            $item = Item::findByCode($this->character->task);
+            $payload['itemId'] = $item->id;
+            $job = $item->craft
+                ? new CollectRawMaterialsToCraft(...$payload)
+                : new GatherItem(...$payload);
+            $this->dispatchWithComeback($job);
         }
 
         $this->end();
