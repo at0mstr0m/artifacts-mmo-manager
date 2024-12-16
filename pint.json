@@ -69,7 +69,7 @@
         "ordered_class_elements": true,
         "ordered_imports": {
             "imports_order": ["class", "function", "const"],
-            "sort_algorithm": "none"
+            "sort_algorithm": "alpha"
         },
         "return_type_declaration": true,
         "short_scalar_cast": true,
