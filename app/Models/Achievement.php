@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\AchievementTypes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * @property int $id
@@ -18,6 +19,9 @@ use App\Enums\AchievementTypes;
  * @property string|null $target
  * @property int $total
  * @property int $rewarded_gold
+ * @property int|null $current
+ * @property \Illuminate\Support\Carbon|null $completed_at
+ * @property-read bool $is_completed
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Achievement newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Achievement newQuery()
@@ -36,6 +40,8 @@ class Achievement extends Model
         'target',
         'total',
         'rewarded_gold',
+        'current',
+        'completed_at',
     ];
 
     protected $casts = [
@@ -47,5 +53,12 @@ class Achievement extends Model
         'target' => 'string',
         'total' => 'integer',
         'rewarded_gold' => 'integer',
+        'current' => 'integer',
+        'completed_at' => 'datetime',
     ];
+
+    protected function isCompleted(): Attribute
+    {
+        return Attribute::get(fn (): bool => (bool) $this->completed_at);
+    }
 }

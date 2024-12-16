@@ -475,6 +475,39 @@ class ArtifactsService
 
     /*
      * #########################################################################
+     * Accounts
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<AchievementData>
+     */
+    public function getAccountAchievements(
+        string $account,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get(
+            "accounts/{$account}/achievements",
+            RateLimitTypes::DATA,
+            $query
+        );
+        $data = AchievementData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    /*
+     * #########################################################################
      * Character
      * #########################################################################
      */

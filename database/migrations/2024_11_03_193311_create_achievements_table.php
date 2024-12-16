@@ -24,6 +24,10 @@ return new class extends Migration {
             $table->string('target')->nullable();
             $table->integer('total');
             $table->integer('rewarded_gold');
+            $table->integer('current')
+                ->nullable();
+            $table->dateTime('completed_at')
+                ->nullable();
         });
     }
 
