@@ -16,12 +16,12 @@ class GatherItem extends CharacterJob
     public function __construct(
         protected int $characterId,
         protected int $itemId,
-        protected int $quantity = 1,    // how many items to gather
+        protected int $count = 1,    // how many items to gather
     ) {
         $this->constructorArguments = compact(
             'characterId',
             'itemId',
-            'quantity',
+            'count',
         );
     }
 
@@ -52,11 +52,11 @@ class GatherItem extends CharacterJob
 
     private function checkHasDesiredQuantity(): void
     {
-        $this->log("Gathering {$this->quantity} units of {$this->item->name}");
+        $this->log("Gathering {$this->count} units of {$this->item->name}");
         $currentQuantity = $this->character->countInInventory($this->item);
         $this->log("currently loaded with {$currentQuantity} units");
 
-        if ($currentQuantity >= $this->quantity) {
+        if ($currentQuantity >= $this->count) {
             $this->log('already have enough items');
             $this->dispatchNextJob();
 
@@ -111,7 +111,7 @@ class GatherItem extends CharacterJob
             ->count();
         $this->log("gathered {$count} Units of {$this->item->name}");
 
-        if ($this->character->refresh()->hasInInventory($this->item, $this->quantity)) {
+        if ($this->character->refresh()->hasInInventory($this->item, $this->count)) {
             $this->log('all items gathered');
             $this->dispatchNextJob()?->delay($delay);
         } else {

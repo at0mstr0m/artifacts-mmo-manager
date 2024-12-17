@@ -11,29 +11,22 @@ use Illuminate\Foundation\Bus\PendingDispatch;
 
 abstract class FightMonster extends CharacterJob
 {
+    protected const int MAX_TRIES = 3;
     protected Monster $monster;
 
     public function __construct(
         protected int $characterId,
         protected int $monsterId,
         protected int $tries = 0,
-    ) {
-        if ($tries > 3) {
-            throw new \Exception(
-                'Character '
-                . $characterId
-                . ' tried to fight monster '
-                . $monsterId
-                . ' too many times'
-            );
-        }
-    }
+    ) {}
 
     abstract protected function handleWin(): PendingDispatch;
 
     protected function handleCharacter(): void
     {
         $this->handleFullInventory();
+
+        $this->handleMaxTriesExceeded();
 
         $this->monster = Monster::find($this->monsterId);
 
@@ -52,6 +45,16 @@ abstract class FightMonster extends CharacterJob
         $this->log('Inventory is full');
         $this->dispatchNextJob();
 
+        $this->end();
+    }
+
+    private function handleMaxTriesExceeded(): void
+    {
+        if ($this->tries < static::MAX_TRIES) {
+            return;
+        }
+
+        $this->log('Max tries exceeded');
         $this->end();
     }
 
