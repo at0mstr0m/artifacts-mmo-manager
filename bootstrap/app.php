@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Jobs\UpdateEvents;
+use App\Jobs\UpdateCurrentThings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {})
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->job(UpdateEvents::class)->everyMinute();
+        $schedule->job(UpdateCurrentThings::class)->everyMinute();
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     })
     ->create();
