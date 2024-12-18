@@ -163,7 +163,10 @@
         "cast_spaces": true,
         "class_attributes_separation": {
             "elements": {
-                "method": "one"
+                "const": "one",
+                "method": "one",
+                "property": "one",
+                "trait_import": "none"
             }
         },
         "class_reference_name_casing": true,

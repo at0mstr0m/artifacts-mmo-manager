@@ -76,5 +76,13 @@ return (new Config())
         'multiline_whitespace_before_semicolons' => true,
         'function_declaration' => true,
         'not_operator_with_successor_space' => true,
+        'class_attributes_separation' => [
+            'elements' => [
+                'const' => 'one',
+                'method' => 'one',
+                'property' => 'one',
+                'trait_import' => 'none',
+            ],
+        ],
     ])
     ->setLineEnding("\n");
