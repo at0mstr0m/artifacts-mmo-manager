@@ -52,9 +52,8 @@ class GatherItem extends CharacterJob
 
     private function checkHasDesiredQuantity(): void
     {
-        $this->log("Gathering {$this->count} units of {$this->item->name}");
         $currentQuantity = $this->character->countInInventory($this->item);
-        $this->log("currently loaded with {$currentQuantity} units");
+        $this->log("Gathering {$currentQuantity}/{$this->count} units of {$this->item->name}");
 
         if ($currentQuantity >= $this->count) {
             $this->log('already have enough items');

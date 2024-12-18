@@ -68,8 +68,7 @@ class FulfillTask extends CharacterJob
 
                 return;
             }
-
-            if ($this->character->countInInventory($this->character->task) === $unfulfilled) {
+            if ($this->character->countInInventory($this->character->task) >= $unfulfilled) {
                 $this->log('Inventory contains last task items to be able to fulfill the task.');
                 $this->dispatchWithComeback(
                     new TradeTaskItems($this->character->id)
@@ -127,7 +126,8 @@ class FulfillTask extends CharacterJob
                 $this->character->task_total - $this->character->task_progress
             ) ,
             TaskTypes::ITEMS => (
-                ($this->character->task_total - $this->character->task_progress)
+                $this->character->task_total
+                    - $this->character->task_progress
                     - $this->character->countInInventory($this->character->task)
             ),
         };
@@ -143,7 +143,7 @@ class FulfillTask extends CharacterJob
 
         $payload = [
             'characterId' => $this->character->id,
-            'count' => $this->character->task_total,
+            'count' => $this->character->task_total - $this->character->task_progress,
         ];
 
         if ($this->type === TaskTypes::MONSTERS) {
@@ -184,6 +184,7 @@ class FulfillTask extends CharacterJob
         }
 
         $this->log('Task fulfilled and reward claimed.');
+        $this->selfDispatch(['type' => null]);
     }
 
     private function getTaskMasterLocation(): Map

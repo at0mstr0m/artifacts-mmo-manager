@@ -408,6 +408,9 @@ class Character extends Model
         $item ??= $this->inventoryItems()->firstWhere('code', $this->task);
 
         switch (true) {
+            case is_string($item):
+                $item = Item::findByCode($item);
+                break;
             case is_int($item):
                 $item = Item::find($item)->code;
                 break;
@@ -416,17 +419,18 @@ class Character extends Model
                 break;
             case $item instanceof SimpleItemData:
             case $item instanceof InventoryItem:
-                $quantity = $quantity ?: $item->quantity;
+                $quantity = $quantity ?: min(
+                    $item->quantity,
+                    $this->task_total - $this->task_progress
+                );
                 $item = $item->code;
                 break;
         }
 
+        $quantity = $quantity ?: ($this->task_total - $this->task_progress);
+
         return app(ArtifactsService::class)
-            ->actionTaskTrade(
-                $this->name,
-                $item,
-                $quantity
-            );
+            ->actionTaskTrade($this->name, $item, $quantity);
     }
 
     public function completeTask(): ActionCompleteTaskData

@@ -52,7 +52,7 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
         $cooldownExpiration = $this->character->cooldown_expiration;
         if ($cooldownExpiration->isAfter(now())) {
             $this->log('Character is on cooldown');
-            $this->release($cooldownExpiration);
+            $this->selfDispatch()->delay($cooldownExpiration->addSecond());
 
             return;
         }
