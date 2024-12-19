@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\PendingDispatch;
 abstract class FightMonster extends CharacterJob
 {
     protected const int MAX_TRIES = 3;
+
     protected Monster $monster;
 
     public function __construct(

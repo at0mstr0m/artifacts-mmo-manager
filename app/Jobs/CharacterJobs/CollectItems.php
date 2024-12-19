@@ -10,10 +10,15 @@ use App\Models\Drop;
 use App\Models\Item;
 use App\Models\Monster;
 use App\Models\Resource;
+use Database\Seeders\BankItemSeeder;
 use Illuminate\Support\Collection;
 
 class CollectItems extends CharacterJob
 {
+    private SimpleItemData $nextItemData;
+
+    private Item $nextItem;
+
     /**
      * @param Collection<SimpleItemData> $items
      */
@@ -26,45 +31,92 @@ class CollectItems extends CharacterJob
 
     protected function handleCharacter(): void
     {
-        // check if all items are already collected
-        $complete = $this->items->every(
-            fn (SimpleItemData $item) => $this->character->hasInInventory($item)
-        );
+        $this->checkAllItemsCollected();
 
-        if ($complete) {
-            $this->log('All items are already crafted');
+        $this->determineNextItem();
+
+        $this->collectNextItemFromBank();
+
+        $this->collectNextItemFromDrop();
+
+        $this->collectNextItemFromCrafting();
+    }
+
+    private function checkAllItemsCollected(): void
+    {
+        if ($this->items->every(
+            fn (SimpleItemData $item) => $this->character->hasInInventory($item)
+        )) {
+            $this->log('All items collected');
             $this->dispatchNextJob();
 
-            return;
+            $this->end();
         }
 
-        $this->log('Not all Items crafted yet.');
+        $this->log('Not all Items collected yet.');
+    }
 
-        /** @var SimpleItemData */
-        $itemData = $this->items->firstWhere(
+    private function determineNextItem(): void
+    {
+        $this->nextItemData = $this->items->firstWhere(
             fn (SimpleItemData $item) => ! $this->character->hasInInventory($item)
         );
 
-        /** @var Item */
-        $nextItem = $itemData->getModel();
+        $this->nextItem = $this->nextItemData->getModel();
+    }
 
-        $this->log("Must collect {$itemData->quantity} units of {$nextItem->name}");
-        $currentQuantity = $this->character->countInInventory($nextItem);
+    private function collectNextItemFromBank(): void
+    {
+        (new BankItemSeeder())->run();
+        $depositedQuantity = $this->nextItem->refresh()->deposited;
+
+        $this->log(
+            'Item '
+            . $this->nextItem->name
+            . ' has '
+            . $depositedQuantity
+            . ' units deposited in bank'
+        );
+
+        if (! $depositedQuantity) {
+            return;
+        }
+
+        $this->dispatchWithComeback(
+            new WithdrawFromBank(
+                $this->characterId,
+                $this->nextItem->code,
+                min($this->nextItemData->quantity, $depositedQuantity)
+            )
+        );
+
+        $this->end();
+    }
+
+    private function collectNextItemFromDrop(): void
+    {
+        $this->log(
+            'Must collect '
+            . $this->nextItemData->quantity
+            . ' units of '
+            . $this->nextItem->name
+        );
+        $currentQuantity = $this->character->countInInventory($this->nextItem);
         $this->log("currently has {$currentQuantity} units");
 
         /** @var Drop */
-        $drop = $nextItem->drops()->orderBy('rate')->first();
+        $drop = $this->nextItem->drops()->orderBy('rate')->first();
 
         $job = match ($drop?->source_type) {
             Monster::class => new FightMonsterDrop(
                 $this->characterId,
                 $drop->source_id,
-                $itemData,
+                $this->nextItemData,
             ),
             Resource::class => new GatherItem(
                 $this->characterId,
-                $nextItem->id,
-                $itemData->quantity,
+                $this->nextItem->id,
+                $this->nextItemData->quantity,
             ),
             default => null,
         };
@@ -72,25 +124,32 @@ class CollectItems extends CharacterJob
         if ($job) {
             $this->dispatchWithComeback($job);
 
-            return;
+            $this->end();
         }
 
-        $this->log("Cannot obtain {$nextItem->name} as drop from any source.");
+        $this->log(
+            'Cannot obtain '
+            . $this->nextItem->name
+            . ' as drop from any source.'
+        );
+    }
 
-        if ($nextItem->craft()->doesntExist()) {
+    private function collectNextItemFromCrafting(): void
+    {
+        if ($this->nextItem->craft()->doesntExist()) {
             $this->fail(
                 'Item '
-                . '$nextItem->name'
+                . $this->nextItem->name
                 . ' can neither be obtained as drop from source nor be crafted'
             );
         }
 
-        $this->log("Item {$nextItem->name} can be crafted");
+        $this->log("Item {$this->nextItem->name} can be crafted");
         $this->dispatchWithComeback(
             new CollectRawMaterialsToCraft(
                 $this->characterId,
-                $nextItem->id,
-                $itemData->quantity
+                $this->nextItem->id,
+                $this->nextItemData->quantity
             )
         );
     }

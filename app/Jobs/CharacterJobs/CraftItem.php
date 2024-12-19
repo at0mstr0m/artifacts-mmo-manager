@@ -26,26 +26,37 @@ class CraftItem extends CharacterJob
 
     protected function handleCharacter(): void
     {
-        $this->log('must determine location to craft item');
-        $this->item = Item::find($this->itemId);
+        $this->ensureHasSklllLevel();
 
+        $this->ensureIsAtWorkshop();
+
+        $this->craftItem();
+    }
+
+    private function ensureHasSklllLevel(): void
+    {
+        $this->log('Must ensure has skill level');
+        $this->item = Item::find($this->itemId);
         $craft = $this->item->craft;
 
-        if (! $this->character->hasSkillLevel($craft)) {
-            $this->fail(
-                $this->character->name
-                . ' does not have required skill level'
-                . $craft->level
-                . ' to craft '
-                . $this->item->name
-            );
-
+        if ($this->character->hasSkillLevel($craft)) {
             return;
         }
 
+        $this->fail(
+            $this->character->name
+            . ' does not have required skill level '
+            . $craft->level
+            . ' to craft '
+            . $this->item->name
+        );
+    }
+
+    private function ensureIsAtWorkshop(): void
+    {
         $workshop = Map::query()
             ->where('content_type', 'workshop')
-            ->where('content_code', $craft->skill)
+            ->where('content_code', $this->item->craft->skill)
             ->first();
 
         if (! $this->character->isAt($workshop)) {
@@ -53,14 +64,19 @@ class CraftItem extends CharacterJob
             $moveData = $this->character->moveTo($workshop);
             $this->selfDispatch()->delay($moveData->cooldown->expiresAt);
 
-            return;
+            $this->end();
         }
+
         $this->log(
             'is at workshop and will now craft '
             . $this->quantity
             . ' units of '
             . $this->item->name
         );
+    }
+
+    private function craftItem(): void
+    {
         $craftingData = $this->character->craft($this->item, $this->quantity);
         $this->dispatchNextJob()?->delay($craftingData->cooldown->expiresAt);
     }
