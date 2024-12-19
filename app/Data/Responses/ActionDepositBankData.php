@@ -10,14 +10,11 @@ use App\Data\Schemas\CooldownData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\SimpleItemData;
 use App\Models\Item;
-use App\Traits\UpdatesDeposit;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ActionDepositBankData extends Data
 {
-    use UpdatesDeposit;
-
     /**
      * @param CooldownData $cooldown
      * @param ItemData $item
