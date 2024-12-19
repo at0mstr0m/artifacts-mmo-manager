@@ -14,6 +14,7 @@ class EvaluateFittingItemSlot
     use AsAction;
 
     private Character $character;
+
     private Item $item;
 
     /**

@@ -7,12 +7,14 @@ namespace App\Jobs\CharacterJobs;
 use App\Data\Schemas\SimpleItemData;
 use App\Jobs\CharacterJob;
 use App\Models\InventoryItem;
-use App\Models\Map;
 use App\Services\ArtifactsService;
+use App\Traits\InteractsWithBank;
 use Illuminate\Support\Collection;
 
 class EmptyInventory extends CharacterJob
 {
+    use InteractsWithBank;
+
     /**
      * @param Collection<SimpleItemData>|null $keep
      */
@@ -34,27 +36,6 @@ class EmptyInventory extends CharacterJob
         $this->depositItems();
 
         $this->dispatchNextJob();
-    }
-
-    private function ensureIsAtBank(): void
-    {
-        if ($this->character->location->content_type === 'bank') {
-            return;
-        }
-
-        /** @var Map */
-        $bankLocation = Map::firstWhere('content_type', 'bank');
-
-        if ($this->character->isAt($bankLocation)) {
-            $this->log('At bank, moving to bank.');
-            $this->character->moveTo($bankLocation->x, $bankLocation->y);
-        } else {
-            $moveData = $this->character->moveTo($bankLocation);
-            $this->log('Moving to bank.');
-            $this->selfDispatch()->delay($moveData->cooldown->expiresAt);
-
-            $this->end();
-        }
     }
 
     private function depositGold(): void

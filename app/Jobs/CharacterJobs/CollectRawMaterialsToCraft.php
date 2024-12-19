@@ -31,8 +31,8 @@ class CollectRawMaterialsToCraft extends CharacterJob
         $this->craftItem();
 
         /*
-         * Check here after crafting because inventory could have been be full
-         * of raw materials.
+         * Check after crafting because inventory could be full of raw
+         * materials.
          */
         $this->handleFullInventory();
 

@@ -482,6 +482,28 @@ class Character extends Model
             ->actionDepositBank($this->name, $item, $quantity);
     }
 
+    public function withdrawItem(
+        int|InventoryItem|Item|SimpleItemData|string $item,
+        int $quantity = 0
+    ): ActionDepositBankData {
+        switch (true) {
+            case is_int($item):
+                $item = Item::find($item)->code;
+                break;
+            case $item instanceof Item:
+                $item = $item->code;
+                break;
+            case $item instanceof SimpleItemData:
+            case $item instanceof InventoryItem:
+                $quantity = $quantity ?: $item->quantity;
+                $item = $item->code;
+                break;
+        }
+
+        return app(ArtifactsService::class)
+            ->actionWithdrawBank($this->name, $item, $quantity);
+    }
+
     public function hasInInventory(
         int|Item|SimpleItemData|string $item,
         int $quantity = 1
