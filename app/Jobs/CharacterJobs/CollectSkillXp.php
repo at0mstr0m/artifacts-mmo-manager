@@ -70,7 +70,7 @@ class CollectSkillXp extends CharacterJob
         $this->log('Triggering item farming');
 
         $currentLevel = $this->character->getSkillLevel($this->skill);
-        $skillLevels = $this->character->getSkillLevelsAsArray();
+        $skillLevels = $this->character->getSkillLevels();
         $item = Craft::query()
             ->where('skill', $this->skill)
             ->where('level', '<=', $currentLevel)
@@ -92,8 +92,21 @@ class CollectSkillXp extends CharacterJob
                             }
                         )
                     )
+                )->orWhereRelation(
+                    'craft',
+                    fn (Builder $query) => $skillLevels->each(
+                        function (int $level, string $skill) use (&$query) {
+                            $query->where(
+                                fn (Builder $query) => $query
+                                    ->where('skill', $skill)
+                                    ->where('level', '<=', $level),
+                                boolean: 'or'
+                            );
+                        }
+                    )
                 )
             )
+            ->whereRelation('item', 'code', '<>', 'wooden_staff')
             ->orderByDesc('level')
             ->first()
             ?->item;

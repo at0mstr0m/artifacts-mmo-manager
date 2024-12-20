@@ -67,6 +67,11 @@ class CollectRawMaterialsToCraft extends CharacterJob
     {
         $this->item = Item::find($this->itemId);
 
+        $this->log(
+            'Checking if has all required items to craft one '
+            . $this->item->name
+        );
+
         $hasRawMaterialToCraftOne = $this->item->craft->requiredItems->every(
             fn (Item $requiredItem): bool => $this->character->hasInInventory(
                 $requiredItem->id,

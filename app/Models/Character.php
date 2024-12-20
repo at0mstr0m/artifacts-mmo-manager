@@ -569,7 +569,7 @@ class Character extends Model
         return $this->{$skill . '_level'};
     }
 
-    public function getSkillLevelsAsArray(): Collection
+    public function getSkillLevels(): Collection
     {
         return collect(Skills::values())
             ->mapWithKeys(fn (string $skill): array => [
