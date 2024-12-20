@@ -19,6 +19,7 @@ use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
+use App\Enums\Skills;
 use App\Enums\TaskTypes;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -545,15 +546,35 @@ class Character extends Model
     }
 
     public function hasSkillLevel(
-        Craft|string $skill,
+        Craft|Skills|string $skill,
         ?int $level = null
     ): bool {
-        if ($skill instanceof Craft) {
-            $level = $skill->level;
-            $skill = $skill->skill->value;
+        switch (true) {
+            case $skill instanceof Craft:
+                $level = $skill->level;
+                $skill = $skill->skill->value;
+                break;
+            case $skill instanceof Skills:
+                $skill = $skill->value;
+                break;
         }
 
         return $this->{$skill . '_level'} >= $level;
+    }
+
+    public function getSkillLevel(Skills|string $skill): int
+    {
+        $skill = is_string($skill) ? $skill : $skill->value;
+
+        return $this->{$skill . '_level'};
+    }
+
+    public function getSkillLevelsAsArray(): Collection
+    {
+        return collect(Skills::values())
+            ->mapWithKeys(fn (string $skill): array => [
+                $skill => $this->getSkillLevel($skill),
+            ]);
     }
 
     public function isEquipedWith(Item|string $itemCode): bool
@@ -599,8 +620,6 @@ class Character extends Model
 
     protected function isHealthy(): Attribute
     {
-        return Attribute::get(
-            fn (): bool => $this->hp === $this->max_hp
-        );
+        return Attribute::get(fn (): bool => $this->hp === $this->max_hp);
     }
 }

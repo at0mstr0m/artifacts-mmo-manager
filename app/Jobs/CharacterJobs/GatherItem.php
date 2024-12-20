@@ -104,7 +104,8 @@ class GatherItem extends CharacterJob
         $this->log("gathering item {$this->item->name}");
         $data = $this->character->gather();
         $delay = $data->cooldown->expiresAt;
-        $count = $data->details
+        $count = $data
+            ->details
             ->items
             ->where('code', $this->item->code)
             ->count();
