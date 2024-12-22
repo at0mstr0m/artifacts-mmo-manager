@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set the base directory for the app
-BASEDIR=/opt/laravel
+BASEDIR=/var/www/html
 
 # Flag to check if it's a fresh install
 FIRST_INSTALL=false

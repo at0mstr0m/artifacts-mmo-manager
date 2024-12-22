@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.authors="https://jdsantos.github.io"
 LABEL laradocker.version="1.1.0"
 
 # Set working directory
-WORKDIR /opt/laravel
+WORKDIR /var/www/html
 
 # Install additional packages
 RUN apk --no-cache add \
@@ -44,11 +44,11 @@ COPY conf.d/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY conf.d/supervisor/supervisord.conf /etc/supervisord.conf
 
 # Copy Laravel application files
-COPY . /opt/laravel
+COPY . /var/www/html
 
 # Set up permissions
-RUN chown -R www-data:www-data /opt/laravel \
-    && chmod -R 755 /opt/laravel/storage
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage
 
 # ::: Scheduler setup :::
 
@@ -56,7 +56,7 @@ RUN chown -R www-data:www-data /opt/laravel \
 RUN touch /var/log/cron.log
 
 # Add cron job directly to crontab
-RUN echo "* * * * * /usr/local/bin/php /opt/laravel/artisan schedule:run >> /var/log/cron.log 2>&1" | crontab -
+RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run >> /var/log/cron.log 2>&1" | crontab -
 
 # ::: --- :::
 
@@ -64,7 +64,7 @@ RUN echo "* * * * * /usr/local/bin/php /opt/laravel/artisan schedule:run >> /var
 EXPOSE 80
 
 # Declare image volumes
-VOLUME /opt/laravel/storage
+VOLUME /var/www/html/storage
 
 # Define a health check
 HEALTHCHECK --interval=30s --timeout=15s --start-period=15s --retries=3 CMD curl -f http://localhost/up || exit 1
