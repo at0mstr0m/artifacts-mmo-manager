@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
+use App\Data\Schemas\SimpleItemData;
 use App\Jobs\CharacterJob;
 use App\Models\Item;
 use App\Models\Map;
@@ -28,6 +29,8 @@ class CraftItem extends CharacterJob
     {
         $this->ensureHasSkillLevel();
 
+        $this->handleFullInventory();
+
         $this->ensureIsAtWorkshop();
 
         $this->craftItem();
@@ -50,6 +53,32 @@ class CraftItem extends CharacterJob
             . ' to craft '
             . $this->item->name
         );
+    }
+
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
+            return;
+        }
+
+        $this->log('Inventory is full, emptying it now');
+
+        $keep = collect(new SimpleItemData($this->item->code, $this->quantity));
+        $this->item
+            ?->craft
+            ?->requiredItems
+            ?->each(fn (Item $item) => $keep->push(
+                new SimpleItemData(
+                    $item->code,
+                    $item->pivot->quantity * $this->quantity
+                )
+            ));
+
+        $this->dispatchWithComeback(
+            new EmptyInventory($this->character->id, $keep)
+        );
+
+        $this->end();
     }
 
     private function ensureIsAtWorkshop(): void

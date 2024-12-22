@@ -33,6 +33,8 @@ class CollectItems extends CharacterJob
     {
         $this->checkAllItemsCollected();
 
+        $this->handleFullInventory();
+
         $this->determineNextItem();
 
         $this->collectNextItemFromBank();
@@ -54,6 +56,34 @@ class CollectItems extends CharacterJob
         }
 
         $this->log('Not all Items collected yet.');
+    }
+
+    private function handleFullInventory(): void
+    {
+        if (! $this->character->inventoryIsFull()) {
+            return;
+        }
+
+        $this->log('Inventory is full, emptying it now');
+
+        $keep = collect();
+        $this->items->each(function (SimpleItemData $item) use (&$keep) {
+            $item->getModel()
+                ?->craft
+                ?->requiredItems
+                ?->each(fn (Item $requiredItem) => $keep->push(
+                    new SimpleItemData(
+                        $requiredItem->code,
+                        $requiredItem->pivot->quantity * $item->quantity
+                    )
+                ));
+        });
+
+        $this->dispatchWithComeback(
+            new EmptyInventory($this->character->id, $keep)
+        );
+
+        $this->end();
     }
 
     private function determineNextItem(): void
