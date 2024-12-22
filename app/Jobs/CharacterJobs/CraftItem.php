@@ -26,14 +26,14 @@ class CraftItem extends CharacterJob
 
     protected function handleCharacter(): void
     {
-        $this->ensureHasSklllLevel();
+        $this->ensureHasSkillLevel();
 
         $this->ensureIsAtWorkshop();
 
         $this->craftItem();
     }
 
-    private function ensureHasSklllLevel(): void
+    private function ensureHasSkillLevel(): void
     {
         $this->log('Must ensure has skill level');
         $this->item = Item::find($this->itemId);

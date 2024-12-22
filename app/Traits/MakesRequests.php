@@ -55,8 +55,11 @@ trait MakesRequests
             sleep(1);
 
             return $this->baseRequest(
-                ...func_get_args(),
-                attempts: $attempts + 1
+                $type,
+                $method,
+                $path,
+                $payload,
+                $attempts + 1
             );
         }
 
