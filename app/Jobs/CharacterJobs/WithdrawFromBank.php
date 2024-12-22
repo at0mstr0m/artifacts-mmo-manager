@@ -44,6 +44,8 @@ class WithdrawFromBank extends CharacterJob
 
         if (! $item->refresh()->deposited) {
             $this->log('No items deposited.');
+
+            $this->dispatchNextJob();
             $this->end();
         }
 

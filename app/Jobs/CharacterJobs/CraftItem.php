@@ -43,6 +43,13 @@ class CraftItem extends CharacterJob
         $craft = $this->item->craft;
 
         if ($this->character->hasSkillLevel($craft)) {
+            $this->log(
+                'has required skill level '
+                . $craft->level
+                . ' to craft '
+                . $this->item->name
+            );
+
             return;
         }
 
