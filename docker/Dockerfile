@@ -8,6 +8,8 @@ RUN curl -fsSL https://bun.sh/install | bash
 
 COPY . .
 
+COPY ./docker/final_stage.dockerignore .dockerignore
+
 RUN composer install \
     # --no-dev \
     --no-interaction \
@@ -42,17 +44,17 @@ RUN docker-php-ext-install pcntl && docker-php-ext-enable pcntl
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy Nginx configuration
-COPY conf.d/nginx/default.conf /etc/nginx/nginx.conf
+COPY docker/conf.d/nginx/default.conf /etc/nginx/nginx.conf
 
 # Copy PHP configuration
-COPY conf.d/php-fpm/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY docker/conf.d/php-fpm/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
-COPY conf.d/php/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY docker/conf.d/php/php.ini /usr/local/etc/php/conf.d/php.ini
 
-COPY conf.d/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/conf.d/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Copy Supervisor configuration
-COPY conf.d/supervisor/supervisord.conf /etc/supervisord.conf
+COPY docker/conf.d/supervisor/supervisord.conf /etc/supervisord.conf
 
 # Copy application files
 COPY --from=builder /var/www/html /var/www/html
@@ -72,7 +74,7 @@ HEALTHCHECK --interval=30s --timeout=15s --start-period=15s --retries=3 \
     CMD curl -f http://localhost/up || exit 1
 
 # Add up the entrypoint
-ADD entrypoint.sh /root/entrypoint.sh
+ADD docker/entrypoint.sh /root/entrypoint.sh
 
 # Ensure the entrypoint script has executable permissions
 RUN chmod +x /root/entrypoint.sh

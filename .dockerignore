@@ -18,11 +18,10 @@ _ide_helper.php
 /routes/dev.php
 /storage/*
 auth.json
+docker-compose.yml
 node_modules
 npm-debug.log
 pint.json
 README.md
 vendor
 yarn-error.log
-docker-compose.yml
-docker-compose.production.yml

@@ -1,6 +1,8 @@
 services:
     laravel:
-        build: .
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
         container_name: laravel
         environment:
             PHP_OPCACHE_ENABLE: 1
