@@ -8,20 +8,20 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@inertiajs/vue3": "^1.0.0",
-        "@mdi/font": "^7.4.47",
-        "@vitejs/plugin-vue": "^5.0.0",
-        "autoprefixer": "^10.4.12",
-        "axios": "^1.6.4",
-        "laravel-vite-plugin": "^1.0",
-        "postcss": "^8.4.31",
-        "prettier": "3.3.3",
-        "sass": "^1.77.8",
-        "sass-loader": "^16.0.1",
-        "vite": "^5.0",
-        "vue": "^3.4.0"
+        "prettier": "3.3.3"
     },
     "dependencies": {
-        "vuetify": "^3.6.13"
+        "@inertiajs/vue3": "^1.0.0",
+        "@mdi/font": "^7.4.47",
+        "autoprefixer": "^10.4.12",
+        "axios": "^1.6.4",
+        "postcss": "^8.4.31",
+        "sass": "^1.77.8",
+        "sass-loader": "^16.0.1",
+        "vue": "^3.4.0",
+        "vuetify": "^3.6.13",
+        "@vitejs/plugin-vue": "^5.0.0",
+        "laravel-vite-plugin": "^1.0",
+        "vite": "^5.0"
     }
 }

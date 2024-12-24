@@ -1,17 +1,28 @@
+FROM laravelsail/php83-composer:latest AS builder
+
+ARG WWWGROUP
+
+WORKDIR /var/www/html
+
+RUN curl -fsSL https://bun.sh/install | bash
+
+COPY . .
+
+RUN composer install \
+    # --no-dev \
+    --no-interaction \
+    --no-scripts \
+    --ignore-platform-reqs
+RUN ~/.bun/bin/bun i --no-dev
+RUN ~/.bun/bin/bun run build
+
 FROM php:8.3-fpm-alpine
-
-LABEL org.opencontainers.image.authors="https://jdsantos.github.io"
-
-LABEL laradocker.version="1.1.0"
 
 # Set working directory
 WORKDIR /var/www/html
 
 # Install additional packages
-RUN apk --no-cache add \
-    nginx \
-    supervisor \
-    npm
+RUN apk --no-cache add nginx supervisor
 
 # Enable opcache extension
 RUN docker-php-ext-enable opcache
@@ -43,22 +54,12 @@ COPY conf.d/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # Copy Supervisor configuration
 COPY conf.d/supervisor/supervisord.conf /etc/supervisord.conf
 
-# Copy Laravel application files
-COPY . /var/www/html
+# Copy application files
+COPY --from=builder /var/www/html /var/www/html
 
 # Set up permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage
-
-# ::: Scheduler setup :::
-
-# Create a log file
-RUN touch /var/log/cron.log
-
-# Add cron job directly to crontab
-RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run >> /var/log/cron.log 2>&1" | crontab -
-
-# ::: --- :::
 
 # Expose ports
 EXPOSE 80
@@ -67,7 +68,8 @@ EXPOSE 80
 VOLUME /var/www/html/storage
 
 # Define a health check
-HEALTHCHECK --interval=30s --timeout=15s --start-period=15s --retries=3 CMD curl -f http://localhost/up || exit 1
+HEALTHCHECK --interval=30s --timeout=15s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost/up || exit 1
 
 # Add up the entrypoint
 ADD entrypoint.sh /root/entrypoint.sh
