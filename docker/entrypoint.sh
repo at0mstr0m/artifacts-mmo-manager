@@ -26,7 +26,8 @@ rm -rf public/storage
 php artisan storage:link
 
 # Set the permissions for the storage directories
-chown -R www-data:www-data "$BASEDIR/*"
+chown -R www-data:www-data "$BASEDIR"
+chmod -R 755 "$BASEDIR/storage"
 
 php artisan migrate --force
 

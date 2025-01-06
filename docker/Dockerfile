@@ -2,23 +2,22 @@ FROM laravelsail/php83-composer:latest AS builder
 
 ARG WWWGROUP
 
-WORKDIR /var/www/html
+WORKDIR /home/www-data
 
 RUN curl -fsSL https://bun.sh/install | bash
 
 COPY . .
 
-COPY ./docker/final_stage.dockerignore .dockerignore
-
 RUN composer install \
     # --no-dev \
     --no-interaction \
     --no-scripts \
-    --ignore-platform-reqs
-RUN ~/.bun/bin/bun i --no-dev
-RUN ~/.bun/bin/bun run build
+    --ignore-platform-reqs \
+    && ~/.bun/bin/bun i --no-dev \
+    && ~/.bun/bin/bun run build \
+    && ls -l /home/www-data/public/build
 
-FROM php:8.3-fpm-alpine
+FROM php:8.3-fpm-alpine AS final_stage
 
 # Set working directory
 WORKDIR /var/www/html
@@ -56,12 +55,19 @@ COPY docker/conf.d/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # Copy Supervisor configuration
 COPY docker/conf.d/supervisor/supervisord.conf /etc/supervisord.conf
 
-# Copy application files
-COPY --from=builder /var/www/html /var/www/html
-
-# Set up permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
+# Copy only necessary application files
+COPY --from=builder /home/www-data/app /var/www/html/app
+COPY --from=builder /home/www-data/bootstrap /var/www/html/bootstrap
+COPY --from=builder /home/www-data/config /var/www/html/config
+COPY --from=builder /home/www-data/database /var/www/html/database
+COPY --from=builder /home/www-data/database /var/www/html/database
+COPY --from=builder /home/www-data/public /var/www/html/public
+COPY --from=builder /home/www-data/resources /var/www/html/resources
+COPY --from=builder /home/www-data/routes /var/www/html/routes
+COPY --from=builder /home/www-data/vendor /var/www/html/vendor
+COPY --from=builder /home/www-data/.env /var/www/html/.env
+COPY --from=builder /home/www-data/artisan /var/www/html/artisan
+COPY --from=builder /home/www-data/composer.json /var/www/html/composer.json
 
 # Expose ports
 EXPOSE 80
