@@ -9,13 +9,11 @@ RUN curl -fsSL https://bun.sh/install | bash
 COPY . .
 
 RUN composer install \
-    # --no-dev \
+    --no-dev \
     --no-interaction \
-    --no-scripts \
     --ignore-platform-reqs \
     && ~/.bun/bin/bun i --no-dev \
-    && ~/.bun/bin/bun run build \
-    && ls -l /home/www-data/public/build
+    && ~/.bun/bin/bun run build
 
 FROM php:8.3-fpm-alpine AS final_stage
 
