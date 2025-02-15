@@ -36,12 +36,8 @@ chmod -R a+w "$BASEDIR/storage"
 echo "run migrations"
 php artisan migrate --force
 
-# Check if running in production or development mode
-if [ "$PRODUCTION" = "1" ]; then
-    echo "Running in production mode"
-else
-    echo "Running in development mode"
-fi
+echo "seed database"
+php artisan db:seed --force
 
 echo "Starting supervisord"
 exec /usr/bin/supervisord -c /etc/supervisord.conf
