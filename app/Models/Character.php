@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Skills;
-use App\Enums\TaskTypes;
-use Illuminate\Support\Str;
-use App\Enums\CharacterSkins;
-use Illuminate\Support\Carbon;
-use App\Services\ArtifactsService;
-use Illuminate\Support\Collection;
-use App\Data\Schemas\SimpleItemData;
-use App\Data\Responses\ActionMoveData;
-use App\Data\Responses\ActionRestData;
-use App\Data\Responses\ActionFightData;
 use App\Actions\EvaluateFittingItemSlot;
-use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionAcceptNewTask;
+use App\Data\Responses\ActionBuyBankExpansionData;
+use App\Data\Responses\ActionCompleteTaskData;
+use App\Data\Responses\ActionCraftingData;
+use App\Data\Responses\ActionDepositBankData;
+use App\Data\Responses\ActionDepositBankGoldData;
 use App\Data\Responses\ActionEquipItemData;
+use App\Data\Responses\ActionFightData;
 use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionGeBuyItemData;
+use App\Data\Responses\ActionMoveData;
+use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionTaskTradeData;
-use App\Data\Responses\ActionDepositBankData;
-use App\Data\Responses\ActionCompleteTaskData;
-use App\Data\Responses\ActionDepositBankGoldData;
+use App\Data\Schemas\SimpleItemData;
+use App\Enums\CharacterSkins;
+use App\Enums\Skills;
+use App\Enums\TaskTypes;
+use App\Services\ArtifactsService;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Data\Responses\ActionBuyBankExpansionData;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id

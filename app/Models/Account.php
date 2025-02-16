@@ -15,7 +15,7 @@ use App\Enums\MemberStatus;
  * @property bool $is_subscribed
  * @property int|null $subscribed_until
  * @property MemberStatus $status
- * @property array|null $badges
+ * @property array<array-key, mixed>|null $badges
  * @property int $gems
  * @property int $achievements_points
  * @property bool $banned

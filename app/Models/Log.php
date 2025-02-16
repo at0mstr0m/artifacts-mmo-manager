@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $account
  * @property string $type
  * @property string $description
- * @property array $content
+ * @property array<array-key, mixed> $content
  * @property \Illuminate\Support\Carbon|null $cooldown
  * @property \Illuminate\Support\Carbon $logged_at
  * @property-read Character|null $character
