@@ -17,7 +17,7 @@ class HistoricSellOrderData extends Data
     public int $totalPrice;
 
     public function __construct(
-        string $id,
+        string $orderId,
         public string $seller,
         public string $buyer,
         string $code,
@@ -25,7 +25,7 @@ class HistoricSellOrderData extends Data
         public int $price,
         public Carbon|string $soldAt,
     ) {
-        $this->identifier = $id;
+        $this->identifier = $orderId;
         $this->item = Item::firstWhere('code', $code);
         $this->soldAt = Carbon::parse($soldAt);
         $this->totalPrice = $this->quantity * $this->price;

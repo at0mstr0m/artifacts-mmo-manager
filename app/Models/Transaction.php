@@ -27,16 +27,20 @@ class Transaction extends Model
 {
     protected $fillable = [
         'identifier',
+        'placed_at',
         'quantity',
         'price',
         'total_price',
+        'tax',
     ];
 
     protected $casts = [
         'identifier' => 'string',
+        'placed_at' => 'datetime',
         'quantity' => 'integer',
         'price' => 'integer',
         'total_price' => 'integer',
+        'tax' => 'integer',
     ];
 
     public function item(): BelongsTo

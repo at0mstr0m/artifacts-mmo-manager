@@ -22,8 +22,8 @@ class SellOrderData extends Data
         string $code,
         public int $quantity,
         public int $price,
-        public int $totalPrice,
         string $createdAt,
+        public int $totalPrice = 0,
     ) {
         $this->identifier = $id;
         $this->item = Item::firstWhere('code', $code);
@@ -35,8 +35,8 @@ class SellOrderData extends Data
             'seller' => $this->seller,
             'quantity' => $this->quantity,
             'price' => $this->price,
-            'total_price' => $this->totalPrice,
             'placed_at' => $this->placedAt,
+            'total_price' => $this->totalPrice,
         ]);
     }
 }

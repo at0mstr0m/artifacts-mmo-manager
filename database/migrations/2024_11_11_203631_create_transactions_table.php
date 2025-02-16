@@ -16,10 +16,12 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('identifier')->unique();
+            $table->dateTime('placed_at');
             $table->foreignId('item_id')->constrained();
             $table->integer('quantity');
             $table->integer('price');
             $table->integer('total_price');
+            $table->integer('tax');
         });
     }
 
