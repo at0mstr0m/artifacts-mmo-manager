@@ -27,9 +27,11 @@ class SellOrderCanceledData extends Data
         public int $tax,
     ) {
         $this->identifier = $id;
-        $this->item = Item::firstWhere('code', $code);
+        $this->item = Item::query()->firstWhere('code', $code);
         $this->placedAt = Carbon::parse($createdAt);
 
-        SellOrder::where('identifier', $id)->delete();
+        SellOrder::query()
+            ->where('identifier', $id)
+            ->delete();
     }
 }
