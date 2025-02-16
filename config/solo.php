@@ -21,7 +21,7 @@ return [
     | Themes
     |--------------------------------------------------------------------------
     */
-    'theme' => env('SOLO_THEME', 'dark'),
+    'theme' => env('SOLO_THEME', 'light'),
 
     'themes' => [
         'light' => Themes\LightTheme::class,
@@ -47,19 +47,20 @@ return [
     |
     */
     'commands' => [
-        'About' => 'php artisan solo:about',
-        'Logs' => EnhancedTailCommand::file(storage_path('logs/laravel.log')),
-        'Vite' => 'bun vite',
+        'About' => './vendor/bin/sail artisan solo:about',
+        'Logs' => EnhancedTailCommand::file(storage_path('logs/laravel-' . now()->format('Y-m-d') . '.log')),
+        'Vite' => Command::from('./vendor/bin/sail bun vite')->interactive(),
         'Make' => new MakeCommand(),
         // 'HTTP' => 'php artisan serve',
 
         // Lazy commands do no automatically start when Solo starts.
-        'Dumps' => Command::from('php artisan solo:dumps')->lazy(),
+        'Dumps' => Command::from('./vendor/bin/sail artisan solo:dumps')->lazy(),
         // 'Reverb' => Command::from('php artisan reverb')->lazy(),
-        'Pint' => Command::from('./vendor/bin/pint --ansi')->lazy(),
-        'Schedule' => Command::from('php artisan schedule:work --ansi')->lazy(),
-        'Queue' => Command::from('php artisan schedule:work --ansi')->lazy(),
-        'Tests' => Command::from('php artisan test --colors=always')->lazy(),
+        'Pint' => Command::from('./vendor/bin/sail pint --ansi')->lazy(),
+        'Schedule' => Command::from('./vendor/bin/sail artisan schedule:work --ansi')->lazy(),
+        'Queue Listen' => Command::from('./vendor/bin/sail artisan queue:listen --ansi')->lazy(),
+        'Horizon' => Command::from('./vendor/bin/sail artisan horizon --ansi')->lazy(),
+        'Tests' => Command::from('./vendor/bin/sail artisan test --colors=always')->lazy(),
     ],
 
     /*
