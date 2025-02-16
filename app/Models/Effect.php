@@ -10,7 +10,7 @@ namespace App\Models;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
  * @property int $value
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Item> $items
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $items
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newQuery()

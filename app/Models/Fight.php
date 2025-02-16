@@ -26,7 +26,7 @@ use App\Enums\FightResults;
  * @property int $player_blocked_hits_total
  * @property FightResults $result
  * @property-read Character $character
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FightLog> $logs
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, FightLog> $logs
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Fight newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Fight newQuery()

@@ -22,11 +22,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $tradeable
  * @property int $deposited
  * @property-read Craft|null $craft
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Effect> $effects
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SellOrder> $sellOrders
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TaskReward> $taskRewards
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Drop> $drops
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Effect> $effects
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SellOrder> $sellOrders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, TaskReward> $taskRewards
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Transaction> $transactions
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()

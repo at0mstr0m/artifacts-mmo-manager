@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $level
  * @property int $quantity
  * @property-read Item $item
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Item> $requiredItems
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $requiredItems
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Craft newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Craft newQuery()

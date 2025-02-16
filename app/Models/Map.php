@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $x_y
  * @property string|null $content_type
  * @property string|null $content_code
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $events
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $events
  * @property-read Monster|null $monster
  * @property-read \App\Models\Resource|null $resource
  *

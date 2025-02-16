@@ -109,12 +109,12 @@ use Illuminate\Support\Str;
  * @property int $task_total
  * @property int $inventory_max_items
  * @property int|null $occupaion_id
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Fight> $fights
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Fight> $fights
  * @property-read int $inventory_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InventoryItem> $inventoryItems
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, InventoryItem> $inventoryItems
  * @property-read bool $is_healthy
  * @property-read Map|null $location
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Log> $logs
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Log> $logs
  * @property-read Occupaion|null $occupation
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newModelQuery()

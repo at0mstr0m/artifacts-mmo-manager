@@ -9,7 +9,7 @@ namespace App\Models;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property array $config
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Character> $characters
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Character> $characters
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Occupaion newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Occupaion newQuery()

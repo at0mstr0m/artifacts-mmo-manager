@@ -26,8 +26,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $res_air
  * @property int $min_gold
  * @property int $max_gold
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Drop> $drops
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Map> $locations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Drop> $drops
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Map> $locations
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newQuery()
