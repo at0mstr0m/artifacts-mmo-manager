@@ -4,31 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Actions\EvaluateFittingItemSlot;
-use App\Data\Responses\ActionAcceptNewTask;
-use App\Data\Responses\ActionBuyBankExpansionData;
-use App\Data\Responses\ActionCompleteTaskData;
-use App\Data\Responses\ActionCraftingData;
-use App\Data\Responses\ActionDepositBankData;
-use App\Data\Responses\ActionDepositBankGoldData;
-use App\Data\Responses\ActionEquipItemData;
-use App\Data\Responses\ActionFightData;
-use App\Data\Responses\ActionGatheringData;
-use App\Data\Responses\ActionGeBuyItemData;
-use App\Data\Responses\ActionMoveData;
-use App\Data\Responses\ActionRestData;
-use App\Data\Responses\ActionTaskTradeData;
-use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
-use App\Enums\Skills;
 use App\Enums\TaskTypes;
-use App\Services\ArtifactsService;
+use App\Traits\Character\CharacterUtils;
+use App\Traits\Character\HasCharacterActions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -126,6 +109,10 @@ use Illuminate\Support\Str;
  */
 class Character extends Model
 {
+    use CharacterUtils;
+    use HasCharacterActions;
+
+    /** @var array<string> */
     protected $fillable = [
         'name',
         'account',
@@ -203,6 +190,7 @@ class Character extends Model
         'inventory_max_items',
     ];
 
+    /** @var array<string, string> */
     protected $casts = [
         'name' => 'string',
         'account' => 'string',
@@ -280,6 +268,7 @@ class Character extends Model
         'inventory_max_items' => 'integer',
     ];
 
+    /** @var array<string> */
     protected $appends = [
         'x_y',
     ];
@@ -307,334 +296,6 @@ class Character extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Map::class, 'x_y', 'x_y');
-    }
-
-    public function refetch(): static
-    {
-        return app(ArtifactsService::class)
-            ->getCharacter($this->name)
-            ->getModel();
-    }
-
-    public function isAt(int|Map $x, ?int $y = null): bool
-    {
-        if ($x instanceof Map) {
-            $y = $x->y;
-            $x = $x->x;
-        }
-
-        return $this->x === $x && $this->y === $y;
-    }
-
-    public function moveTo(int|Map $x, ?int $y = null): ActionMoveData
-    {
-        if ($x instanceof Map) {
-            $y = $x->y;
-            $x = $x->x;
-        }
-
-        return app(ArtifactsService::class)->actionMove($this->name, $x, $y);
-    }
-
-    public function fight(): ActionFightData
-    {
-        return app(ArtifactsService::class)->actionFight($this->name);
-    }
-
-    public function gather(): ActionGatheringData
-    {
-        return app(ArtifactsService::class)->actionGathering($this->name);
-    }
-
-    public function craft(
-        Item|string $item,
-        int $quantity = 1
-    ): ActionCraftingData {
-        if ($item instanceof Item) {
-            $item = $item->code;
-        }
-
-        return app(ArtifactsService::class)->actionCrafting(
-            $this->name,
-            $item,
-            $quantity
-        );
-    }
-
-    public function rest(): ActionRestData
-    {
-        if ($this->is_healthy) {
-            return $this;
-        }
-
-        return app(ArtifactsService::class)->actionRest($this->name);
-    }
-
-    public function equip(
-        Item|string $item,
-        int $quantity = 1,
-        ?string $slot = null,
-    ): ActionEquipItemData {
-        if (is_string($item)) {
-            $item = Item::findByCode($item);
-        }
-
-        if ($slot === null) {
-            /** @var false|string|null */
-            $slot = EvaluateFittingItemSlot::run($this, $item);
-
-            if ($slot === false) {
-                throw new \Exception('Item slot is occupied');
-            }
-
-            if ($slot === null) {
-                throw new \Exception('Item does not fit into any slot');
-            }
-        }
-
-        $slot = Str::beforeLast($slot, '_slot');
-
-        return app(ArtifactsService::class)
-            ->actionEquipItem($this->name, $slot, $item->code, $quantity);
-    }
-
-    public function acceptNewTask(): ActionAcceptNewTask
-    {
-        return app(ArtifactsService::class)->actionAcceptNewTask($this->name);
-    }
-
-    public function tradeTaskItems(
-        null|int|InventoryItem|Item|SimpleItemData|string $item = null,
-        int $quantity = 0,
-    ): ActionTaskTradeData {
-        $item ??= $this->inventoryItems()->firstWhere('code', $this->task);
-
-        switch (true) {
-            case is_string($item):
-                $item = Item::findByCode($item);
-                break;
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-                $item = $item->code;
-                break;
-            case $item instanceof SimpleItemData:
-            case $item instanceof InventoryItem:
-                $quantity = $quantity ?: min(
-                    $item->quantity,
-                    $this->task_total - $this->task_progress
-                );
-                $item = $item->code;
-                break;
-        }
-
-        $quantity = $quantity ?: ($this->task_total - $this->task_progress);
-
-        return app(ArtifactsService::class)
-            ->actionTaskTrade($this->name, $item, $quantity);
-    }
-
-    public function completeTask(): ActionCompleteTaskData
-    {
-        return app(ArtifactsService::class)->actionCompleteTask($this->name);
-    }
-
-    public function depositGold(int $quantity = 0): ActionDepositBankGoldData
-    {
-        $quantity = $quantity ?: $this->gold;
-
-        return app(ArtifactsService::class)
-            ->actionDepositBankGold($this->name, $quantity);
-    }
-
-    public function withdrawGold(int $quantity): ActionDepositBankGoldData
-    {
-        return app(ArtifactsService::class)
-            ->actionWithdrawBankGold($this->name, $quantity);
-    }
-
-    public function buyBankExpansion(): ActionBuyBankExpansionData
-    {
-        return app(ArtifactsService::class)
-            ->actionBuyBankExpansion($this->name);
-    }
-
-    public function depositItem(
-        int|InventoryItem|Item|SimpleItemData|string $item,
-        int $quantity = 0
-    ): ActionDepositBankData {
-        switch (true) {
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-                $item = $item->code;
-                break;
-            case $item instanceof SimpleItemData:
-            case $item instanceof InventoryItem:
-                $quantity = $quantity ?: $item->quantity;
-                $item = $item->code;
-                break;
-        }
-
-        $quantity = $quantity ?: $this->countInInventory($item);
-
-        return app(ArtifactsService::class)
-            ->actionDepositBank($this->name, $item, $quantity);
-    }
-
-    public function withdrawItem(
-        int|InventoryItem|Item|SimpleItemData|string $item,
-        int $quantity = 0
-    ): ActionDepositBankData {
-        switch (true) {
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-                $item = $item->code;
-                break;
-            case $item instanceof SimpleItemData:
-            case $item instanceof InventoryItem:
-                $quantity = $quantity ?: $item->quantity;
-                $item = $item->code;
-                break;
-        }
-
-        return app(ArtifactsService::class)
-            ->actionWithdrawBank($this->name, $item, $quantity);
-    }
-
-    public function createSellOrder(
-        int|InventoryItem|Item|SimpleItemData|string $item,
-        int $quantity = 0,
-        int $price = 1,
-    ): ActionGeBuyItemData {
-        switch (true) {
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-                $item = $item->code;
-                break;
-            case $item instanceof SimpleItemData:
-            case $item instanceof InventoryItem:
-                $quantity = $quantity ?: $item->quantity;
-                $item = $item->code;
-                break;
-        }
-
-        $quantity = $quantity ?: $this->countInInventory($item);
-
-        return app(ArtifactsService::class)
-            ->actionGeCreateSellOrder($this->name, $item, $quantity, $price);
-    }
-
-    public function hasInInventory(
-        int|Item|SimpleItemData|string $item,
-        int $quantity = 1
-    ): bool {
-        switch (true) {
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-                $item = $item->code;
-                break;
-            case $item instanceof SimpleItemData:
-                $quantity = $item->quantity;
-                $item = $item->code;
-                break;
-        }
-
-        return $this->inventoryItems()
-            ->where('code', $item)
-            ->where('quantity', '>=', $quantity)
-            ->exists();
-    }
-
-    public function countInInventory(int|Item|SimpleItemData|string $item): int
-    {
-        switch (true) {
-            case is_int($item):
-                $item = Item::find($item)->code;
-                break;
-            case $item instanceof Item:
-            case $item instanceof SimpleItemData:
-                $item = $item->code;
-                break;
-        }
-
-        return (int) $this->inventoryItems()
-            ->where('code', $item)
-            ->sum('quantity');
-    }
-
-    public function hasSkillLevel(
-        Craft|Skills|string $skill,
-        ?int $level = null
-    ): bool {
-        switch (true) {
-            case $skill instanceof Craft:
-                $level = $skill->level;
-                $skill = $skill->skill->value;
-                break;
-            case $skill instanceof Skills:
-                $skill = $skill->value;
-                break;
-        }
-
-        return $this->{$skill . '_level'} >= $level;
-    }
-
-    public function getSkillLevel(Skills|string $skill): int
-    {
-        $skill = is_string($skill) ? $skill : $skill->value;
-
-        return $this->{$skill . '_level'};
-    }
-
-    public function getSkillLevels(): Collection
-    {
-        return collect(Skills::values())
-            ->mapWithKeys(fn (string $skill): array => [
-                $skill => $this->getSkillLevel($skill),
-            ]);
-    }
-
-    public function isEquipedWith(Item|string $itemCode): bool
-    {
-        if ($itemCode instanceof Item) {
-            $itemCode = $itemCode->code;
-        }
-
-        return $this->getSlots()->contains($itemCode);
-    }
-
-    public function slotIsOccupied(string $slot): bool
-    {
-        return (bool) $this->{$slot};
-    }
-
-    public function getSlots(): Collection
-    {
-        return collect($this->getAttributes())->filter(
-            function (mixed $value, string $key): bool {
-                return Str::endsWith($key, '_slot');
-            }
-        );
-    }
-
-    public function getSlotNames(): Collection
-    {
-        return $this->getSlots()->keys();
-    }
-
-    public function inventoryIsFull(): bool
-    {
-        return $this->inventory_count === $this->inventory_max_items
-            || $this->inventoryItems()->pluck('code')->filter()->count() >= 20;
     }
 
     protected function inventoryCount(): Attribute
