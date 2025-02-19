@@ -6,7 +6,7 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 
-class ItemEffectData extends Data
+class SimpleEffectData extends Data
 {
     public function __construct(
         public string $name,

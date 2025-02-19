@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\EffectSubTypes;
+use App\Enums\EffectTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -30,12 +32,15 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->integer('value');
+            $table->string('code')->unique();
+            $table->enum('type', EffectTypes::values());
+            $table->enum('subtype', EffectSubTypes::values());
         });
 
         Schema::create('effect_item', function (Blueprint $table) {
             $table->foreignId('effect_id')->constrained();
             $table->foreignId('item_id')->constrained();
+            $table->integer('value');
         });
     }
 

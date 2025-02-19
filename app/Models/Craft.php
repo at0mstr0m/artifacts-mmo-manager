@@ -53,6 +53,6 @@ class Craft extends Model
             'item_code',
             'id',
             'code',
-        )->withPivot(['quantity']);
+        )->withPivot('quantity');
     }
 }

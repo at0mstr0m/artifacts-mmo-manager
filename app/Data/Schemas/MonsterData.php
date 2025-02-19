@@ -27,6 +27,7 @@ class MonsterData extends Data
         public int $resEarth,
         public int $resWater,
         public int $resAir,
+        // todo: add effects
         public int $minGold,
         public int $maxGold,
         public array|Collection $drops,

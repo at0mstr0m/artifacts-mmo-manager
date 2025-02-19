@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EffectSubTypes;
+use App\Enums\EffectTypes;
+use App\Traits\IdentifiableByCode;
+
 /**
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -20,18 +24,27 @@ namespace App\Models;
  */
 class Effect extends Model
 {
+    use IdentifiableByCode;
+
     protected $fillable = [
         'name',
-        'value',
+        'code',
+        'description',
+        'type',
+        'subtype',
     ];
 
     protected $casts = [
         'name' => 'string',
-        'value' => 'integer',
+        'code' => 'string',
+        'description' => 'string',
+        'type' => EffectTypes::class,
+        'subtype' => EffectSubTypes::class,
     ];
 
     public function items()
     {
-        return $this->belongsToMany(Item::class);
+        return $this->belongsToMany(Item::class)
+            ->withPivot('value');
     }
 }

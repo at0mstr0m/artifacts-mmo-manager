@@ -28,6 +28,7 @@ use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\AchievementData;
 use App\Data\Schemas\CharacterData;
+use App\Data\Schemas\EffectData;
 use App\Data\Schemas\EventData;
 use App\Data\Schemas\GrandExchangeItemData;
 use App\Data\Schemas\HistoricSellOrderData;
@@ -48,7 +49,7 @@ class ArtifactsService
 {
     use MakesRequests;
 
-    private const MAX_PER_PAGE = 100;
+    protected const MAX_PER_PAGE = 100;
 
     private string $token;
 
@@ -675,6 +676,34 @@ class ArtifactsService
 
     /*
      * #########################################################################
+     * Effects
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<EffectData>
+     */
+    public function getAllEffects(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get('effects', RateLimitTypes::DATA, $query);
+        $data = EffectData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
+            : $data;
+    }
+
+    /*
+     * #########################################################################
      * Events
      * #########################################################################
      */
@@ -682,7 +711,7 @@ class ArtifactsService
     /**
      * @return Collection<EventData>
      */
-    public function getAllEvents(
+    public function getAllActiveEvents(
         int $perPage = 10,
         int $page = 1,
         bool $all = false

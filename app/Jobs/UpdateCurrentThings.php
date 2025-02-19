@@ -34,7 +34,7 @@ class UpdateCurrentThings implements ShouldBeUnique, ShouldQueue
     {
         $changedIds = $this
             ->api
-            ->getAllEvents(all: true)
+            ->getAllActiveEvents(all: true)
             ->map(fn (EventData $event): int => $event->getModel()->id);
 
         Event::query()

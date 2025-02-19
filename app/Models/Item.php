@@ -63,7 +63,8 @@ class Item extends Model
 
     public function effects(): BelongsToMany
     {
-        return $this->belongsToMany(Effect::class);
+        return $this->belongsToMany(Effect::class)
+            ->withPivot('value');
     }
 
     public function craft(): HasOne

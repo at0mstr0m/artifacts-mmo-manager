@@ -15,7 +15,7 @@ class ItemData extends Data
     private Item $model;
 
     /**
-     * @param Collection<ItemEffectData> $effects
+     * @param Collection<SimpleEffectData> $effects
      * @param CraftData $craft
      */
     public function __construct(
@@ -29,7 +29,7 @@ class ItemData extends Data
         public array|Collection $effects = [],
         public null|array|CraftData $craft = null,
     ) {
-        $this->effects = ItemEffectData::collection($effects);
+        $this->effects = SimpleEffectData::collection($effects);
         $this->craft = CraftData::from($craft);
 
         $this->createIfNotExists();
@@ -55,11 +55,11 @@ class ItemData extends Data
             $this->effects->isNotEmpty()
             && $this->model->effects()->doesntExist()
         ) {
-            $this->effects->each(function (ItemEffectData $effect) {
-                $this->model->effects()->attach(Effect::firstOrCreate([
-                    'name' => $effect->name,
-                    'value' => $effect->value,
-                ]));
+            $this->effects->each(function (SimpleEffectData $effect) {
+                $this->model->effects()->attach(
+                    Effect::firstWhere('name', $effect->name),
+                    ['value' => $effect->value]
+                );
             });
         }
 

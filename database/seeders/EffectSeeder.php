@@ -7,13 +7,13 @@ namespace Database\Seeders;
 use App\Services\ArtifactsService;
 use Illuminate\Database\Seeder;
 
-class EventSeeder extends Seeder
+class EffectSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        app(ArtifactsService::class)->getAllActiveEvents(all: true);
+        app(ArtifactsService::class)->getAllEffects(all: true);
     }
 }
