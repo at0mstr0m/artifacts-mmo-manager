@@ -13,12 +13,15 @@ use App\Traits\IdentifiableByCode;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
- * @property int $value
+ * @property string $code
+ * @property EffectTypes $type
+ * @property EffectSubTypes $subtype
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $items
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect searchByCode(string $search = '')
  *
  * @mixin \Eloquent
  */
