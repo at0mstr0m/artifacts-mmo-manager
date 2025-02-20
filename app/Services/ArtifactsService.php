@@ -487,6 +487,9 @@ class ArtifactsService
      * #########################################################################
      */
 
+    /**
+     * @return Collection<BadgeData>
+     */
     public function getAllBadges(
         int $perPage = 10,
         int $page = 1,
@@ -747,9 +750,9 @@ class ArtifactsService
      * #########################################################################
      */
 
-     /**
-      * @return Collection<NpcData>
-      */
+    /**
+     * @return Collection<NpcData>
+     */
     public function getAllNpcs(
         int $perPage = 10,
         int $page = 1,
