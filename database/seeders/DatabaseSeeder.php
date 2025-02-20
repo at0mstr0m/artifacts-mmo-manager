@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AccountSeeder::class,
             UserSeeder::class,
+            BadgeSeeder::class,
+            NpcSeeder::class,
             EffectSeeder::class,
             ItemSeeder::class,
             MapSeeder::class,
@@ -30,7 +32,6 @@ class DatabaseSeeder extends Seeder
             CharacterSeeder::class,
             GrandExchangeSeeder::class,
             BankItemSeeder::class,
-            BadgeSeeder::class,
         ]);
 
         UpdateCurrentThings::dispatchSync();

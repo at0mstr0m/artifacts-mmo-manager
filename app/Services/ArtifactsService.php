@@ -36,6 +36,7 @@ use App\Data\Schemas\ItemData;
 use App\Data\Schemas\LogData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
+use App\Data\Schemas\NpcData;
 use App\Data\Schemas\ResourceData;
 use App\Data\Schemas\SellOrderData;
 use App\Data\Schemas\SimpleItemData;
@@ -738,6 +739,31 @@ class ArtifactsService
     public function getMonster(string $code): MonsterData
     {
         return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * NPCs
+     * #########################################################################
+     */
+
+     /**
+      * @return Collection<NpcData>
+      */
+    public function getAllNpcs(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'npcs',
+            RateLimitTypes::DATA,
+            NpcData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     /*
