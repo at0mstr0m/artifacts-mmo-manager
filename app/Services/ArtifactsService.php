@@ -31,7 +31,6 @@ use App\Data\Schemas\BadgeData;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\EffectData;
 use App\Data\Schemas\EventData;
-use App\Data\Schemas\GrandExchangeItemData;
 use App\Data\Schemas\HistoricSellOrderData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\LogData;
@@ -88,52 +87,6 @@ class ArtifactsService
             'my/bank/items',
             RateLimitTypes::DATA,
             SimpleItemData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    /**
-     * @return Collection<SellOrderData>
-     */
-    public function getGeSellOrders(
-        ?string $itemCode = null,
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $arguments = $itemCode ? ['code' => $itemCode] : [];
-        $query = [
-            ...static::paginationParams($perPage, $page, $all),
-            ...$arguments,
-        ];
-        $response = $this->get('my/grandexchange/orders', RateLimitTypes::DATA, $query);
-        $data = SellOrderData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage, $arguments)
-            : $data;
-    }
-
-    /**
-     * @return Collection<HistoricSellOrderData>
-     */
-    public function getGeSellHistory(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'my/grandexchange/history',
-            RateLimitTypes::DATA,
-            HistoricSellOrderData::class,
             $perPage,
             $page,
             $all
@@ -496,6 +449,38 @@ class ArtifactsService
     }
 
     /*
+    * #########################################################################
+    * Achievements
+    * #########################################################################
+    */
+
+    /**
+     * @return Collection<AchievementData>
+     */
+    public function getAllAchievements(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'achievements',
+            RateLimitTypes::DATA,
+            AchievementData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getAchievement(string $code): AchievementData
+    {
+        return AchievementData::from(
+            $this->get("achievements/{$code}", RateLimitTypes::DATA)
+        );
+    }
+
+    /*
      * #########################################################################
      * Badges
      * #########################################################################
@@ -519,7 +504,7 @@ class ArtifactsService
 
     /*
      * #########################################################################
-     * Character
+     * Characters
      * #########################################################################
      */
 
@@ -550,126 +535,6 @@ class ArtifactsService
         return CharacterData::from(
             $this->get("characters/{$name}", RateLimitTypes::DATA)
         );
-    }
-
-    /*
-     * #########################################################################
-     * Maps
-     * #########################################################################
-     */
-
-    /**
-     * @return Collection<MapData>
-     */
-    public function getAllMaps(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'maps',
-            RateLimitTypes::DATA,
-            MapData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getMap(int $x, int $y): MapData
-    {
-        return MapData::from($this->get("maps/{$x}/{$y}", RateLimitTypes::DATA));
-    }
-
-    /*
-     * #########################################################################
-     * Items
-     * #########################################################################
-     */
-
-    /**
-     * @return Collection<ItemData>
-     */
-    public function getAllItems(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'items',
-            RateLimitTypes::DATA,
-            ItemData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getItem(string $code): ItemData
-    {
-        return ItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
-    }
-
-    /*
-     * #########################################################################
-     * Monsters
-     * #########################################################################
-     */
-
-    /**
-     * @return Collection<MonsterData>
-     */
-    public function getAllMonsters(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'monsters',
-            RateLimitTypes::DATA,
-            MonsterData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getMonster(string $code): MonsterData
-    {
-        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
-    }
-
-    /*
-     * #########################################################################
-     * Resources
-     * #########################################################################
-     */
-
-    /**
-     * @return Collection<ResourceData>
-     */
-    public function getAllResources(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'resources',
-            RateLimitTypes::DATA,
-            ResourceData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getResource(string $code): ResourceData
-    {
-        return ResourceData::from($this->get("resources/{$code}", RateLimitTypes::DATA));
     }
 
     /*
@@ -729,20 +594,18 @@ class ArtifactsService
      */
 
     /**
-     * @return Collection<GrandExchangeItemData>
-     *
-     * @deprecated
+     * @return Collection<HistoricSellOrderData>
      */
-    public function getAllGeItem(
+    public function getGeSellHistory(
         int $perPage = 10,
         int $page = 1,
         bool $all = false
     ): Collection {
         return $this->getAllOrOne(
             __FUNCTION__,
-            'ge',
+            'my/grandexchange/history',
             RateLimitTypes::DATA,
-            GrandExchangeItemData::class,
+            HistoricSellOrderData::class,
             $perPage,
             $page,
             $all
@@ -750,11 +613,164 @@ class ArtifactsService
     }
 
     /**
-     * @deprecated
+     * @return Collection<SellOrderData>
      */
-    public function getGeItem(string $code): GrandExchangeItemData
+    public function getGeSellOrders(
+        ?string $itemCode = null,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $arguments = $itemCode ? ['code' => $itemCode] : [];
+        $query = [
+            ...static::paginationParams($perPage, $page, $all),
+            ...$arguments,
+        ];
+        $response = $this->get(
+            'my/grandexchange/orders',
+            RateLimitTypes::DATA,
+            $query
+        );
+        $data = SellOrderData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData(
+                $data,
+                $response,
+                __FUNCTION__,
+                $page,
+                $perPage,
+                $arguments
+            )
+            : $data;
+    }
+
+    /*
+     * #########################################################################
+     * Items
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<ItemData>
+     */
+    public function getAllItems(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'items',
+            RateLimitTypes::DATA,
+            ItemData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getItem(string $code): ItemData
     {
-        return GrandExchangeItemData::from($this->get("ge/{$code}", RateLimitTypes::DATA));
+        return ItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * Maps
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<MapData>
+     */
+    public function getAllMaps(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'maps',
+            RateLimitTypes::DATA,
+            MapData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getMap(int $x, int $y): MapData
+    {
+        return MapData::from($this->get("maps/{$x}/{$y}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * Monsters
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<MonsterData>
+     */
+    public function getAllMonsters(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'monsters',
+            RateLimitTypes::DATA,
+            MonsterData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getMonster(string $code): MonsterData
+    {
+        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
+    }
+
+    /*
+     * #########################################################################
+     * Resources
+     * #########################################################################
+     */
+
+    /**
+     * @return Collection<ResourceData>
+     */
+    public function getAllResources(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'resources',
+            RateLimitTypes::DATA,
+            ResourceData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getResource(string $code): ResourceData
+    {
+        return ResourceData::from($this->get(
+            "resources/{$code}",
+            RateLimitTypes::DATA
+        ));
     }
 
     /*
@@ -812,38 +828,6 @@ class ArtifactsService
     {
         return TaskRewardData::from(
             $this->get("tasks/rewards/{$code}", RateLimitTypes::DATA)
-        );
-    }
-
-    /*
-     * #########################################################################
-     * Achievements
-     * #########################################################################
-     */
-
-    /**
-     * @return Collection<AchievementData>
-     */
-    public function getAllAchievements(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'achievements',
-            RateLimitTypes::DATA,
-            AchievementData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getAchievement(string $code): AchievementData
-    {
-        return AchievementData::from(
-            $this->get("achievements/{$code}", RateLimitTypes::DATA)
         );
     }
 }
