@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use App\Data\Data;
 use App\Enums\RateLimitTypes;
 use App\Services\ArtifactsService;
 use Illuminate\Http\Client\PendingRequest;
@@ -177,5 +178,39 @@ trait MakesRequests
             $callback,
             1
         );
+    }
+
+    /**
+     * @param class-string<Data> $dataClass
+     *
+     * @return Collection<Data>
+     */
+    private function getAllOrOne(
+        string $methodName,
+        string $path,
+        RateLimitTypes $rateLimit,
+        string $dataClass,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $query = static::paginationParams($perPage, $page, $all);
+        $response = $this->get($path, $rateLimit, $query);
+        $data = $dataClass::collection($response);
+
+        return $all
+            ? $this->getAllPagesData(
+                $data,
+                $response,
+                $methodName,
+                $page,
+                $perPage
+            )
+            : $data;
     }
 }
