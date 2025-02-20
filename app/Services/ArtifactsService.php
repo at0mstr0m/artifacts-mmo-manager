@@ -663,18 +663,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('effects', RateLimitTypes::DATA, $query);
-        $data = EffectData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'effects',
+            RateLimitTypes::DATA,
+            EffectData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     /*
