@@ -19,8 +19,6 @@ class UpdateCurrentThings implements ShouldBeUnique, ShouldQueue
 
     private ArtifactsService $api;
 
-    public function __construct() {}
-
     public function handle(): void
     {
         $this->api = app(ArtifactsService::class);

@@ -406,18 +406,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('my/bank/items', RateLimitTypes::DATA, $query);
-        $data = SimpleItemData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'my/bank/items',
+            RateLimitTypes::DATA,
+            SimpleItemData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     /**
@@ -455,18 +452,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('my/grandexchange/history', RateLimitTypes::DATA, $query);
-        $data = HistoricSellOrderData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'my/grandexchange/history',
+            RateLimitTypes::DATA,
+            HistoricSellOrderData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getAccountDetails(): GetAccountDetailsData
@@ -489,22 +483,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get(
+        return $this->getAllOrOne(
+            __FUNCTION__,
             "accounts/{$account}/achievements",
             RateLimitTypes::DATA,
-            $query
+            AchievementData::class,
+            $perPage,
+            $page,
+            $all
         );
-        $data = AchievementData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
     }
 
     /*
@@ -556,18 +543,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('maps', RateLimitTypes::DATA, $query);
-        $data = MapData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'maps',
+            RateLimitTypes::DATA,
+            MapData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getMap(int $x, int $y): MapData
@@ -589,18 +573,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('items', RateLimitTypes::DATA, $query);
-        $data = ItemData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'items',
+            RateLimitTypes::DATA,
+            ItemData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getItem(string $code): ItemData
@@ -622,18 +603,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('monsters', RateLimitTypes::DATA, $query);
-        $data = MonsterData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'monsters',
+            RateLimitTypes::DATA,
+            MonsterData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getMonster(string $code): MonsterData
@@ -655,18 +633,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('resources', RateLimitTypes::DATA, $query);
-        $data = ResourceData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'resources',
+            RateLimitTypes::DATA,
+            ResourceData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getResource(string $code): ResourceData
@@ -716,18 +691,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('events/active', RateLimitTypes::DATA, $query);
-        $data = EventData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'events/active',
+            RateLimitTypes::DATA,
+            EventData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     /*
@@ -738,26 +710,28 @@ class ArtifactsService
 
     /**
      * @return Collection<GrandExchangeItemData>
+     *
+     * @deprecated
      */
     public function getAllGeItem(
         int $perPage = 10,
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('ge', RateLimitTypes::DATA, $query);
-        $data = GrandExchangeItemData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'ge',
+            RateLimitTypes::DATA,
+            GrandExchangeItemData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
+    /**
+     * @deprecated
+     */
     public function getGeItem(string $code): GrandExchangeItemData
     {
         return GrandExchangeItemData::from($this->get("ge/{$code}", RateLimitTypes::DATA));
@@ -777,18 +751,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('tasks/list', RateLimitTypes::DATA, $query);
-        $data = TaskData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'tasks/list',
+            RateLimitTypes::DATA,
+            TaskData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getTask(string $code): TaskData
@@ -806,18 +777,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('tasks/rewards', RateLimitTypes::DATA, $query);
-        $data = TaskRewardData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'tasks/rewards',
+            RateLimitTypes::DATA,
+            TaskRewardData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getTaskReward(string $code): TaskRewardData
@@ -841,18 +809,15 @@ class ArtifactsService
         int $page = 1,
         bool $all = false
     ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $query = static::paginationParams($perPage, $page, $all);
-        $response = $this->get('achievements', RateLimitTypes::DATA, $query);
-        $data = AchievementData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage)
-            : $data;
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'achievements',
+            RateLimitTypes::DATA,
+            AchievementData::class,
+            $perPage,
+            $page,
+            $all
+        );
     }
 
     public function getAchievement(string $code): AchievementData

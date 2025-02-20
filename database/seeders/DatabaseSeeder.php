@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Jobs\UpdateCurrentThings;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -29,5 +31,7 @@ class DatabaseSeeder extends Seeder
             GrandExchangeSeeder::class,
             BankItemSeeder::class,
         ]);
+
+        UpdateCurrentThings::dispatchSync();
     }
 }
