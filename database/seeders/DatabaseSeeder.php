@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CharacterSeeder::class,
             GrandExchangeSeeder::class,
             BankItemSeeder::class,
+            BadgeSeeder::class,
         ]);
 
         UpdateCurrentThings::dispatchSync();

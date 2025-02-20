@@ -67,7 +67,7 @@ trait MakesRequests
         $this->logRequest($method, $path, $payload);
 
         return $request
-            ->{$method}(dump(self::URL . $path), $payload)
+            ->{$method}(self::URL . $path, $payload)
             ->throwUnlessStatus(HttpResponse::HTTP_OK);
     }
 

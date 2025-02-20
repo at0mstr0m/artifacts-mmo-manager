@@ -27,6 +27,7 @@ use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
 use App\Data\Responses\GetStatusData;
 use App\Data\Schemas\AchievementData;
+use App\Data\Schemas\BadgeData;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\EffectData;
 use App\Data\Schemas\EventData;
@@ -61,6 +62,87 @@ class ArtifactsService
     public function getStatus(): GetStatusData
     {
         return GetStatusData::from($this->get());
+    }
+
+    /*
+     * #########################################################################
+     * My account
+     * #########################################################################
+     */
+
+    public function getBankDetails(): GetBankDetailsData
+    {
+        return GetBankDetailsData::from($this->get('my/bank'));
+    }
+
+    /**
+     * @return Collection<SimpleItemData>
+     */
+    public function getBankItems(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'my/bank/items',
+            RateLimitTypes::DATA,
+            SimpleItemData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    /**
+     * @return Collection<SellOrderData>
+     */
+    public function getGeSellOrders(
+        ?string $itemCode = null,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        if ($all) {
+            $perPage = static::MAX_PER_PAGE;
+            $page = 1;
+        }
+
+        $arguments = $itemCode ? ['code' => $itemCode] : [];
+        $query = [
+            ...static::paginationParams($perPage, $page, $all),
+            ...$arguments,
+        ];
+        $response = $this->get('my/grandexchange/orders', RateLimitTypes::DATA, $query);
+        $data = SellOrderData::collection($response);
+
+        return $all
+            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage, $arguments)
+            : $data;
+    }
+
+    /**
+     * @return Collection<HistoricSellOrderData>
+     */
+    public function getGeSellHistory(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'my/grandexchange/history',
+            RateLimitTypes::DATA,
+            HistoricSellOrderData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    public function getAccountDetails(): GetAccountDetailsData
+    {
+        return GetAccountDetailsData::from($this->get('my/details'));
     }
 
     /*
@@ -389,87 +471,6 @@ class ArtifactsService
 
     /*
      * #########################################################################
-     * My account
-     * #########################################################################
-     */
-
-    public function getBankDetails(): GetBankDetailsData
-    {
-        return GetBankDetailsData::from($this->get('my/bank'));
-    }
-
-    /**
-     * @return Collection<SimpleItemData>
-     */
-    public function getBankItems(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'my/bank/items',
-            RateLimitTypes::DATA,
-            SimpleItemData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    /**
-     * @return Collection<SellOrderData>
-     */
-    public function getGeSellOrders(
-        ?string $itemCode = null,
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        if ($all) {
-            $perPage = static::MAX_PER_PAGE;
-            $page = 1;
-        }
-
-        $arguments = $itemCode ? ['code' => $itemCode] : [];
-        $query = [
-            ...static::paginationParams($perPage, $page, $all),
-            ...$arguments,
-        ];
-        $response = $this->get('my/grandexchange/orders', RateLimitTypes::DATA, $query);
-        $data = SellOrderData::collection($response);
-
-        return $all
-            ? $this->getAllPagesData($data, $response, __FUNCTION__, $page, $perPage, $arguments)
-            : $data;
-    }
-
-    /**
-     * @return Collection<HistoricSellOrderData>
-     */
-    public function getGeSellHistory(
-        int $perPage = 10,
-        int $page = 1,
-        bool $all = false
-    ): Collection {
-        return $this->getAllOrOne(
-            __FUNCTION__,
-            'my/grandexchange/history',
-            RateLimitTypes::DATA,
-            HistoricSellOrderData::class,
-            $perPage,
-            $page,
-            $all
-        );
-    }
-
-    public function getAccountDetails(): GetAccountDetailsData
-    {
-        return GetAccountDetailsData::from($this->get('my/details'));
-    }
-
-    /*
-     * #########################################################################
      * Accounts
      * #########################################################################
      */
@@ -488,6 +489,28 @@ class ArtifactsService
             "accounts/{$account}/achievements",
             RateLimitTypes::DATA,
             AchievementData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    /*
+     * #########################################################################
+     * Badges
+     * #########################################################################
+     */
+
+    public function getAllBadges(
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            'badges',
+            RateLimitTypes::DATA,
+            BadgeData::class,
             $perPage,
             $page,
             $all
