@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\IdentifiableByCode;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -24,9 +25,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $res_earth
  * @property int $res_water
  * @property int $res_air
+ * @property int $critical_strike
  * @property int $min_gold
  * @property int $max_gold
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Drop> $drops
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Effect> $effects
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Map> $locations
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Monster newModelQuery()
@@ -53,6 +56,7 @@ class Monster extends Model
         'res_earth',
         'res_water',
         'res_air',
+        'critical_strike',
         'min_gold',
         'max_gold',
     ];
@@ -70,6 +74,7 @@ class Monster extends Model
         'res_earth' => 'integer',
         'res_water' => 'integer',
         'res_air' => 'integer',
+        'critical_strike' => 'integer',
         'min_gold' => 'integer',
         'max_gold' => 'integer',
     ];
@@ -82,5 +87,11 @@ class Monster extends Model
     public function locations(): HasMany
     {
         return $this->hasMany(Map::class, 'content_code', 'code');
+    }
+
+    public function effects(): BelongsToMany
+    {
+        return $this->belongsToMany(Effect::class)
+            ->withPivot('value');
     }
 }

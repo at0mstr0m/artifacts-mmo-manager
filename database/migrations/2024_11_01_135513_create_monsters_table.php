@@ -30,6 +30,8 @@ return new class extends Migration {
             $table->integer('res_water');
             $table->integer('res_air');
 
+            $table->integer('critical_strike');
+
             $table->integer('min_gold');
             $table->integer('max_gold');
         });
@@ -42,6 +44,13 @@ return new class extends Migration {
             $table->integer('rate');
             $table->integer('min_quantity');
             $table->integer('max_quantity');
+        });
+
+        Schema::create('effect_monster', function (Blueprint $table) {
+            $table->foreignId('effect_id')->constrained();
+            $table->foreignId('monster_id')->constrained();
+            $table->unique(['effect_id', 'monster_id']);
+            $table->integer('value');
         });
     }
 

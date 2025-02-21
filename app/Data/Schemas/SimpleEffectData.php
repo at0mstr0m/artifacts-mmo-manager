@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Schemas;
 
 use App\Data\Data;
+use App\Models\Effect;
 
 class SimpleEffectData extends Data
 {
@@ -12,4 +13,9 @@ class SimpleEffectData extends Data
         public string $name,
         public int $value,
     ) {}
+
+    public function getModel()
+    {
+        return Effect::firstWhere('name', $this->name);
+    }
 }

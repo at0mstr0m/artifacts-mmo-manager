@@ -27,12 +27,14 @@ class MonsterData extends Data
         public int $resEarth,
         public int $resWater,
         public int $resAir,
-        // todo: add effects
+        public int $criticalStrike,
+        public array|Collection $effects,
         public int $minGold,
         public int $maxGold,
         public array|Collection $drops,
     ) {
         $this->drops = DropRateData::collection($drops);
+        $this->effects = SimpleEffectData::collection($effects);
 
         $this->createIfNotExists();
     }
@@ -52,6 +54,7 @@ class MonsterData extends Data
             'res_earth' => $this->resEarth,
             'res_water' => $this->resWater,
             'res_air' => $this->resAir,
+            'critical_strike' => $this->criticalStrike,
             'min_gold' => $this->minGold,
             'max_gold' => $this->maxGold,
         ]);
@@ -71,6 +74,12 @@ class MonsterData extends Data
                 ->item()
                 ->associate(Item::firstWhere('code', $drop->code))
                 ->saveOrFail()
+        );
+
+        $this->effects->each(
+            fn (SimpleEffectData $effect) => $monster
+                ->effects()
+                ->attach($effect->getModel(), ['value' => $effect->value])
         );
     }
 }

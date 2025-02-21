@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\EffectSubTypes;
 use App\Enums\EffectTypes;
 use App\Traits\IdentifiableByCode;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -17,6 +18,7 @@ use App\Traits\IdentifiableByCode;
  * @property EffectTypes $type
  * @property EffectSubTypes $subtype
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $items
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Monster> $monsters
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Effect newQuery()
@@ -45,9 +47,15 @@ class Effect extends Model
         'subtype' => EffectSubTypes::class,
     ];
 
-    public function items()
+    public function items(): BelongsToMany
     {
         return $this->belongsToMany(Item::class)
+            ->withPivot('value');
+    }
+
+    public function monsters(): BelongsToMany
+    {
+        return $this->belongsToMany(Monster::class)
             ->withPivot('value');
     }
 }
