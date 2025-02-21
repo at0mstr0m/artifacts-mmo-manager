@@ -17,5 +17,6 @@ enum AchievementTypes: string
     case CRAFTING = 'crafting';
     case RECYCLING = 'recycling';
     case TASK = 'task';
+    case USE = 'use';
     case OTHER = 'other';
 }
