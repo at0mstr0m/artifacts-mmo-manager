@@ -39,6 +39,7 @@ use App\Data\Schemas\LogData;
 use App\Data\Schemas\MapData;
 use App\Data\Schemas\MonsterData;
 use App\Data\Schemas\NpcData;
+use App\Data\Schemas\NpcItemData;
 use App\Data\Schemas\ResourceData;
 use App\Data\Schemas\SellOrderData;
 use App\Data\Schemas\SimpleItemData;
@@ -793,6 +794,26 @@ class ArtifactsService
             'npcs',
             RateLimitTypes::DATA,
             NpcData::class,
+            $perPage,
+            $page,
+            $all
+        );
+    }
+
+    /**
+     * @return Collection<NpcData>
+     */
+    public function getNpcItems(
+        string $npcCode,
+        int $perPage = 10,
+        int $page = 1,
+        bool $all = false
+    ): Collection {
+        return $this->getAllOrOne(
+            __FUNCTION__,
+            "npcs/{$npcCode}/items",
+            RateLimitTypes::DATA,
+            NpcItemData::class,
             $perPage,
             $page,
             $all

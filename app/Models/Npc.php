@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\NpcTypes;
+use App\Traits\IdentifiableByCode;
 
 /**
  * @property int $id
@@ -23,6 +24,8 @@ use App\Enums\NpcTypes;
  */
 class Npc extends Model
 {
+    use IdentifiableByCode;
+
     protected $fillable = [
         'name',
         'code',
