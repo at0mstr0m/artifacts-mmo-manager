@@ -63,13 +63,15 @@ return new class extends Migration {
             $table->integer('max_hp');
             $table->integer('haste');
             $table->integer('critical_strike');
-            $table->integer('stamina');
+            $table->integer('wisdom');
+            $table->integer('prospecting');
 
             $table->integer('attack_fire');
             $table->integer('attack_earth');
             $table->integer('attack_water');
             $table->integer('attack_air');
 
+            $table->integer('dmg');
             $table->integer('dmg_fire');
             $table->integer('dmg_earth');
             $table->integer('dmg_water');
@@ -88,6 +90,7 @@ return new class extends Migration {
             $table->dateTime('cooldown_expiration');
 
             $table->string('weapon_slot');
+            $table->string('rune_slot');
             $table->string('shield_slot');
             $table->string('helmet_slot');
             $table->string('body_armor_slot');

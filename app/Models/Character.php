@@ -53,7 +53,8 @@ use Illuminate\Support\Carbon;
  * @property int $max_hp
  * @property int $haste
  * @property int $critical_strike
- * @property int $stamina
+ * @property int $wisdom
+ * @property int $prospecting
  * @property int $attack_fire
  * @property int $attack_earth
  * @property int $attack_water
@@ -72,6 +73,7 @@ use Illuminate\Support\Carbon;
  * @property int $cooldown
  * @property Carbon $cooldown_expiration
  * @property string $weapon_slot
+ * @property string $rune_slot
  * @property string $shield_slot
  * @property string $helmet_slot
  * @property string $body_armor_slot
@@ -150,11 +152,13 @@ class Character extends Model
         'max_hp',
         'haste',
         'critical_strike',
-        'stamina',
+        'wisdom',
+        'prospecting',
         'attack_fire',
         'attack_earth',
         'attack_water',
         'attack_air',
+        'dmg',
         'dmg_fire',
         'dmg_earth',
         'dmg_water',
@@ -168,6 +172,7 @@ class Character extends Model
         'cooldown',
         'cooldown_expiration',
         'weapon_slot',
+        'rune_slot',
         'shield_slot',
         'helmet_slot',
         'body_armor_slot',
@@ -228,11 +233,13 @@ class Character extends Model
         'max_hp' => 'integer',
         'haste' => 'integer',
         'critical_strike' => 'integer',
-        'stamina' => 'integer',
+        'wisdom' => 'integer',
+        'prospecting' => 'integer',
         'attack_fire' => 'integer',
         'attack_earth' => 'integer',
         'attack_water' => 'integer',
         'attack_air' => 'integer',
+        'dmg' => 'integer',
         'dmg_fire' => 'integer',
         'dmg_earth' => 'integer',
         'dmg_water' => 'integer',
@@ -246,6 +253,7 @@ class Character extends Model
         'cooldown' => 'integer',
         'cooldown_expiration' => 'datetime',
         'weapon_slot' => 'string',
+        'rune_slot' => 'string',
         'shield_slot' => 'string',
         'helmet_slot' => 'string',
         'body_armor_slot' => 'string',
