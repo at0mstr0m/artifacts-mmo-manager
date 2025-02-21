@@ -17,6 +17,8 @@ use App\Data\Responses\ActionGatheringData;
 use App\Data\Responses\ActionGeBuyItemData;
 use App\Data\Responses\ActionGeCancelSellOrderData;
 use App\Data\Responses\ActionMoveData;
+use App\Data\Responses\ActionNpcBuyItemData;
+use App\Data\Responses\ActionNpcSellItemData;
 use App\Data\Responses\ActionRecyclingData;
 use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionTaskCancelData;
@@ -270,6 +272,34 @@ class ArtifactsService
             $this->post(
                 "my/{$name}/action/bank/buy_expansion",
                 RateLimitTypes::ACTIONS
+            )
+        );
+    }
+
+    public function actionNpcBuyItem(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionNpcBuyItemData {
+        return ActionNpcBuyItemData::from(
+            $this->post(
+                "my/{$name}/action/npc/buy",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionNpcSellItem(
+        string $name,
+        string $itemCode,
+        int $quantity
+    ): ActionNpcSellItemData {
+        return ActionNpcSellItemData::from(
+            $this->post(
+                "my/{$name}/action/npc/sell",
+                RateLimitTypes::ACTIONS,
+                ['code' => $itemCode, 'quantity' => $quantity]
             )
         );
     }
