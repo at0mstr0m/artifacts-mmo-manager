@@ -59,6 +59,7 @@ use Illuminate\Support\Carbon;
  * @property int $attack_earth
  * @property int $attack_water
  * @property int $attack_air
+ * @property int $dmg
  * @property int $dmg_fire
  * @property int $dmg_earth
  * @property int $dmg_water
