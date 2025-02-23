@@ -16,10 +16,10 @@ class EffectData extends Data
         public string $code,
         public string $description,
         public EffectTypes|string $type,
-        public EffectSubTypes|string $subType,
+        public EffectSubTypes|string $subtype,
     ) {
         $this->type = EffectTypes::fromValue($type);
-        $this->subType = EffectSubTypes::fromValue($subType);
+        $this->subtype = EffectSubTypes::fromValue($subtype);
 
         $this->createIfNotExists();
     }
@@ -32,7 +32,7 @@ class EffectData extends Data
             'name' => $this->name,
             'description' => $this->description,
             'type' => $this->type->value,
-            'sub_type' => $this->subType->value,
+            'subtype' => $this->subtype->value,
         ]);
     }
 }

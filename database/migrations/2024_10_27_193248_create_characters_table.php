@@ -106,6 +106,7 @@ return new class extends Migration {
             $table->tinyInteger('utility1_slot_quantity');
             $table->string('utility2_slot');
             $table->tinyInteger('utility2_slot_quantity');
+            $table->string('bag_slot');
 
             $table->string('task');
             $table->enum('task_type', TaskTypes::values())

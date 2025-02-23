@@ -6,7 +6,6 @@ namespace App\Data\Schemas;
 
 use App\Data\Data;
 use App\Models\Craft;
-use App\Models\Effect;
 use App\Models\Item;
 use Illuminate\Support\Collection;
 
@@ -57,7 +56,7 @@ class ItemData extends Data
         ) {
             $this->effects->each(function (SimpleEffectData $effect) {
                 $this->model->effects()->attach(
-                    Effect::firstWhere('name', $effect->name),
+                    $effect->getModel(),
                     ['value' => $effect->value]
                 );
             });

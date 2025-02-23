@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $name
  * @property string $code
+ * @property string $description
  * @property EffectTypes $type
  * @property EffectSubTypes $subtype
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $items

@@ -90,6 +90,7 @@ use Illuminate\Support\Carbon;
  * @property int $utility1_slot_quantity
  * @property string $utility2_slot
  * @property int $utility2_slot_quantity
+ * @property string $bag_slot
  * @property string $task
  * @property TaskTypes|null $task_type
  * @property int $task_progress
@@ -189,6 +190,7 @@ class Character extends Model
         'utility1_slot_quantity',
         'utility2_slot',
         'utility2_slot_quantity',
+        'bag_slot',
         'task',
         'task_type',
         'task_progress',
@@ -270,6 +272,7 @@ class Character extends Model
         'utility1_slot_quantity' => 'integer',
         'utility2_slot' => 'string',
         'utility2_slot_quantity' => 'integer',
+        'bag_slot' => 'string',
         'task' => 'string',
         'task_type' => TaskTypes::class,
         'task_progress' => 'integer',

@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->string('name');
             $table->string('code')->unique();
+            $table->text('description');
             $table->enum('type', EffectTypes::values());
             $table->enum('subtype', EffectSubTypes::values());
         });

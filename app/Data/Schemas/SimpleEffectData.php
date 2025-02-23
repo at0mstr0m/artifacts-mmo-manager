@@ -10,12 +10,12 @@ use App\Models\Effect;
 class SimpleEffectData extends Data
 {
     public function __construct(
-        public string $name,
+        public string $code,
         public int $value,
     ) {}
 
     public function getModel()
     {
-        return Effect::firstWhere('name', $this->name);
+        return Effect::firstWhere('name', $this->code);
     }
 }

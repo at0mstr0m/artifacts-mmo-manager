@@ -19,6 +19,7 @@ use App\Traits\IdentifiableByCode;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Npc newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Npc newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Npc query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Npc searchByCode(string $search = '')
  *
  * @mixin \Eloquent
  */
