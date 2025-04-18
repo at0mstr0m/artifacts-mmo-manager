@@ -444,16 +444,6 @@ class ArtifactsService
         );
     }
 
-    /**
-     * @return Collection<CharacterData>
-     */
-    public function getMyCharacters(): Collection
-    {
-        return CharacterData::collection(
-            $this->get('my/characters', RateLimitTypes::DATA)
-        );
-    }
-
     /*
      * #########################################################################
      * Accounts
@@ -477,6 +467,16 @@ class ArtifactsService
             $perPage,
             $page,
             $all
+        );
+    }
+
+    /**
+     * @return Collection<CharacterData>
+     */
+    public function getMyCharacters(string $account): Collection
+    {
+        return CharacterData::collection(
+            $this->get("accounts/{$account}/characters", RateLimitTypes::DATA)
         );
     }
 
