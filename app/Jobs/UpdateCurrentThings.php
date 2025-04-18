@@ -23,6 +23,7 @@ class UpdateCurrentThings implements ShouldBeUnique, ShouldQueue
     {
         $this->api = app(ArtifactsService::class);
 
+        $this->api->getAllCharactersLogs();
         $this->updateEvents();
         $this->updateAchievements();
         $this->updateGrandExchange();
