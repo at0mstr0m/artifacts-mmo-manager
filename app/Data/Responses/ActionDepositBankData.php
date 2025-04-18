@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Data\Responses;
 
+use App\Actions\UpdateBankDepositsAction;
 use App\Data\Data;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\CooldownData;
 use App\Data\Schemas\ItemData;
 use App\Data\Schemas\SimpleItemData;
-use App\Models\Item;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ActionDepositBankData extends Data
 {
@@ -37,14 +36,6 @@ class ActionDepositBankData extends Data
 
     protected function updateDeposit(): void
     {
-        DB::transaction(function () {
-            // reset all deposits to 0
-            Item::getQuery()->update(['deposited' => 0]);
-            // update deposits
-            $this->bank->each(function (SimpleItemData $itemData) {
-                $item = Item::firstWhere('code', $itemData->code);
-                $item->update(['deposited' => $itemData->quantity]);
-            });
-        });
+        UpdateBankDepositsAction::run($this->bank);
     }
 }

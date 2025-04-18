@@ -45,7 +45,8 @@ trait CharacterUtils
                 break;
         }
 
-        return $this->inventoryItems()
+        return $this
+            ->inventoryItems()
             ->where('code', $item)
             ->where('quantity', '>=', $quantity)
             ->exists();
@@ -63,7 +64,8 @@ trait CharacterUtils
                 break;
         }
 
-        return (int) $this->inventoryItems()
+        return (int) $this
+            ->inventoryItems()
             ->where('code', $item)
             ->sum('quantity');
     }

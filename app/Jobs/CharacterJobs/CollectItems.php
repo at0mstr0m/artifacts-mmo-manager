@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
+use App\Actions\UpdateBankDepositsAction;
 use App\Data\Schemas\SimpleItemData;
 use App\Jobs\CharacterJob;
 use App\Models\Drop;
 use App\Models\Item;
 use App\Models\Monster;
 use App\Models\Resource;
-use Database\Seeders\BankItemSeeder;
 use Illuminate\Support\Collection;
 
 class CollectItems extends CharacterJob
@@ -97,7 +97,7 @@ class CollectItems extends CharacterJob
 
     private function collectNextItemFromBank(): void
     {
-        (new BankItemSeeder())->run();
+        UpdateBankDepositsAction::run();
         $depositedQuantity = $this->nextItem->refresh()->deposited;
 
         $this->log(

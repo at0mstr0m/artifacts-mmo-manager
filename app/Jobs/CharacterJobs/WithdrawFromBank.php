@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Jobs\CharacterJobs;
 
+use App\Actions\UpdateBankDepositsAction;
 use App\Jobs\CharacterJob;
 use App\Models\Item;
 use App\Traits\InteractsWithBank;
-use Database\Seeders\BankItemSeeder;
 
 class WithdrawFromBank extends CharacterJob
 {
@@ -40,7 +40,7 @@ class WithdrawFromBank extends CharacterJob
 
         $this->log("Withdrawing {$this->quantity} Units of {$item->itemCode}.");
         $this->log('Updating deposited quantity...');
-        (new BankItemSeeder())->run();
+        UpdateBankDepositsAction::run();
 
         if (! $item->refresh()->deposited) {
             $this->log('No items deposited.');
