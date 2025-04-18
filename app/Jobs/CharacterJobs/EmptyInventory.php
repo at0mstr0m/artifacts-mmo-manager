@@ -112,7 +112,7 @@ class EmptyInventory extends CharacterJob
         }
 
         if ($item->quantity <= $keepQuantity) {
-            $this->log("Keeping {$item->quantity} {$item->name}");
+            $this->log("Keeping {$item->quantity} {$item->code}");
 
             return;
         }
