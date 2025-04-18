@@ -53,13 +53,22 @@ class CraftItem extends CharacterJob
             return;
         }
 
-        $this->fail(
-            $this->character->name
-            . ' does not have required skill level '
+        $this->log(
+            'Character does not have required skill level '
             . $craft->level
             . ' to craft '
             . $this->item->name
         );
+
+        $this->dispatchWithComeback(
+            new CollectSkillXp(
+                $this->character->id, 
+                $craft->skill,
+                $craft->level
+            )
+        );
+
+        $this->end();
     }
 
     private function handleFullInventory(): void
