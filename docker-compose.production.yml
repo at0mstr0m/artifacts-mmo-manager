@@ -1,9 +1,9 @@
 services:
-    laravel:
+    laravel_production:
         build:
             context: .
             dockerfile: docker/Dockerfile
-        container_name: laravel
+        container_name: laravel_production
         environment:
             PHP_OPCACHE_ENABLE: 1
             PRODUCTION: 0
@@ -19,11 +19,11 @@ services:
         networks:
             - sail
         depends_on:
-            mysql:
+            mysql_production:
                 condition: service_healthy
-            redis:
+            redis_production:
                 condition: service_healthy
-    mysql:
+    mysql_production:
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
@@ -35,7 +35,7 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
+            - 'sail-mysql_production:/var/lib/mysql'
             - './docker/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
@@ -47,12 +47,12 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
-    redis:
+    redis_production:
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
-            - 'sail-redis:/data'
+            - 'sail-redis_production:/data'
         networks:
             - sail
         healthcheck:
@@ -66,7 +66,7 @@ networks:
     sail:
         driver: bridge
 volumes:
-    sail-mysql:
+    sail-mysql_production:
         driver: local
-    sail-redis:
+    sail-redis_production:
         driver: local
