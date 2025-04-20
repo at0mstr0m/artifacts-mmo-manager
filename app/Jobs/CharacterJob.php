@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -48,6 +49,12 @@ abstract class CharacterJob implements ShouldBeUniqueUntilProcessing, ShouldQueu
     public function handle(): void
     {
         $this->character = Character::find($this->characterId)->refetch();
+
+        if (Cache::pull('stop_character_' . $this->characterId)) {
+            $this->log('Job stopped by user');
+
+            return;
+        }
 
         $cooldownExpiration = $this->character->cooldown_expiration;
         if ($cooldownExpiration->isAfter(now())) {
