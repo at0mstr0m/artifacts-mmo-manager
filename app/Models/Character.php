@@ -321,4 +321,11 @@ class Character extends Model
     {
         return Attribute::get(fn (): bool => $this->hp === $this->max_hp);
     }
+
+    protected function remainingSpaceInInventory(): Attribute
+    {
+        return Attribute::get(
+            fn (): int => $this->inventory_max_items - $this->inventory_count
+        );
+    }
 }

@@ -28,6 +28,8 @@ class CollectRawMaterialsToCraft extends CharacterJob
     {
         $this->checkHasDesiredQuantity();
 
+        $this->checkCouldWithdrawFromBank();
+
         $this->craftItem();
 
         /*
@@ -51,6 +53,52 @@ class CollectRawMaterialsToCraft extends CharacterJob
         $this->log('Not all items collected yet.');
     }
 
+    private function checkCouldWithdrawFromBank(): void
+    {
+        $this->item = Item::find($this->itemId);
+
+        $deposited = $this->item->deposited;
+        if (! $deposited) {
+            $this->log('Item is not deposited in bank');
+
+            return;
+        }
+        $this->log('Item is deposited in bank');
+
+        $currentlyInInventory = $this->character->countInInventory($this->item);
+        if ($currentlyInInventory === $this->character->inventory_max_items) {
+            $this->log('Inventory is full, cannot withdraw');
+            $this->handleFullInventory();
+            // ends here
+        }
+
+        $needed = $this->count - $currentlyInInventory;
+        $toWithdraw = min($needed, $deposited);
+
+        if (
+            $toWithdraw > $this->character->remaining_space_in_inventory
+            && !$this->character->isOnlyLoadedWith($this->item)
+        ) {
+            $this->log('Not enough space in inventory to withdraw');
+            $this->dispatchWithComeback(new EmptyInventory(
+                $this->characterId,
+                collect([new SimpleItemData($this->item->code, $this->count)])
+            ));
+
+            $this->end();
+        }
+
+        $this->dispatchWithComeback(
+            new WithdrawFromBank(
+                $this->characterId,
+                $this->item->code,
+                min($toWithdraw, $this->character->remaining_space_in_inventory),
+            )
+        );
+
+        $this->end();
+    }
+
     private function handleFullInventory(): void
     {
         if (! $this->character->inventoryIsFull()) {
@@ -65,8 +113,6 @@ class CollectRawMaterialsToCraft extends CharacterJob
 
     private function craftItem(): void
     {
-        $this->item = Item::find($this->itemId);
-
         $this->log(
             'Checking if has all required items to craft one '
             . $this->item->name

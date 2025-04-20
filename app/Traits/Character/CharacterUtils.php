@@ -135,4 +135,9 @@ trait CharacterUtils
         return $this->inventory_count === $this->inventory_max_items
             || $this->inventoryItems()->pluck('code')->filter()->count() >= 20;
     }
+
+    public function isOnlyLoadedWith(int|Item|SimpleItemData|string $item): bool
+    {
+        return $this->countInInventory($item) === $this->inventory_count;
+    }
 }
