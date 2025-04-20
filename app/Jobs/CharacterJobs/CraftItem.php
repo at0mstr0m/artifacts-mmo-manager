@@ -62,7 +62,7 @@ class CraftItem extends CharacterJob
 
         $this->dispatchWithComeback(
             new CollectSkillXp(
-                $this->character->id, 
+                $this->character->id,
                 $craft->skill,
                 $craft->level
             )
@@ -79,7 +79,7 @@ class CraftItem extends CharacterJob
 
         $this->log('Inventory is full, emptying it now');
 
-        $keep = collect(new SimpleItemData($this->item->code, $this->quantity));
+        $keep = collect([new SimpleItemData($this->item->code, $this->quantity)]);
         $this->item
             ?->craft
             ?->requiredItems

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\IdentifiableByCode;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item searchByCode(string $search = '')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Item onlyDeposited()
  *
  * @mixin \Eloquent
  */
@@ -90,5 +92,10 @@ class Item extends Model
     public function sellOrders(): HasMany
     {
         return $this->hasMany(SellOrder::class);
+    }
+
+    public function scopeOnlyDeposited(Builder $query): Builder
+    {
+        return $query->where('deposited', '>', 0);
     }
 }

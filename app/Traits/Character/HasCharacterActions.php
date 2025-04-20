@@ -83,12 +83,18 @@ trait HasCharacterActions
     }
 
     public function equip(
-        Item|string $item,
+        InventoryItem|Item|string $item,
         int $quantity = 1,
         ?string $slot = null,
     ): ActionEquipItemData {
-        if (is_string($item)) {
-            $item = Item::findByCode($item);
+        switch (true) {
+            case is_string($item):
+                $item = Item::findByCode($item);
+                break;
+            case $item instanceof InventoryItem:
+                $quantity = $quantity ?: $item->quantity;
+                $item = $item->item;
+                break;
         }
 
         if ($slot === null) {

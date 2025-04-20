@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\IdentifiableByCode;
+use App\Traits\MonsterUtils;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Monster extends Model
 {
     use IdentifiableByCode;
+    use MonsterUtils;
 
     protected $fillable = [
         'name',

@@ -92,7 +92,8 @@ class EmptyInventory extends CharacterJob
 
     private function keepQuantity(InventoryItem $item): int
     {
-        return (int) $this->keep
+        return (int) $this
+            ->keep
             ?->firstWhere(
                 fn (SimpleItemData $itemData) => $itemData->code === $item->code
             )

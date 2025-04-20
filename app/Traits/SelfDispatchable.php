@@ -32,18 +32,14 @@ trait SelfDispatchable
 
     public function pushNextJob(NextJobData $data): static
     {
-        empty($this->nextJobs)
-            ? $this->nextJobs = collect([$data])
-            : $this->nextJobs->push($data);
+        $this->addToNextJobs('push', $data);
 
         return $this;
     }
 
     public function unshiftNextJob(NextJobData $data): static
     {
-        empty($this->nextJobs)
-            ? $this->nextJobs = collect([$data])
-            : $this->nextJobs->unshift($data);
+        $this->addToNextJobs('unshift', $data);
 
         return $this;
     }
@@ -83,5 +79,12 @@ trait SelfDispatchable
             ...$this->constructorArguments,
             ...$arguments,
         ]))->setNextJobs($this->nextJobs));
+    }
+
+    private function addToNextJobs(string $method, NextJobData $data): void
+    {
+        empty($this->nextJobs)
+            ? $this->nextJobs = collect([$data])
+            : $this->nextJobs->{$method}($data);
     }
 }
