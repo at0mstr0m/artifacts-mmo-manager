@@ -13,13 +13,15 @@ class FightMonsterCount extends FightMonster
         protected int $monsterId,
         protected int $count = 1,
         protected int $tries = 0,
+        protected int $rests = 0,
     ) {
-        parent::__construct($characterId, $monsterId, $tries);
+        parent::__construct($characterId, $monsterId, $tries, $rests);
         $this->constructorArguments = compact(
             'characterId',
             'monsterId',
             'count',
-            'tries'
+            'tries',
+            'rests',
         );
     }
 

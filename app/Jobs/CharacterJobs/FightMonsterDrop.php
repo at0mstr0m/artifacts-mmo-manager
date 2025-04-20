@@ -14,13 +14,15 @@ class FightMonsterDrop extends FightMonster
         protected int $monsterId,
         protected SimpleItemData $itemData,
         protected int $tries = 0,
+        protected int $rests = 0,
     ) {
         parent::__construct($characterId, $monsterId, $tries);
         $this->constructorArguments = compact(
             'characterId',
             'monsterId',
             'itemData',
-            'tries'
+            'tries',
+            'rests',
         );
     }
 

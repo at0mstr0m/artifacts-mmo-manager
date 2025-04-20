@@ -13,12 +13,15 @@ abstract class FightMonster extends CharacterJob
 {
     protected const int MAX_TRIES = 3;
 
+    protected const int MAX_RESTS = 3;
+
     protected Monster $monster;
 
     public function __construct(
         protected int $characterId,
         protected int $monsterId,
         protected int $tries = 0,
+        protected int $rests = 0,
     ) {}
 
     abstract protected function handleWin(): PendingDispatch;
@@ -27,7 +30,7 @@ abstract class FightMonster extends CharacterJob
     {
         $this->handleFullInventory();
 
-        $this->handleMaxTriesExceeded();
+        $this->handleMaxTriesOrRestsExceeded();
 
         $this->monster = Monster::find($this->monsterId);
 
@@ -49,9 +52,12 @@ abstract class FightMonster extends CharacterJob
         $this->end();
     }
 
-    private function handleMaxTriesExceeded(): void
+    private function handleMaxTriesOrRestsExceeded(): void
     {
-        if ($this->tries < static::MAX_TRIES) {
+        if (
+            $this->tries < static::MAX_TRIES
+            && $this->rests < static::MAX_RESTS
+        ) {
             return;
         }
 
@@ -62,11 +68,15 @@ abstract class FightMonster extends CharacterJob
     private function ensureCharacterIsHealthy(): void
     {
         if ($this->character->is_healthy) {
+            $this->rests = 0;
+
             return;
         }
 
         $this->log('Not healthy enough to fight');
         $delay = $this->character->rest()->cooldown->expiresAt;
+        ++$this->rests;
+        $this->log("Resting for {$this->rests} time(s)");
         $this->selfDispatch()->delay($delay);
 
         $this->end();
