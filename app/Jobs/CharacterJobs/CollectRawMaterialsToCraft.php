@@ -77,24 +77,22 @@ class CollectRawMaterialsToCraft extends CharacterJob
 
         if (
             $toWithdraw > $this->character->remaining_space_in_inventory
-            && !$this->character->isOnlyLoadedWith($this->item)
+            && ! $this->character->isOnlyLoadedWith($this->item)
         ) {
             $this->log('Not enough space in inventory to withdraw');
             $this->dispatchWithComeback(new EmptyInventory(
                 $this->characterId,
                 collect([new SimpleItemData($this->item->code, $this->count)])
             ));
-
-            $this->end();
+        } else {
+            $this->dispatchWithComeback(
+                new WithdrawFromBank(
+                    $this->characterId,
+                    $this->item->code,
+                    min($toWithdraw, $this->character->remaining_space_in_inventory),
+                )
+            );
         }
-
-        $this->dispatchWithComeback(
-            new WithdrawFromBank(
-                $this->characterId,
-                $this->item->code,
-                min($toWithdraw, $this->character->remaining_space_in_inventory),
-            )
-        );
 
         $this->end();
     }

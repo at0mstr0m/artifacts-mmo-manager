@@ -38,7 +38,7 @@ class WithdrawFromBank extends CharacterJob
     {
         $item = Item::findByCode($this->itemCode);
 
-        $this->log("Withdrawing {$this->quantity} Units of {$item->itemCode}.");
+        $this->log("Withdrawing {$this->quantity} Units of {$item->name}.");
         $this->log('Updating deposited quantity...');
         UpdateBankDepositsAction::run();
 
@@ -52,7 +52,7 @@ class WithdrawFromBank extends CharacterJob
         $quantity = $this->quantity
             ? min($this->quantity, $item->deposited)
             : $item->deposited;
-        $this->log("Withdrawing {$quantity} Units of {$item->itemCode}.");
+        $this->log("Withdrawing {$quantity} Units of {$item->name}.");
         $this->character->withdrawItem($item, $quantity);
     }
 }
