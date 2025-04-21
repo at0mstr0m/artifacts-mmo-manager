@@ -98,4 +98,9 @@ class Item extends Model
     {
         return $query->where('deposited', '>', 0);
     }
+
+    public static function maxLevel(): int
+    {
+        return self::query()->max('level');
+    }
 }

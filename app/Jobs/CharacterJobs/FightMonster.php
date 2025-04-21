@@ -62,6 +62,11 @@ abstract class FightMonster extends CharacterJob
         }
 
         $this->log('Max tries exceeded');
+
+        $this->dispatchWithComeback(
+            new ChooseBetterWeapon($this->characterId, $this->monsterId)
+        );
+
         $this->end();
     }
 
