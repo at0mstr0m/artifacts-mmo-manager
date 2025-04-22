@@ -26,14 +26,14 @@ class ChooseBetterWeapon extends CharacterJob
 
     protected function handleCharacter(): void
     {
-        $this->ensureHasWeaponEquiped();
+        $this->ensureHasWeaponEquipped();
 
         $this->checkHasBetterWeaponInInventoryOrBank();
 
         $this->checkCouldCraftBetterWeapon();
     }
 
-    private function ensureHasWeaponEquiped(): void
+    private function ensureHasWeaponEquipped(): void
     {
         if ($this->character->weapon_slot) {
             $this->log('Character has a weapon equiped.');
