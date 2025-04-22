@@ -36,12 +36,12 @@ class ChooseBetterWeapon extends CharacterJob
     private function ensureHasWeaponEquipped(): void
     {
         if ($this->character->weapon_slot) {
-            $this->log('Character has a weapon equiped.');
+            $this->log('Character has a weapon equipped.');
 
             return;
         }
 
-        $this->log('Character does not have a weapon equiped.');
+        $this->log('Character does not have a weapon equipped.');
 
         /** @var InventoryItem */
         $weapon = $this
@@ -144,13 +144,13 @@ class ChooseBetterWeapon extends CharacterJob
             return;
         }
 
-        $currenWeaponCraftingLevel = $this->character->weaponcrafting_level;
-        $this->log("Current weapon crafting skill: {$currenWeaponCraftingLevel}");
+        $currentWeaponCraftingLevel = $this->character->weaponcrafting_level;
+        $this->log("Current weapon crafting skill: {$currentWeaponCraftingLevel}");
 
         $newWeapon = Item::query()
             ->where('type', 'weapon')
             ->where('level', '>', $currentWeapon->level)
-            ->where('level', '<=', $currenWeaponCraftingLevel)
+            ->where('level', '<=', $currentWeaponCraftingLevel)
             ->orderByDesc('level')
             ->first();
 
@@ -167,14 +167,14 @@ class ChooseBetterWeapon extends CharacterJob
             $this->end();
         }
 
-        if ($currenWeaponCraftingLevel < Item::maxLevel()) {
-            $this->log("Current weapon crafting skill {$currenWeaponCraftingLevel} is not maxed.");
+        if ($currentWeaponCraftingLevel < Item::maxLevel()) {
+            $this->log("Current weapon crafting skill {$currentWeaponCraftingLevel} is not maxed.");
 
             $this->dispatchWithComeback(
                 new CollectSkillXp(
                     $this->character->id,
                     Skills::WEAPON_CRAFTING,
-                    $currenWeaponCraftingLevel + 1
+                    $currentWeaponCraftingLevel + 1
                 )
             );
 
