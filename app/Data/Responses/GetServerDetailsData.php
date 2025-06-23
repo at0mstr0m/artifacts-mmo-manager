@@ -6,27 +6,31 @@ namespace App\Data\Responses;
 
 use App\Data\Data;
 use App\Data\Schemas\AnnouncementData;
+use App\Data\Schemas\RateLimitData;
+use App\Data\Schemas\SeasonData;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
-class GetStatusData extends Data
+class GetServerDetailsData extends Data
 {
     /**
+     * @param Collection<SeasonData> $season
      * @param Collection<AnnouncementData> $announcements
+     * @param Collection<RateLimitData> $rateLimits
      */
     public function __construct(
-        public string $status,
         public string $version,
-        public int $maxLevel,
-        public int $charactersOnline,
         public Carbon|string $serverTime,
-        public Collection $announcements,
-        public Carbon|string $lastWipe,
-        public null|Carbon|string $nextWipe,
+        public int $maxLevel,
+        public int $maxSkillLevel,
+        public int $charactersOnline,
+        public array|SeasonData $season,
+        public array|Collection $announcements,
+        public array|Collection $rateLimits,
     ) {
         $this->serverTime = Carbon::parse($serverTime);
+        $this->season = SeasonData::from($season);
         $this->announcements = AnnouncementData::collection($announcements);
-        $this->lastWipe = Carbon::parse($lastWipe);
-        $this->nextWipe = Carbon::parse($nextWipe);
+        $this->rateLimits = RateLimitData::collection($rateLimits);
     }
 }

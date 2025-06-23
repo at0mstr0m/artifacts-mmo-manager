@@ -27,7 +27,7 @@ use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Responses\ActionUseItemData;
 use App\Data\Responses\GetAccountDetailsData;
 use App\Data\Responses\GetBankDetailsData;
-use App\Data\Responses\GetStatusData;
+use App\Data\Responses\GetServerDetailsData;
 use App\Data\Schemas\AchievementData;
 use App\Data\Schemas\BadgeData;
 use App\Data\Schemas\CharacterData;
@@ -62,9 +62,15 @@ class ArtifactsService
         $this->token = env('ARTIFACTS_TOKEN');
     }
 
-    public function getStatus(): GetStatusData
+    /*
+     * #########################################################################
+     * Server Details
+     * #########################################################################
+     */
+
+    public function getServerDetails(): GetServerDetailsData
     {
-        return GetStatusData::from($this->get());
+        return GetServerDetailsData::from($this->get());
     }
 
     /*
