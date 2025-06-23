@@ -444,6 +444,17 @@ class ArtifactsService
         );
     }
 
+    /**
+     * @return Collection<LogData>
+     */
+    public function getCharacterLogs(string $name): Collection
+    {
+        return LogData::collection(
+            // not more than 100 logs available
+            $this->get("my/logs/{$name}", RateLimitTypes::DATA, ['size' => 100])
+        );
+    }
+
     /*
      * #########################################################################
      * Accounts
