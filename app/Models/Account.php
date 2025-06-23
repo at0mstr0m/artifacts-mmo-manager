@@ -39,6 +39,7 @@ class Account extends Model
         'achievements_points',
         'banned',
         'ban_reason',
+        'skins',
     ];
 
     protected $casts = [
@@ -51,5 +52,6 @@ class Account extends Model
         'achievements_points' => 'integer',
         'banned' => 'boolean',
         'ban_reason' => 'string',
+        'skins' => 'array',
     ];
 }

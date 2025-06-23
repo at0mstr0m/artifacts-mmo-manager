@@ -34,6 +34,7 @@ return new class extends Migration {
                 ->default(false);
             $table->text('ban_reason')
                 ->nullable();
+            $table->json('skins');
         });
     }
 

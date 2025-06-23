@@ -17,7 +17,7 @@ class CharacterSeeder extends Seeder
     {
         $api = app(ArtifactsService::class);
 
-        $api->getMyCharacters(Account::first()->username);
+        $api->getAccountCharacters(Account::first()->username);
         $api->getAllCharactersLogs();
     }
 }

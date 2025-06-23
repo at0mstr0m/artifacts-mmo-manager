@@ -505,7 +505,7 @@ class ArtifactsService
     /**
      * @return Collection<CharacterData>
      */
-    public function getMyCharacters(string $account): Collection
+    public function getAccountCharacters(string $account): Collection
     {
         return CharacterData::collection(
             $this->get("accounts/{$account}/characters", RateLimitTypes::DATA)
@@ -513,9 +513,9 @@ class ArtifactsService
     }
 
     /*
-    * #########################################################################
+    * ##########################################################################
     * Achievements
-    * #########################################################################
+    * ##########################################################################
     */
 
     /**
@@ -744,7 +744,9 @@ class ArtifactsService
 
     public function getItem(string $code): ItemData
     {
-        return ItemData::from($this->get("items/{$code}", RateLimitTypes::DATA));
+        return ItemData::from(
+            $this->get("items/{$code}", RateLimitTypes::DATA)
+        );
     }
 
     /*
@@ -774,7 +776,9 @@ class ArtifactsService
 
     public function getMap(int $x, int $y): MapData
     {
-        return MapData::from($this->get("maps/{$x}/{$y}", RateLimitTypes::DATA));
+        return MapData::from(
+            $this->get("maps/{$x}/{$y}", RateLimitTypes::DATA)
+        );
     }
 
     /*
@@ -804,7 +808,9 @@ class ArtifactsService
 
     public function getMonster(string $code): MonsterData
     {
-        return MonsterData::from($this->get("monsters/{$code}", RateLimitTypes::DATA));
+        return MonsterData::from(
+            $this->get("monsters/{$code}", RateLimitTypes::DATA)
+        );
     }
 
     /*

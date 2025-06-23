@@ -23,6 +23,7 @@ class GetAccountDetailsData extends Data
         public int $achievementsPoints,
         public bool $banned,
         public string $banReason,
+        public array $skins,
         public ?int $gems = null,
         public int $subscribedUntil = 0,
         public ?string $email = null,  // irrelevant
@@ -41,6 +42,7 @@ class GetAccountDetailsData extends Data
             'achievements_points' => $this->achievementsPoints,
             'banned' => $this->banned,
             'ban_reason' => $this->banReason,
+            'skins' => $this->skins,
         ]);
     }
 }
