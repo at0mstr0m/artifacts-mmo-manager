@@ -512,6 +512,13 @@ class ArtifactsService
         );
     }
 
+    public function getAccount(string $account): GetAccountDetailsData
+    {
+        return GetAccountDetailsData::from(
+            $this->get("accounts/{$account}", RateLimitTypes::DATA)
+        );
+    }
+
     /*
     * ##########################################################################
     * Achievements
