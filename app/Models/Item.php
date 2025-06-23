@@ -31,9 +31,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Item onlyDeposited()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item searchByCode(string $search = '')
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item onlyDeposited()
  *
  * @mixin \Eloquent
  */

@@ -104,6 +104,7 @@ use Illuminate\Support\Carbon;
  * @property-read Map|null $location
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Log> $logs
  * @property-read Occupaion|null $occupation
+ * @property-read int $remaining_space_in_inventory
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Character newQuery()
