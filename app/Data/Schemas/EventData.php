@@ -17,7 +17,7 @@ class EventData extends Data
     public function __construct(
         public string $name,
         public string $code,
-        public string $previousSkin,
+        public string $previousMap,
         public int $duration,
         public Carbon|string $expiration,
         public array|MapData $map,
@@ -43,7 +43,7 @@ class EventData extends Data
         ]) ?? $this->map->getModel()->events()->create([
             'name' => $this->name,
             'code' => $this->code,
-            'previous_skin' => $this->previousSkin,
+            'previous_map' => $this->previousMap,
             'duration' => $this->duration,
             'expiration' => $this->expiration,
             'started_at' => $this->startedAt,

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('code');
             $table->foreignId('map_id')->constrained();
-            $table->string('previous_skin');
+            $table->string('previous_map');
             $table->integer('duration');
             $table->dateTime('expiration');
             $table->dateTime('started_at'); // called "created_at" in API response

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property string $code
  * @property int $map_id
- * @property string $previous_skin
+ * @property string $previous_map
  * @property int $duration
  * @property \Illuminate\Support\Carbon $expiration
  * @property \Illuminate\Support\Carbon $started_at
@@ -30,7 +30,7 @@ class Event extends Model
     protected $fillable = [
         'name',
         'code',
-        'previous_skin',
+        'previous_map',
         'duration',
         'expiration',
         'started_at',
@@ -39,7 +39,7 @@ class Event extends Model
     protected $casts = [
         'name' => 'string',
         'code' => 'string',
-        'previous_skin' => 'string',
+        'previous_map' => 'string',
         'duration' => 'integer',
         'expiration' => 'datetime',
         'started_at' => 'datetime',
