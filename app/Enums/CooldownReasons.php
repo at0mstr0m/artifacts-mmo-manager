@@ -29,4 +29,8 @@ enum CooldownReasons: string
     case REST = 'rest';
     case USE = 'use';
     case BUY_BANK_EXPANSION = 'buy_bank_expansion';
+    case GIVE_ITEM = 'give_item';
+    case GIVE_GOLD = 'give_gold';
+    case CHANGE_SKIN = 'change_skin';
+    case RENAME = 'rename';
 }

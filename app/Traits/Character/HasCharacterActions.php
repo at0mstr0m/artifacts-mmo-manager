@@ -7,6 +7,7 @@ namespace App\Traits\Character;
 use App\Actions\EvaluateFittingItemSlot;
 use App\Data\Responses\ActionAcceptNewTask;
 use App\Data\Responses\ActionBuyBankExpansionData;
+use App\Data\Responses\ActionChangeSkinData;
 use App\Data\Responses\ActionCompleteTaskData;
 use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionDepositBankData;
@@ -19,6 +20,7 @@ use App\Data\Responses\ActionMoveData;
 use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Schemas\SimpleItemData;
+use App\Enums\CharacterSkins;
 use App\Models\Character;
 use App\Models\InventoryItem;
 use App\Models\Item;
@@ -205,6 +207,12 @@ trait HasCharacterActions
 
         return app(ArtifactsService::class)
             ->actionGeCreateSellOrder($this->name, $item, $quantity, $price);
+    }
+
+    public function changeSkin(CharacterSkins $skin): ActionChangeSkinData
+    {
+        return app(ArtifactsService::class)
+            ->actionChangeSkin($this->name, $skin);
     }
 
     /**

@@ -16,4 +16,6 @@ enum CharacterSkins: string
     case WOMEN1 = 'women1';
     case WOMEN2 = 'women2';
     case WOMEN3 = 'women3';
+    case CORRUPTED1 = 'corrupted1';
+    case ZOMBIE1 = 'zombie1';
 }

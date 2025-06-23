@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Data\Responses\ActionAcceptNewTask;
 use App\Data\Responses\ActionBuyBankExpansionData;
+use App\Data\Responses\ActionChangeSkinData;
 use App\Data\Responses\ActionCompleteTaskData;
 use App\Data\Responses\ActionCraftingData;
 use App\Data\Responses\ActionDeleteItemData;
@@ -45,6 +46,7 @@ use App\Data\Schemas\SellOrderData;
 use App\Data\Schemas\SimpleItemData;
 use App\Data\Schemas\TaskData;
 use App\Data\Schemas\TaskRewardData;
+use App\Enums\CharacterSkins;
 use App\Enums\RateLimitTypes;
 use App\Traits\MakesRequests;
 use Illuminate\Support\Collection;
@@ -435,6 +437,19 @@ class ArtifactsService
                 "my/{$name}/action/delete",
                 RateLimitTypes::ACTIONS,
                 ['code' => $itemCode, 'quantity' => $quantity]
+            )
+        );
+    }
+
+    public function actionChangeSkin(
+        string $name,
+        CharacterSkins $skin,
+    ): ActionChangeSkinData {
+        return ActionChangeSkinData::from(
+            $this->post(
+                "my/{$name}/action/change_skin",
+                RateLimitTypes::ACTIONS,
+                ['skin' => $skin->value]
             )
         );
     }
