@@ -15,6 +15,7 @@ class ItemData extends Data
 
     /**
      * @param Collection<SimpleEffectData> $effects
+     * @param Collection<ItemConditionData> $conditions
      * @param CraftData $craft
      */
     public function __construct(
@@ -24,11 +25,13 @@ class ItemData extends Data
         public string $type,
         public string $subtype,
         public string $description,
+        public array|Collection $conditions,
         public bool $tradeable,
         public array|Collection $effects = [],
         public null|array|CraftData $craft = null,
     ) {
         $this->effects = SimpleEffectData::collection($effects);
+        $this->conditions = ItemConditionData::collection($conditions);
         $this->craft = CraftData::from($craft);
 
         $this->createIfNotExists();
@@ -59,6 +62,20 @@ class ItemData extends Data
                     $effect->getModel(),
                     ['value' => $effect->value]
                 );
+            });
+        }
+
+        if (
+            $this->conditions->isNotEmpty()
+            && $this->model->conditions()->doesntExist()
+        ) {
+            $this->conditions->each(function (ItemConditionData $condition) {
+                $this->model->conditions()->updateOrCreate([
+                    'code' => $condition->code,
+                ], [
+                    'operator' => $condition->operator,
+                    'value' => $condition->value,
+                ]);
             });
         }
 

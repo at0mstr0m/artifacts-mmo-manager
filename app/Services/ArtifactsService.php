@@ -836,7 +836,7 @@ class ArtifactsService
     ): Collection {
         return $this->getAllOrOne(
             __FUNCTION__,
-            'npcs',
+            'npcs/details',
             RateLimitTypes::DATA,
             NpcData::class,
             $perPage,

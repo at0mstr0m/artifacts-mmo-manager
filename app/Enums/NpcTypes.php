@@ -11,4 +11,5 @@ enum NpcTypes: string
     use EnumUtils;
 
     case MERCHANT = 'merchant';
+    case TRADER = 'trader';
 }

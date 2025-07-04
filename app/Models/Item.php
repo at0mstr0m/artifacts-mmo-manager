@@ -69,6 +69,11 @@ class Item extends Model
             ->withPivot('value');
     }
 
+    public function conditions(): HasMany
+    {
+        return $this->hasMany(ItemCondition::class);
+    }
+
     public function craft(): HasOne
     {
         return $this->hasOne(Craft::class);

@@ -17,7 +17,7 @@ class EventData extends Data
     public function __construct(
         public string $name,
         public string $code,
-        public string $previousMap,
+        public array|string $previousMap,
         public int $duration,
         public Carbon|string $expiration,
         public array|MapData $map,
@@ -26,6 +26,7 @@ class EventData extends Data
         $this->expiration = Carbon::parse($expiration);
         $this->startedAt = Carbon::parse($createdAt);
         $this->map = MapData::from($map);
+        $this->previousMap = $previousMap['skin'];  // the other attributes are irrelevant
 
         $this->createIfNotExists();
     }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\ComparisonOperators;
 use App\Enums\EffectSubTypes;
 use App\Enums\EffectTypes;
 use Illuminate\Database\Migrations\Migration;
@@ -43,6 +44,15 @@ return new class extends Migration {
             $table->foreignId('item_id')->constrained();
             $table->integer('value');
         });
+
+        Schema::create('item_conditions', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('item_id')->constrained();
+            $table->string('code');
+            $table->enum('operator', ComparisonOperators::values());
+            $table->integer('value');
+        });
     }
 
     /**
@@ -50,6 +60,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('item_conditions');
         Schema::dropIfExists('effect_item');
         Schema::dropIfExists('effects');
         Schema::dropIfExists('items');

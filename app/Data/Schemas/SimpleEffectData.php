@@ -12,6 +12,7 @@ class SimpleEffectData extends Data
     public function __construct(
         public string $code,
         public int $value,
+        public string $description,
     ) {}
 
     public function getModel()
