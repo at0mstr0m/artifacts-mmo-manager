@@ -9,6 +9,7 @@ use App\Enums\Skills;
 use App\Models\Character;
 use App\Models\Craft;
 use App\Models\Item;
+use App\Models\ItemCondition;
 use App\Models\Map;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -139,5 +140,27 @@ trait CharacterUtils
     public function isOnlyLoadedWith(int|Item|SimpleItemData|string $item): bool
     {
         return $this->countInInventory($item) === $this->inventory_count;
+    }
+
+    public function canUseItem(Item|string $item): bool
+    {
+        if (is_string($item)) {
+            $item = Item::findByCode($item);
+        }
+
+        $conditions = $item->conditions;
+
+        if ($conditions->isEmpty()) {
+            return true;
+        }
+
+        return $conditions->every(
+            fn (ItemCondition $condition) => $condition
+                ->operator
+                ->compare(
+                    $this->getAttribute($condition->attribute),
+                    $condition->value
+                )
+        );
     }
 }
