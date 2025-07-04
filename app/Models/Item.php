@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $description
  * @property bool $tradeable
  * @property int $deposited
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ItemCondition> $conditions
  * @property-read Craft|null $craft
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Drop> $drops
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Effect> $effects

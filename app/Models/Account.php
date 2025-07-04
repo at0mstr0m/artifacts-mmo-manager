@@ -20,6 +20,7 @@ use App\Enums\MemberStatus;
  * @property int $achievements_points
  * @property bool $is_banned
  * @property string|null $ban_reason
+ * @property array<array-key, mixed> $skins
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Account newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Account newQuery()

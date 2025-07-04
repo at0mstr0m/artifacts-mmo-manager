@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property string $code
  * @property int $map_id
- * @property string $previous_skin
+ * @property string $previous_map
  * @property int $duration
  * @property \Illuminate\Support\Carbon $expiration
  * @property \Illuminate\Support\Carbon $started_at
