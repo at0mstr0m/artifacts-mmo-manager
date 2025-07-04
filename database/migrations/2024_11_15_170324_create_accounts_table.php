@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->string('email')
                 ->nullable()
                 ->unique();
-            $table->boolean('is_subscribed');
-            $table->integer('subscribed_until')
+            $table->boolean('is_member');
+            $table->integer('member_expiration')
                 ->nullable();
             $table->enum('status', MemberStatus::values());
             $table->json('badges')
@@ -30,7 +30,7 @@ return new class extends Migration {
             $table->integer('gems')
                 ->default(0);
             $table->integer('achievements_points');
-            $table->boolean('banned')
+            $table->boolean('is_banned')
                 ->default(false);
             $table->text('ban_reason')
                 ->nullable();

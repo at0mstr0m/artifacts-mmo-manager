@@ -12,13 +12,13 @@ use App\Enums\MemberStatus;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $username
  * @property string|null $email
- * @property bool $is_subscribed
- * @property int|null $subscribed_until
+ * @property bool $is_member
+ * @property int|null $member_expiration
  * @property MemberStatus $status
  * @property array<array-key, mixed>|null $badges
  * @property int $gems
  * @property int $achievements_points
- * @property bool $banned
+ * @property bool $is_banned
  * @property string|null $ban_reason
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Account newModelQuery()
@@ -32,12 +32,12 @@ class Account extends Model
     protected $fillable = [
         'username',
         'email',
-        'is_subscribed',
-        'subscribed_until',
+        'is_member',
+        'member_expiration',
         'status',
         'badges',
         'achievements_points',
-        'banned',
+        'is_banned',
         'ban_reason',
         'skins',
     ];
@@ -45,12 +45,12 @@ class Account extends Model
     protected $casts = [
         'username' => 'string',
         'email' => 'string',
-        'is_subscribed' => 'boolean',
-        'subscribed_until' => 'integer',
+        'is_member' => 'boolean',
+        'member_expiration' => 'integer',
         'status' => MemberStatus::class,
         'badges' => 'array',
         'achievements_points' => 'integer',
-        'banned' => 'boolean',
+        'is_banned' => 'boolean',
         'ban_reason' => 'string',
         'skins' => 'array',
     ];
