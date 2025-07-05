@@ -22,8 +22,6 @@ class FightData extends Data
         public int $gold,
         public array|Collection $drops,
         public int $turns,
-        public array|BlockedHitsData $monsterBlockedHits,
-        public array|BlockedHitsData $playerBlockedHits,
         public array $logs,
         public FightResults|string $result,
     ) {

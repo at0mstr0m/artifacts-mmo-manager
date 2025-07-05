@@ -25,8 +25,10 @@ class EvaluateFittingItemSlot
      *  2. false if the item fits in a slot but the slot is already occupied
      *  3. slot name if the item fits in a slot and the slot is empty
      */
-    public function handle(Character $character, Item|string $item): null|false|string
-    {
+    public function handle(
+        Character $character,
+        Item|string $item
+    ): null|array|false|string {
         $this->character = $character;
         $this->item = $item instanceof Item ? $item : Item::findByCode($item);
 
@@ -41,7 +43,7 @@ class EvaluateFittingItemSlot
 
         $slot = $this->item->type . '_slot';
         if ($slotNames->contains($slot)) {
-            return $this->character->slotIsOccupied($slot) ? false : $slot;
+            return $this->character->slotIsOccupied($slot) ? [$slot] : $slot;
         }
 
         $maxCount = $this->item->type === 'artifact' ? 3 : 2;

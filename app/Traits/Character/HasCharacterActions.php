@@ -21,6 +21,7 @@ use App\Data\Responses\ActionRestData;
 use App\Data\Responses\ActionTaskTradeData;
 use App\Data\Schemas\SimpleItemData;
 use App\Enums\CharacterSkins;
+use App\Exceptions\SlotOccupiedException;
 use App\Models\Character;
 use App\Models\InventoryItem;
 use App\Models\Item;
@@ -84,6 +85,14 @@ trait HasCharacterActions
         return app(ArtifactsService::class)->actionRest($this->name);
     }
 
+    public function unequip(string $slot, int $quantity = 1): ActionEquipItemData
+    {
+        $slot = Str::beforeLast($slot, '_slot');
+
+        return app(ArtifactsService::class)
+            ->actionUnequipItem($this->name, $slot, $quantity);
+    }
+
     public function equip(
         InventoryItem|Item|string $item,
         int $quantity = 1,
@@ -103,12 +112,15 @@ trait HasCharacterActions
             /** @var false|string|null */
             $slot = EvaluateFittingItemSlot::run($this, $item);
 
-            if ($slot === false) {
-                throw new \Exception('Item slot is occupied');
-            }
-
-            if ($slot === null) {
-                throw new \Exception('Item does not fit into any slot');
+            switch (true) {
+                case $slot === false:
+                    throw new SlotOccupiedException();
+                case $slot === null:
+                    throw new \Exception('Item does not fit into any slot');
+                case is_array($slot):
+                    $slot = $slot[0];
+                    $response = $this->unequip($slot, $quantity);
+                    sleep((int) ceil(now()->diffInSeconds($response->cooldown->expiresAt)));
             }
         }
 

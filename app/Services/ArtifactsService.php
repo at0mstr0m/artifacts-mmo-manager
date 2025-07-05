@@ -159,7 +159,6 @@ class ArtifactsService
     public function actionUnequipItem(
         string $name,
         string $slot,
-        string $itemCode,
         int $quantity = 1
     ): ActionEquipItemData {
         return ActionEquipItemData::from(
@@ -168,7 +167,6 @@ class ArtifactsService
                 RateLimitTypes::ACTIONS,
                 [
                     'slot' => $slot,
-                    'code' => $itemCode,
                     'quantity' => $quantity,
                 ]
             )
@@ -240,7 +238,7 @@ class ArtifactsService
     ): ActionDepositBankData {
         return ActionDepositBankData::from(
             $this->post(
-                "my/{$name}/action/bank/deposit",
+                "my/{$name}/action/bank/deposit/item",
                 RateLimitTypes::ACTIONS,
                 ['code' => $itemCode, 'quantity' => $quantity]
             )
@@ -254,7 +252,7 @@ class ArtifactsService
     ): ActionDepositBankData {
         return ActionDepositBankData::from(
             $this->post(
-                "my/{$name}/action/bank/withdraw",
+                "my/{$name}/action/bank/withdraw/item",
                 RateLimitTypes::ACTIONS,
                 ['code' => $itemCode, 'quantity' => $quantity]
             )
