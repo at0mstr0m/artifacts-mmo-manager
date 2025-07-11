@@ -12,8 +12,6 @@ class FightData extends Data
 {
     /**
      * @param Collection<DropData> $drops
-     * @param BlockedHitsData $monsterBlockedHits
-     * @param BlockedHitsData $playerBlockedHits
      * @param array<string> $logs
      * @param FightResults $result
      */
@@ -26,8 +24,6 @@ class FightData extends Data
         public FightResults|string $result,
     ) {
         $this->drops = DropData::collection($drops);
-        $this->monsterBlockedHits = BlockedHitsData::from($monsterBlockedHits);
-        $this->playerBlockedHits = BlockedHitsData::from($playerBlockedHits);
         $this->result = FightResults::fromValue($result);
     }
 }
