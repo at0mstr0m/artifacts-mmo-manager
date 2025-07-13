@@ -240,7 +240,8 @@ class ArtifactsService
             $this->post(
                 "my/{$name}/action/bank/deposit/item",
                 RateLimitTypes::ACTIONS,
-                ['code' => $itemCode, 'quantity' => $quantity]
+                // must be an array of items
+                [['code' => $itemCode, 'quantity' => $quantity]]
             )
         );
     }
@@ -254,7 +255,8 @@ class ArtifactsService
             $this->post(
                 "my/{$name}/action/bank/withdraw/item",
                 RateLimitTypes::ACTIONS,
-                ['code' => $itemCode, 'quantity' => $quantity]
+                // must be an array of items
+                [['code' => $itemCode, 'quantity' => $quantity]]
             )
         );
     }

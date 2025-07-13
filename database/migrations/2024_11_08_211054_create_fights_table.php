@@ -20,19 +20,7 @@ return new class extends Migration {
             $table->integer('xp');
             $table->integer('gold');
             $table->integer('turns');
-
-            $table->integer('monster_blocked_hits_fire');
-            $table->integer('monster_blocked_hits_earth');
-            $table->integer('monster_blocked_hits_water');
-            $table->integer('monster_blocked_hits_air');
-            $table->integer('monster_blocked_hits_total');
-
-            $table->integer('player_blocked_hits_fire');
-            $table->integer('player_blocked_hits_earth');
-            $table->integer('player_blocked_hits_water');
-            $table->integer('player_blocked_hits_air');
-            $table->integer('player_blocked_hits_total');
-
+            $table->json('drops');
             $table->enum('result', FightResults::values());
         });
 

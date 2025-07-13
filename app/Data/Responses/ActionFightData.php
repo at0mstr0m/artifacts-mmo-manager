@@ -33,17 +33,8 @@ class ActionFightData extends Data
                 'xp' => $this->fight->xp,
                 'gold' => $this->fight->gold,
                 'turns' => $this->fight->turns,
-                'monster_blocked_hits_fire' => $this->fight->monsterBlockedHits->fire,
-                'monster_blocked_hits_earth' => $this->fight->monsterBlockedHits->earth,
-                'monster_blocked_hits_water' => $this->fight->monsterBlockedHits->water,
-                'monster_blocked_hits_air' => $this->fight->monsterBlockedHits->air,
-                'monster_blocked_hits_total' => $this->fight->monsterBlockedHits->total,
-                'player_blocked_hits_fire' => $this->fight->playerBlockedHits->fire,
-                'player_blocked_hits_earth' => $this->fight->playerBlockedHits->earth,
-                'player_blocked_hits_water' => $this->fight->playerBlockedHits->water,
-                'player_blocked_hits_air' => $this->fight->playerBlockedHits->air,
-                'player_blocked_hits_total' => $this->fight->playerBlockedHits->total,
                 'result' => $this->fight->result->value,
+                'drops' => $this->fight->drops->toArray()
             ])
             ->logs()
             ->createMany(
