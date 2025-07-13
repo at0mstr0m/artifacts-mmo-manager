@@ -31,7 +31,7 @@ class Fight extends Model
         'gold',
         'turns',
         'result',
-        'drops'
+        'drops',
     ];
 
     protected $casts = [

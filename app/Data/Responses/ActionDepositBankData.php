@@ -8,7 +8,6 @@ use App\Actions\UpdateBankDepositsAction;
 use App\Data\Data;
 use App\Data\Schemas\CharacterData;
 use App\Data\Schemas\CooldownData;
-use App\Data\Schemas\ItemData;
 use App\Data\Schemas\SimpleItemData;
 use Illuminate\Support\Collection;
 

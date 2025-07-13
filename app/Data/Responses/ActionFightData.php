@@ -34,7 +34,7 @@ class ActionFightData extends Data
                 'gold' => $this->fight->gold,
                 'turns' => $this->fight->turns,
                 'result' => $this->fight->result->value,
-                'drops' => $this->fight->drops->toArray()
+                'drops' => $this->fight->drops->toArray(),
             ])
             ->logs()
             ->createMany(
